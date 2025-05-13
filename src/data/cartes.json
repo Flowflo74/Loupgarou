@@ -1,0 +1,233 @@
+[
+  {
+    "name": "Ancien",
+    "image": "ancien.jpeg",
+    "order": 1,
+    "onlyFirstNight": true,
+    "isCallable": false,
+    "categorie": "Villageois",
+    "description": "Résiste à la première attaque des loups.",
+    "dire": "Réveille-toi ! Tu es l'Ancien et tu peux donc survivre à une morsure des Loup-Garou !"
+  },
+  {
+    "name": "Cupidon",
+    "image": "cupidon.jpeg",
+    "order": 2,
+    "onlyFirstNight": true,
+    "isCallable": false,
+    "categorie": "Villageois",
+    "description": "Lie deux joueurs amoureux en début de partie.",
+    "dire": "Vers qui souhaites-tu lancer tes 2 flèches d'amour ?"
+  },
+  {
+    "name": "Voleur",
+    "image": "voleur.jpg",
+    "order": 3,
+    "onlyFirstNight": true,
+    "isCallable": false,
+    "categorie": "Solitaire",
+    "description": "Peut échanger sa carte avec l'une des cartes restantes au début.",
+    "dire": "Quelle carte souhaites-tu voler ?"
+  },
+  {
+    "name": "Enfant Sauvage",
+    "image": "enfant.jpeg",
+    "order": 4,
+    "onlyFirstNight": false,
+    "isCallable": true,
+    "categorie": "Villageois",
+    "description": "Choisit un modèle et peut devenir loup s'il meurt.",
+    "dire": "Qui veux-tu choisir comme mentor ?"
+  },
+    {
+      "name": "Chasseur",
+      "image": "chasseur.jpeg",
+      "order": 10,
+      "onlyFirstNight": false,
+      "isCallable": false,
+      "categorie": "Villageois",
+      "description": "Peut tirer sur un joueur s'il meurt."
+    },
+    {
+      "name": "Villageois",
+      "image": "villageois.jpeg",
+      "order": 4,
+      "onlyFirstNight": false,
+      "isCallable": false,
+      "categorie": "Villageois",
+      "description": "N'a aucun pouvoir particulier, mais vote pour éliminer les loups."
+    },
+    {
+      "name": "Deux Soeurs",
+      "image": "Deuxsoeurs.jpeg",
+      "order": 5,
+      "onlyFirstNight": true,
+      "isCallable": false,
+      "categorie": "Villageois",
+      "description": "Se connaissent et peuvent se concerter.",
+      "dire": "Vous êtes deux soeurs, vous pouvez vous faire confiance !"
+    },
+    {
+      "name": "Voyante",
+      "image": "voyante.jpeg",
+      "order": 6,
+      "onlyFirstNight": false,
+      "isCallable": true,
+      "categorie": "Villageois",
+      "description": "La voyante peut voir chaque nuit le rôle d'un joueur.",
+      "dire": "Quelle carte veux-tu découvrir ?"
+    },
+    {
+      "name": "Renard",
+      "image": "renard.jpeg",
+      "order": 7,
+      "onlyFirstNight": false,
+      "isCallable": true,
+      "categorie": "Villageois",
+      "description": "Renifle les rôles autour d un joueur pour détecter un loup-garou.",
+      "dire": "Veux-tu utiliser ton flair ce soir ?, si oui, quel groupe de 3 joueurs veux-tu flairer ?"
+    },
+    {
+      "name": "Salvateur",
+      "image": "salvateur.jpeg",
+      "order": 8,
+      "onlyFirstNight": false,
+      "isCallable": true,
+      "categorie": "Villageois",
+      "description": "Protege un joueur chaque nuit contre les attaques.",
+      "dire": "Qui veux tu proteger cette nuit ?"
+    },
+    {
+      "name": "Loup Garou",
+      "image": "LoupGarou.jpeg",
+      "order": 9,
+      "onlyFirstNight": false,
+      "isCallable": true,
+      "categorie": "Loup-garou",
+      "description": "Se réveille la nuit avec les autres loups pour désigner une victime.",
+      "dire": "Concertez-vous,  Qui voulez-vous dévorer ce soir ?"
+    },
+    {
+      "name": "Infect pere des loups",
+      "image": "Infect.jpeg",
+      "order": 10,
+      "onlyFirstNight": false,
+      "isCallable": true,
+      "categorie": "Loup-garou",
+      "description": "Peut transformer un joueur en loup-garou.",
+      "dire": "Souhaites-tu transformer votre victime en Loup-Garou ?"
+    },
+    {
+      "name": "Grand Mechant Loup",
+      "image": "grandMechantLoup.jpeg",
+      "order": 11,
+      "onlyFirstNight": false,
+      "isCallable": true,
+      "categorie": "Loup-garou",
+      "description": "Peut devorer deux victimes en une nuit, mais une seule fois dans la partie.",
+      "dire": "Souhaites-tu devorer une victime supplementaire ?"
+    },
+    {
+      "name": "Loup Blanc",
+      "image": "loupblanc.webp",
+      "order": 12,
+      "onlyFirstNight": false,
+      "isCallable": true,
+      "categorie": "Solitaire",
+      "description": "Il peut éliminer un loup-garou une nuit sur deux.",
+      "dire": "Souhaites-tu éliminer l'un de tes camarades ?"
+    },
+    {
+      "name": "Sorciere",
+      "image": "sorciere.jpeg",
+      "order": 13,
+      "onlyFirstNight": false,
+      "isCallable": true,
+      "categorie": "Villageois",
+      "description": "Dispose d'une potion de vie et d'une potion de mort.",
+      "dire": "Cette personne a été tué par les loups cette nuit, Veux-tu la sauver ?                                 Souhaites-tu utiliser ta potion d'empoisonnement et éliminer quelqu'un ?" 
+    },
+    {
+      "name": "Corbeau",
+      "image": "corbeau.jpeg",
+      "order": 14,
+      "onlyFirstNight": false,
+      "isCallable": true,
+      "categorie": "Villageois",
+      "description": "Designe un joueur à accuser chaque nuit.",
+      "dire": "Qui veux-tu accuser ?"
+    },
+    {
+      "name": "Joueur de flute",
+      "image": "flutiste.jpeg",
+      "order": 15,
+      "onlyFirstNight": false,
+      "isCallable": true,
+      "categorie": "Solitaire",
+      "description": "Hypnotise les joueurs ; il gagne s ils sont tous envoutes.",
+      "dire": "Qui veux-tu envouter de ta douce melodie?"
+    },
+    {
+      "name": "Idiot",
+      "image": "idiot.jpeg",
+      "order": 16,
+      "onlyFirstNight": false,
+      "isCallable": false,
+      "categorie": "Villageois",
+      "description": "S il est vote, il ne meurt pas mais perd son droit de vote."
+    },
+    {
+      "name": "Ange",
+      "image": "ange.jpeg",
+      "order": 17,
+      "onlyFirstNight": false,
+      "isCallable": false,
+      "categorie": "Solitaire",
+      "description": "Doit se faire eliminer au premier vote pour gagner."
+    },
+    {
+      "name": "Montreur d ours",
+      "image": "ours.jpeg",
+      "order": 18,
+      "onlyFirstNight": false,
+      "isCallable": false,
+      "categorie": "Villageois",
+      "description": "Sait s il y a un loup parmi ses voisins."
+    },
+    {
+      "name": "Servante devouee",
+      "image": "servante.jpeg",
+      "order": 19,
+      "onlyFirstNight": false,
+      "isCallable": false,
+      "categorie": "Villageois",
+      "description": "Prend le role d un autre personnage en cas de deces."
+    },
+    {
+      "name": "Dictateur",
+      "image": "dictateurlg.png",
+      "order": 20,
+      "onlyFirstNight": false,
+      "isCallable": false,
+      "categorie": "Villageois",
+      "description": "Peut realiser un coup d'etat au moment du vote du village."
+    },
+    {
+      "name": "Chien-Loup",
+      "image": "chienloup.jpeg",
+      "order": 21,
+      "onlyFirstNight": false,
+      "isCallable": true,
+      "categorie": "Loup-garou",
+      "description": "Peut choisir au debut de la partie de rejoindre les loups garous ou de rester avec les villageois."
+    },
+    {
+      "name": "Comedien",
+      "image": "comedien.jpeg",
+      "order": 22,
+      "onlyFirstNight": false,
+      "isCallable": true,
+      "categorie": "Solitaire",
+      "description": "Peut imiter le pouvoir d’un autre joueur chaque nuit."
+    }
+]
