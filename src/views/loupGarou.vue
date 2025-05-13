@@ -85,7 +85,7 @@
             <LoupGarouCard :lgcard="card" />
           </li>
         </ul>
-        <button class="btn-next-phase" @click="nextPhase">Nuit suivante</button>
+        <button class="btn-next-phase" @click="nextPhase">Nuits suivante</button>
       </section>
   
       <!-- Résultat -->
