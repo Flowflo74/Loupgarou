@@ -1,7 +1,9 @@
 <template>
     <div class="loup-garou-app" :class="phase === 'day' ? 'day-theme' : 'night-theme'">
+
       <header>
         <h1>Interface Loup-Garou v0.1</h1>
+       
       </header>
   
       <section v-if="phase === 'selection'" class="selection-phase">
@@ -69,6 +71,21 @@
           </li>
         </ul>
         <button class="btn-next-phase" @click="nextPhase">Passer au jour</button>
+      </section>
+  
+      <!-- Phase : élimination de la nuit -->
+      <section v-if="phase === 'night-elim'" class="phase-nuit-elim">
+        <h2>💀 Qui a été éliminé cette nuit ? 💀</h2>
+        <p class="vote">Sélectionne la ou les victimes de la nuit</p>
+        <ul class="village-list">
+          <li v-for="(card, index) in selectedCards" :key="'nightelim-'+index" class="remaining-card">
+            <img src="../assets/assets-projet/autres/tomberip2.png"
+                 alt="Exclure" class="exclusion-logo"
+                 @click="removeCard(index)" />
+            <LoupGarouCard :lgcard="card" />
+          </li>
+        </ul>
+        <button class="btn-next-phase" @click="nextPhase">Passer au vote du village</button>
       </section>
   
       <!-- Jour -->
@@ -162,6 +179,11 @@
         visible.value = false
         break
       case 'night':
+        // Après la nuit, on passe à la phase d'élimination de la nuit
+        phase.value = 'night-elim'
+        break
+      case 'night-elim':
+        // Après l'élimination de la nuit, on passe au jour
         dayCount.value += 1
         phase.value = 'day'
         visible.value = true
@@ -311,6 +333,9 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+    justify-content: center;
+    padding: 0;
+    margin: 0 auto;
   }
   .remaining-card {
     background: rgba(0, 0, 0, 0.5);

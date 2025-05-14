@@ -4,7 +4,6 @@
 
 <template>
 
-    
      <h1 class="Bienvenue">Bienvenue</h1>
     
     <main>
