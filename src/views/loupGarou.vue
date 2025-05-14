@@ -20,25 +20,23 @@
           </ul>
         </div>
         <div class="cartes-container">
-          <div class="cartes-list">
-            <p class="label">Villageois</p>
-            <ul>
-              <li v-for="card in villageoisCards" :key="card.name + '-v'" @click="addCard(card)">
-                <LoupGarouCard :lgcard="card" />
-              </li>
-            </ul>
-            <p class="label">Loups-garous</p>
-            <ul>
-              <li v-for="card in loupGarouCards" :key="card.name + '-lg'" @click="addCard(card)">
-                <LoupGarouCard :lgcard="card" />
-              </li>
-            </ul>
-            <p class="label">Solitaire</p>
-            <ul>
-              <li v-for="card in solitaireCards" :key="card.name + '-s'" @click="addCard(card)">
-                <LoupGarouCard :lgcard="card" />
-              </li>
-            </ul>
+          <div class="cartes-list-2col">
+            <div class="cartes-colonne">
+              <p class="label">Villageois</p>
+              <ul>
+                <li v-for="card in villageoisCards" :key="card.name + '-v'" @click="addCard(card)">
+                  <LoupGarouCard :lgcard="card" />
+                </li>
+              </ul>
+            </div>
+            <div class="cartes-colonne">
+              <p class="label">Loups-garous & Solitaires</p>
+              <ul>
+                <li v-for="card in [...loupGarouCards, ...solitaireCards]" :key="card.name + '-lgsol'" @click="addCard(card)">
+                  <LoupGarouCard :lgcard="card" />
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </section>
@@ -50,7 +48,7 @@
           <li v-for="card in prepCards" :key="card.name + '-prep'" class="appel-row">
             <LoupGarouCard :lgcard="card" />
             <div class="appel-info">
-              <p class="dire"><strong>GM :</strong> {{ card.dire }}</p>
+              <p class="dire"><strong>Meneur :</strong> {{ card.dire }}</p>
               <p class="description">{{ card.description }}</p>
             </div>
           </li>
@@ -65,7 +63,7 @@
           <li v-for="card in nightCards" :key="card.name + '-night'" class="appel-row">
             <LoupGarouCard :lgcard="card" />
             <div class="appel-info">
-              <p class="dire"><strong>GM :</strong> {{ card.dire }}</p>
+              <p class="dire"><strong>Meneur :</strong> {{ card.dire }}</p>
               <p class="description">{{ card.description }}</p>
             </div>
           </li>
@@ -220,12 +218,30 @@
     gap: 2rem;
   }
   .cartes-list { flex: 1; }
-  .cartes-list .label { text-align: center; margin-bottom: 1rem; padding-top: 1rem; font-size:x-large; }
-  .cartes-list ul {
+  .cartes-list-2col {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+  }
+  .cartes-colonne {
+    flex: 1 1 0;
+    min-width: 220px;
+  }
+  .cartes-colonne .label {
+    text-align: center;
+    margin-bottom: 1rem;
+    padding-top: 1rem;
+    font-size: x-large;
+  }
+  .cartes-colonne ul {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
     list-style: none;
+    padding: 0;
+    justify-content: center;
   }
   .cartes-selectionnees {
     width: 100%;
