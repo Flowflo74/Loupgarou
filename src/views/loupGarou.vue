@@ -194,7 +194,7 @@
     ) {
       phase.value = 'end'
       winnerMessage.value = "L'Ange a été éliminé lors du premier jour et remporte la partie !"
-      winnerImage.value = './src/assets/assets-projet/autres/victoire/victoireange.jpg'
+      winnerImage.value = '/victoire/victoireange.jpg'
     }
   }
   
@@ -239,11 +239,11 @@
       if (hasWolf && !hasVillager) {
         phase.value = 'end'
         winnerMessage.value = 'Les Loups-garous remportent la partie !'
-        winnerImage.value = './src/assets/assets-projet/autres/victoire/victoirelg.jpg'
+        winnerImage.value = '/victoire/victoirelg.jpg'
       } else if (!hasWolf && hasVillager) {
         phase.value = 'end'
         winnerMessage.value = 'Les Villageois remportent la partie !'
-        winnerImage.value = './src/assets/assets-projet/autres/victoire/victoirevillage.jpg'
+        winnerImage.value = '/victoire/victoirevillage.jpg'
       }
     },
     { deep: true }
