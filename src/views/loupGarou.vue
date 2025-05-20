@@ -68,6 +68,27 @@
               <p class="dire"><strong>Meneur :</strong> {{ card.dire }}</p>
               <p class="description">{{ card.description }}</p>
             </div>
+            <!-- Logos potions pour la Sorcière SOUS la description -->
+            <template v-if="card.name === 'Sorciere'">
+              <div class="potions-sorciere">
+                <img
+                  v-if="potionVieDispo"
+                  class="potion-logo potion-vie"
+                  src="../assets/assets-projet/logoperso/healthpotion.png"
+                  alt="Potion de vie"
+                  title="Utiliser la potion de vie"
+                  @click="potionVieDispo = false"
+                />
+                <img
+                  v-if="potionMortDispo"
+                  class="potion-logo potion-mort"
+                  src="../assets/assets-projet/logoperso/deathpotion.png"
+                  alt="Potion de mort"
+                  title="Utiliser la potion de mort"
+                  @click="potionMortDispo = false"
+                />
+              </div>
+            </template>
           </li>
         </ul>
         <button class="btn-next-phase" @click="nextPhase">Passer au jour</button>
@@ -235,6 +256,9 @@
     nightCount.value = 0
     visible.value = false
   }
+
+  const potionVieDispo = ref(true)
+  const potionMortDispo = ref(true)
   </script>
   
   <style scoped>
@@ -425,4 +449,15 @@
 
   /* Footer */
   .footer { text-align: center; padding: 1rem; }
+
+  .potion-logo {
+  width: 60px;
+  height: 60px;
+  margin: 0 3px;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.potion-logo:hover {
+  transform: scale(1.15) rotate(-10deg);
+}
   </style>

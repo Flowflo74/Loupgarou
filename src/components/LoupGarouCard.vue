@@ -1,12 +1,11 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 const props = defineProps({
   lgcard: Object,
 })
 const imageUrl = computed(() =>
   new URL(`../assets/assets-projet/CarteLoupGarou/${props.lgcard.image}`, import.meta.url).href
 )
-
 </script>
 
 <template>
@@ -61,5 +60,4 @@ const imageUrl = computed(() =>
   margin-bottom: 8px;
   font-size: 1rem;
 }
-
 </style>
