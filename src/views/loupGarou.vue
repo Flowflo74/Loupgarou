@@ -163,7 +163,18 @@
     selectedCards.value.push({ ...card })
   }
   function removeCard(index) {
+    const removed = selectedCards.value[index]
     selectedCards.value.splice(index, 1)
+    // Victoire de l'Ange uniquement s'il est éliminé au premier jour (après la première nuit)
+    if (
+      phase.value === 'day' &&
+      removed.name === 'Ange' &&
+      dayCount.value === 1
+    ) {
+      phase.value = 'end'
+      winnerMessage.value = "L'Ange a été éliminé lors du premier jour et remporte la partie !"
+      winnerImage.value = './src/assets/assets-projet/autres/victoire/victoireange.jpg'
+    }
   }
   
   function startGame() {
@@ -207,11 +218,11 @@
       if (hasWolf && !hasVillager) {
         phase.value = 'end'
         winnerMessage.value = 'Les Loups-garous remportent la partie !'
-        winnerImage.value = './src/assets/assets-projet/dabo/victoirelg.jpg'
+        winnerImage.value = './src/assets/assets-projet/autres/victoire/victoirelg.jpg'
       } else if (!hasWolf && hasVillager) {
         phase.value = 'end'
         winnerMessage.value = 'Les Villageois remportent la partie !'
-        winnerImage.value = './src/assets/assets-projet/dabo/victoirevillage.jpg'
+        winnerImage.value = './src/assets/assets-projet/autres/victoire/victoirevillage.jpg'
       }
     },
     { deep: true }
