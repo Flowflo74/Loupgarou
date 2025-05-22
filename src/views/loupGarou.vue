@@ -72,17 +72,15 @@
             <template v-if="card.name === 'Sorciere'">
               <div class="potions-sorciere">
                 <img
-                  v-if="potionVieDispo"
                   class="position-logo potion-vie"
-                  src="../assets/assets-projet/logoperso/healthpotion.png"
-                  title="Utiliser la potion de vie"
+                  :src="potionVieDispo ? '/logospouvoirs/healthpotion.png' : '/logospouvoirs/potionviecroix.png'"
+                  :title="potionVieDispo ? 'Utiliser la potion de vie' : 'Potion de vie déjà utilisée'"
                   @click="potionVieDispo = false"
                 />
                 <img
-                  v-if="potionMortDispo"
                   class="position-logo potion-mort"
-                  src="../assets/assets-projet/logoperso/deathpotion.png"
-                  title="Utiliser la potion de mort"
+                  :src="potionMortDispo ? '/logospouvoirs/deathpotion.png' : '/logospouvoirs/potionmortcroix.png'"
+                  :title="potionMortDispo ? 'Utiliser la potion de mort' : 'Potion de mort déjà utilisée'"
                   @click="potionMortDispo = false"
                 />
               </div>
@@ -125,12 +123,11 @@
             <template v-if="card.name === 'Renard'">
               <div class="position-logo renard">
                 <img
-                  v-if="choixrenard"
                   class="position-logo renard"
-                  src="../assets/assets-projet/logoperso/flairrenardlogo.png"
+                  :src="choixrenard ? '/logospouvoirs/flairrenardlogo.png' : '/logospouvoirs/renardcroix.png'"
                   title="Choisir la personne à flairer"
                   @click="choixrenard = false"/>
-              </div>
+              </div>          
             </template>
             <!-- logo pour pour le pouvoir du joueur de flute -->
             <template v-if="card.name === 'Joueur de flute'">
