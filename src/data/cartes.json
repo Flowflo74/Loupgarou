@@ -89,7 +89,7 @@
     "dire": "Salvateur, réveille-toi… Qui veux-tu protéger cette nuit ?"
   },
   {
-    "name": "Loup garou",
+    "name": "Loup-garou",
     "image": "LoupGarou.jpeg",
     "order": 9,
     "onlyFirstNight": false,

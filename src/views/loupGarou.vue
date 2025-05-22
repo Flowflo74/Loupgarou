@@ -89,15 +89,25 @@
             </template>
 
             <!-- Logos tête de lg pour la victime -->
-            <template v-if="card.name === 'Loup garou'">
+            <template v-if="card.name === 'Loup-garou'">
               <div class="position-logo victimelg">
+                <!-- teeeeeeest -->
+      <button @click="openDialog">Ouvrir la pop-up</button>
+        <dialog ref="testDialog">
+        <p>Ceci est un test de pop-up</p>
+    <div>
+        <label for="nomvictime" class="font-semibold w-24">La victime est </label>
+        <input id="victimName" v-model="victimName" type="text" class="flex-auto" autocomplete="off" />
+    </div>
+  <button @click="testDialog.close()">Valider</button>
+                </dialog>
+<!-- fin du bouton de test -->
                 <img
                   v-if="choixvictimelg"
                   class="position-logo victimelg"
                   src="../assets/assets-projet/logoperso/victimelg.png"
                   title="Choisir la victime"
-                  @click="choixvictimelg = false"
-                />
+                  @click="victimLGDialog.value.showModal()"/>
               </div>
             </template>
            <!-- Logos bouclier pour le salva -->
@@ -108,8 +118,7 @@
                   class="position-logo boucliersalva"
                   src="../assets/assets-projet/logoperso/salvabouclierlogo.png"
                   title="Choisir la personne à protéger"
-                  @click="choixsalvateur = false"
-                />
+                  @click="choixsalvateur = false"/>
               </div>
             </template>
             <!-- Logos renard pour le pouvoir du renard -->
@@ -120,8 +129,7 @@
                   class="position-logo renard"
                   src="../assets/assets-projet/logoperso/flairrenardlogo.png"
                   title="Choisir la personne à flairer"
-                  @click="choixrenard = false"
-                />
+                  @click="choixrenard = false"/>
               </div>
             </template>
             <!-- logo pour pour le pouvoir du joueur de flute -->
@@ -132,8 +140,7 @@
                   class="position-logo Joueur de flute"
                   src="../assets/assets-projet/logoperso/pouvoirflute.png"
                   title="Le joueur de flute peut choisir 1/2 joueurs à charmer"
-                  @click="pouvoirflute = false"
-                />
+                  @click="pouvoirflute = false"/>
               </div>
             </template>
 
@@ -192,6 +199,7 @@
   import data from '@/data/cartes.json'
   import LoupGarouCard from '@/components/LoupGarouCard.vue'
   
+  
   // Etat
   const allCards = data
   const selectedCards = ref([])
@@ -200,11 +208,8 @@
   const nightCount = ref(0)
   const visible = ref(false)
   const winnerMessage = ref('')
-
-  // Images de victoire
-  
   const winnerImage = ref('')
-
+  const victimName = ref('')
   // Computed
   const prepCards = computed(() =>
     selectedCards.value
@@ -260,7 +265,6 @@
         visible.value = false
         break
       case 'night':
-        // Après la nuit, on passe à la phase d'élimination de la nuit
         phase.value = 'night-elim'
         break
       case 'night-elim':
@@ -315,8 +319,10 @@
   const choixrenard = ref(true)
   const pouvoirflute = ref(true)
 // test pour la popup
-  const openDialog = ref(false)
-const note = ref('')
+  const testDialog = ref(null)
+function openDialog() {
+  testDialog.value.showModal()
+}
   </script>
   
   <style scoped>
@@ -504,10 +510,6 @@ const note = ref('')
     box-shadow: 0 0 20px rgba(255, 174, 0, 0.5);
     transition: transform 0.2s, box-shadow 0.2s;
   }  
-
-  /* Footer */
-  .footer { text-align: center; padding: 1rem; }
-
   .position-logo {
   width: 75px;
   height: 75px;
@@ -516,6 +518,10 @@ const note = ref('')
   transition: transform 0.15s;
 }
 .position-logo:hover {
-  transform: scale(1.15) rotate(-10deg);
+  transform: scale(1.15);
 }
+  
+  /* Footer */
+  .footer { text-align: center; padding: 1rem; }
+
   </style>

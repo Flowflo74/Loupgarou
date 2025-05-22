@@ -7,6 +7,18 @@
 <button @click="decrement">Moins</button>
 <br>
 
+<!-- test de bouton pop up  -->
+<button @click="openDialog">Ouvrir la pop-up</button>
+<dialog ref="testDialog">
+  <p>Ceci est un test de pop-up</p>
+  <div>
+        <label for="nomvictime" class="font-semibold w-24">La victime est </label>
+        <input id="victimName" v-model="victimName" type="text" class="flex-auto" autocomplete="off" />
+    </div>
+  <button @click="testDialog.close()">Valider</button>
+</dialog>
+
+
 <!-- Bouton de lancement de la partie -->
 <button id="lancerlapartie" class="lancerlapartie" @click="lancerLaPartie">Lancer la partie</button>
 
@@ -23,8 +35,6 @@
     <button class="btn-retouraccueil">Retour à l'accueil</button>
 </router-link>
 </div>
-
-
 </template>
 
 <!-- /////////////////////////////////////////////////////////// -->
@@ -47,6 +57,13 @@ const lancerLaPartie = () => {
     partieLancee.value = true
 }
 const partieLancee = ref(false)
+
+const testDialog = ref(null)
+function openDialog() {
+  testDialog.value.showModal()
+}
+
+const victimName = ref('')
 </script>
 
 <!-- ///////////////////////////////////////////////////////// -->
