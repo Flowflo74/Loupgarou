@@ -2,7 +2,7 @@
     <div class="loup-garou-app" :class="phase === 'day' ? 'day-theme' : 'night-theme'">
 
       <header>
-        <h1>Interface Loup-Garou v0.1</h1>
+        <h1>Interface Loup-Garou v1.1</h1>
        
       </header>
   
@@ -68,27 +68,75 @@
               <p class="dire"><strong>Meneur :</strong> {{ card.dire }}</p>
               <p class="description">{{ card.description }}</p>
             </div>
-            <!-- Logos potions pour la Sorcière SOUS la description -->
+            <!-- Logos potions pour la Sorcière -->
             <template v-if="card.name === 'Sorciere'">
               <div class="potions-sorciere">
                 <img
                   v-if="potionVieDispo"
-                  class="potion-logo potion-vie"
+                  class="position-logo potion-vie"
                   src="../assets/assets-projet/logoperso/healthpotion.png"
-                  alt="Potion de vie"
                   title="Utiliser la potion de vie"
                   @click="potionVieDispo = false"
                 />
                 <img
                   v-if="potionMortDispo"
-                  class="potion-logo potion-mort"
+                  class="position-logo potion-mort"
                   src="../assets/assets-projet/logoperso/deathpotion.png"
-                  alt="Potion de mort"
                   title="Utiliser la potion de mort"
                   @click="potionMortDispo = false"
                 />
               </div>
             </template>
+
+            <!-- Logos tête de lg pour la victime -->
+            <template v-if="card.name === 'Loup garou'">
+              <div class="position-logo victimelg">
+                <img
+                  v-if="choixvictimelg"
+                  class="position-logo victimelg"
+                  src="../assets/assets-projet/logoperso/victimelg.png"
+                  title="Choisir la victime"
+                  @click="choixvictimelg = false"
+                />
+              </div>
+            </template>
+           <!-- Logos bouclier pour le salva -->
+            <template v-if="card.name === 'Salvateur'">
+              <div class="position-logo boucliersalva">
+                <img
+                  v-if="choixsalvateur"
+                  class="position-logo boucliersalva"
+                  src="../assets/assets-projet/logoperso/salvabouclierlogo.png"
+                  title="Choisir la personne à protéger"
+                  @click="choixsalvateur = false"
+                />
+              </div>
+            </template>
+            <!-- Logos renard pour le pouvoir du renard -->
+            <template v-if="card.name === 'Renard'">
+              <div class="position-logo renard">
+                <img
+                  v-if="choixrenard"
+                  class="position-logo renard"
+                  src="../assets/assets-projet/logoperso/flairrenardlogo.png"
+                  title="Choisir la personne à flairer"
+                  @click="choixrenard = false"
+                />
+              </div>
+            </template>
+            <!-- logo pour pour le pouvoir du joueur de flute -->
+            <template v-if="card.name === 'Joueur de flute'">
+              <div class="position-logo Joueur de flute">
+                <img
+                  v-if="pouvoirflute"
+                  class="position-logo Joueur de flute"
+                  src="../assets/assets-projet/logoperso/pouvoirflute.png"
+                  title="Le joueur de flute peut choisir 1/2 joueurs à charmer"
+                  @click="pouvoirflute = false"
+                />
+              </div>
+            </template>
+
           </li>
         </ul>
         <button class="btn-next-phase" @click="nextPhase">Passer au jour</button>
@@ -144,7 +192,7 @@
   import data from '@/data/cartes.json'
   import LoupGarouCard from '@/components/LoupGarouCard.vue'
   
-  // State
+  // Etat
   const allCards = data
   const selectedCards = ref([])
   const phase = ref('selection')
@@ -186,6 +234,7 @@
   function removeCard(index) {
     const removed = selectedCards.value[index]
     selectedCards.value.splice(index, 1)
+    
     // Victoire de l'Ange uniquement s'il est éliminé au premier jour (après la première nuit)
     if (
       phase.value === 'day' &&
@@ -257,8 +306,17 @@
     visible.value = false
   }
 
+  // ça c'est pour les logos à côté des cartes
   const potionVieDispo = ref(true)
   const potionMortDispo = ref(true)
+
+  const choixvictimelg = ref(true)
+  const choixsalvateur = ref(true)
+  const choixrenard = ref(true)
+  const pouvoirflute = ref(true)
+// test pour la popup
+  const openDialog = ref(false)
+const note = ref('')
   </script>
   
   <style scoped>
@@ -450,14 +508,14 @@
   /* Footer */
   .footer { text-align: center; padding: 1rem; }
 
-  .potion-logo {
-  width: 60px;
-  height: 60px;
+  .position-logo {
+  width: 75px;
+  height: 75px;
   margin: 0 3px;
   cursor: pointer;
   transition: transform 0.15s;
 }
-.potion-logo:hover {
+.position-logo:hover {
   transform: scale(1.15) rotate(-10deg);
 }
   </style>
