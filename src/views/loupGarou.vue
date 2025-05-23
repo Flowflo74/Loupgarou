@@ -90,15 +90,7 @@
             <template v-if="card.name === 'Loup-garou'">
               <div class="position-logo victimelg">
                 <!-- teeeeeeest -->
-      <button @click="openDialog">Ouvrir la pop-up</button>
-        <dialog ref="testDialog">
-        <p>Ceci est un test de pop-up</p>
-    <div>
-        <label for="nomvictime" class="font-semibold w-24">La victime est </label>
-        <input id="victimName" v-model="victimName" type="text" class="flex-auto" autocomplete="off" />
-    </div>
-  <button @click="testDialog.close()">Valider</button>
-                </dialog>
+                <LoupGarouButton />
 <!-- fin du bouton de test -->
                 <img
                   v-if="choixvictimelg"
@@ -195,7 +187,7 @@
   import { ref, computed, watch } from 'vue'
   import data from '@/data/cartes.json'
   import LoupGarouCard from '@/components/LoupGarouCard.vue'
-  
+  import LoupGarouButton from '@/components/LoupGarouButton.vue'
   
   // Etat
   const allCards = data
