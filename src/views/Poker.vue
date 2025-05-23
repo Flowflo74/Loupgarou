@@ -1,16 +1,16 @@
 <template>
     <h1>On test des trucs ici</h1>
     
-    <p>Nombre de joueurs : {{ count }}</p>
+    <!-- <p>Nombre de joueurs : {{ count }}</p>
     <div v-show="count > 14">Maximum de joueurs atteint</div>
 <button @click="increment">Plus</button>
 <button @click="decrement">Moins</button>
-<br>
+<br> -->
 
 <!-- test de bouton pop up  -->
 <button @click="openDialog">Ouvrir la pop-up</button>
 <dialog ref="testDialog">
-  <p>Ceci est un test de pop-up</p>
+  <p>Les loups-garous choisissent leur victime</p>
   <div>
         <label for="nomvictime" class="font-semibold w-24">La victime est </label>
         <input id="victimName" v-model="victimName" type="text" class="flex-auto" autocomplete="off" />
@@ -23,11 +23,11 @@
 <button id="lancerlapartie" class="lancerlapartie" @click="lancerLaPartie">Lancer la partie</button>
 
 <!-- Liste des cartes en liste -->
-<div class="boxtest">
+<!-- <div class="boxtest">
 <ul id="listedescartes" v-if="!partieLancee">
     <li v-for="card in data" :key="card.id" @click="addcard(card)"><LoupGarouCard :lgcard="card"/></li>
 </ul>
-</div>
+</div> -->
 
 <!-- bouton de retour à l'accueil -->
     <div class="retouraccueil">

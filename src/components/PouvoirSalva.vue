@@ -1,14 +1,14 @@
 <template>
-  <!-- teeeeeeest -->
   <button class="bouton" @click="openDialog">
-    <img class="position-logo" src="../assets/assets-projet/logoperso/victimelg.png" title="Choisir la victime"></button>
+    <img class="position-logo" src="../assets/assets-projet/logoperso/salvabouclierlogo.png" alt="bouclierSalvateur" title="Choisir la personne à protéger">
+  </button>
   <dialog ref="testDialog">
-    <p>Les loups-garous choisissent leur victime</p>
+    <p>Le salvateur choisi de protéger :</p>
     <div>
-      <label for="nomvictime" class="font-semibold w-24">La victime est</label>
+      <label for="nomproteger" class="font-semibold w-24">La personne protéger est</label>
       <input
-        id="victimLGName"
-        v-model="victimLGName"
+        id="personneProteger"
+        v-model="personneProteger"
         type="text"
         class="flex-auto"
         autocomplete="off"
@@ -16,31 +16,30 @@
     </div>
     <button @click="validate">Valider</button>
   </dialog>
-  <!-- fin du bouton de test -->
 </template>
 
 <script setup>
 import { ref, defineEmits } from "vue";
 
 const testDialog = ref(null);
-const victimLGName = ref("");
-const emit = defineEmits(["victim-selected"]);
+const personneProteger = ref("");
+const emit = defineEmits(["protected-person"]);
 
 function openDialog() {
-  victimLGName.value = ""; // Réinitialise le champ à chaque ouverture
+  personneProteger.value = ""; // Réinitialise le champ à chaque ouverture
   testDialog.value.showModal();
 }
 function validate() {
-  emit("victim-selected", victimLGName.value);
+  emit("protected-person", personneProteger.value);
   testDialog.value.close();
 }
 </script>
 
 <style>
-.position-logo {
+  .position-logo {
   width: 75px;
   height: 75px;
-  margin-right: 10px;
+  margin: 0 3px;
   cursor: pointer;
   transition: transform 0.15s;
 }
@@ -52,7 +51,6 @@ button.bouton {
   border: none;
   cursor: pointer;
 }
-
 dialog {
   border: none;
   border-radius: 16px;

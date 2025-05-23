@@ -1,14 +1,25 @@
 <template>
-  <!-- teeeeeeest -->
-  <button class="bouton" @click="openDialog">
-    <img class="position-logo" src="../assets/assets-projet/logoperso/victimelg.png" title="Choisir la victime"></button>
-  <dialog ref="testDialog">
-    <p>Les loups-garous choisissent leur victime</p>
+  <div class="potions-sorciere">
+    <img
+      class="position-logo"
+      :src="props.potionVieDispo ? '/logospouvoirs/healthpotion.png' : '/logospouvoirs/potionviecroix.png'"
+      :title="props.potionVieDispo ? 'Utiliser la potion de vie' : 'Potion de vie déjà utilisée'"
+      @click="!props.potionVieDispo || emit('use-vie')"
+    />
+    <button class="bouton" @click="openDialog">
+    <img
+      class="position-logo"
+      :src="props.potionMortDispo ? '/logospouvoirs/deathpotion.png' : '/logospouvoirs/potionmortcroix.png'"
+      :title="props.potionMortDispo ? 'Utiliser la potion de mort' : 'Potion de mort déjà utilisée'"
+      @click="!props.potionMortDispo || emit('use-mort')"
+    /></button>
+    <dialog ref="testDialog">
+    <p>La sorcière choisi sa victime</p>
     <div>
-      <label for="nomvictime" class="font-semibold w-24">La victime est</label>
+      <label for="nomvictimesor" class="font-semibold w-24">La victime de la sorcière est</label>
       <input
-        id="victimLGName"
-        v-model="victimLGName"
+        id="victimSorName"
+        v-model="victimSorName"
         type="text"
         class="flex-auto"
         autocomplete="off"
@@ -16,31 +27,38 @@
     </div>
     <button @click="validate">Valider</button>
   </dialog>
-  <!-- fin du bouton de test -->
+  </div>
 </template>
 
 <script setup>
-import { ref, defineEmits } from "vue";
+import { ref, defineProps, defineEmits } from "vue";
+
+
+const props = defineProps({
+  potionVieDispo: Boolean,
+  potionMortDispo: Boolean
+});
 
 const testDialog = ref(null);
-const victimLGName = ref("");
-const emit = defineEmits(["victim-selected"]);
+const victimSorName = ref("");
+const emit = defineEmits(["use-vie", "use-mort", "sor-victim-selected"]);
 
 function openDialog() {
-  victimLGName.value = ""; // Réinitialise le champ à chaque ouverture
+  victimSorName.value = ""; // Réinitialise le champ à chaque ouverture
   testDialog.value.showModal();
 }
 function validate() {
-  emit("victim-selected", victimLGName.value);
+  emit("sor-victim-selected", victimSorName.value);
   testDialog.value.close();
 }
+
 </script>
 
 <style>
 .position-logo {
   width: 75px;
   height: 75px;
-  margin-right: 10px;
+  margin: 0 3px;
   cursor: pointer;
   transition: transform 0.15s;
 }
@@ -52,7 +70,6 @@ button.bouton {
   border: none;
   cursor: pointer;
 }
-
 dialog {
   border: none;
   border-radius: 16px;
