@@ -315,6 +315,7 @@
   const choixsalvateur = ref(true)
   const choixrenard = ref(true)
   const pouvoirflute = ref(true)
+  
 // test pour la popup
   const testDialog = ref(null)
 function openDialog() {
