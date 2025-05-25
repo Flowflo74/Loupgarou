@@ -2,7 +2,7 @@
   <div class="loup-garou-app" :class="phase === 'day' ? 'day-theme' : 'night-theme'">
 
     <header>
-      <h1>Interface Loup-Garou v1.1</h1>
+      <h1>Interface Loup-Garou v1</h1>
 
     </header>
 
@@ -54,7 +54,11 @@
             <p class="dire"><strong>Meneur :</strong> {{ card.dire }}</p>
             <p class="description">{{ card.description }}</p>
           </div>
-
+          
+          <!-- Logo pouvoir ancien -->
+          <template v-if="card.name === 'Ancien'">
+            <PouvoirAncien @ancienduvillage="setAncien" />
+          </template>
           <!-- Logos pouvoir cupidon -->
           <template v-if="card.name === 'Cupidon'">
             <PouvoirCupidon @inlove1="setAmoureux" />
@@ -121,17 +125,22 @@
       <h2>💀 Qui a été éliminé cette nuit ? 💀</h2>
       <p class="vote">Sélectionne la ou les victimes de la nuit</p>
 
-      <div v-if="nomAmoureux1" class="amoureux-annonce">
-        <strong>Les amoureux sont :</strong> {{ nomAmoureux1 }} ❤ {{ nomAmoureux2 }}
-      </div>
-      <div v-if="personneProteger" class="protected-annonce">
-        <strong>La personne protéger est :</strong> {{ personneProteger }}
-      </div>
-      <div v-if="victimLGName" class="victim-annonce">
-        <strong>Victime des Loups-garous :</strong> {{ victimLGName }}
-      </div>
-      <div v-if="victimSorName" class="victim-annonce">
-        <strong>Victime de la Sorcière :</strong> {{ victimSorName }}
+      <div class="annonces-row">
+        <div v-if="nomAncien" class="annonce-block ancien-annonce">
+          <strong>L’Ancien du village est :</strong> {{ nomAncien }}
+        </div>
+        <div v-if="nomAmoureux1" class="annonce-block amoureux-annonce">
+          <strong>Les amoureux sont :</strong> {{ nomAmoureux1 }} ➕ {{ nomAmoureux2 }}
+        </div>
+        <div v-if="personneProteger" class="annonce-block protected-annonce">
+          <strong>La personne protégée est :</strong> {{ personneProteger }}
+        </div>
+        <div v-if="victimLGName" class="annonce-block victim-annonce">
+          <strong>Victime des Loups-garous :</strong> {{ victimLGName }}
+        </div>
+        <div v-if="victimSorName" class="annonce-block victim-annonce">
+          <strong>Victime de la Sorcière :</strong> {{ victimSorName }}
+        </div>
       </div>
       <ul class="village-list">
         <li v-for="(card, index) in selectedCards" :key="'nightelim-' + index" class="remaining-card">
@@ -147,6 +156,14 @@
     <section v-if="phase === 'day'" class="phase-jour">
       <h2>🌕 Jour {{ dayCount }}</h2>
       <p class="vote">Vote du village : Qui a été éliminer par le village ?</p>
+      <div class="annonces-row">
+      <div v-if="nomAncien" class="annonce-block ancien-annonce">
+          <strong>L’Ancien du village est :</strong> {{ nomAncien }}
+        </div>
+      <div v-if="nomAmoureux1" class="annonce-block amoureux-annonce">
+        <strong>Les amoureux sont :</strong> ❤ {{ nomAmoureux1 }} ➕ {{ nomAmoureux2 }} ❤
+      </div>
+      </div>
       <ul class="village-list">
         <li v-for="(card, index) in selectedCards" :key="'vote-' + index" class="remaining-card">
           <img src="../assets/assets-projet/CarteLoupGarou/exclusion.png" alt="Exclure" class="exclusion-logo"
@@ -181,6 +198,7 @@ import PotionsSorciere from '@/components/PotionsSorciere.vue'
 import PouvoirRenard from '@/components/PouvoirRenard.vue'
 import PouvoirSalva from '@/components/PouvoirSalva.vue'
 import PouvoirCupidon from '@/components/PouvoirCupidon.vue'
+import PouvoirAncien from '@/components/PouvoirAncien.vue'
 
 // Etat
 const allCards = data
@@ -193,6 +211,7 @@ const winnerMessage = ref('')
 const winnerImage = ref('')
 const victimLGName = ref('')
 const victimeSorName = ref('')
+const nomAncien = ref('')
 // Computed
 const prepCards = computed(() =>
   selectedCards.value
@@ -318,9 +337,13 @@ const victimSorName = ref('');
 const nomAmoureux1 = ref('');
 const nomAmoureux2 = ref('');
 
+
 function setAmoureux({ nomAmoureux1: n1, nomAmoureux2: n2 }) {
   nomAmoureux1.value = n1;
   nomAmoureux2.value = n2;
+}
+function setAncien({ nomAncien: n }) {
+  nomAncien.value = n;
 }
 </script>
 
@@ -577,46 +600,65 @@ h2 {
   padding: 1rem;
 }
 
-.victim-annonce {
-  text-transform: uppercase;
-  font-size: 1.1rem;
-  color: #f40303;
-  background:  rgba(0, 0, 0, 0.5);
-  border-radius: 12px;
-  padding: 1rem 1rem;
-  margin: 1rem auto 1rem auto;
-  text-align: center;
-  box-shadow: 0 0 12px #ffae0033;
-  max-width: 400px;
-  font-weight: bold;
-  letter-spacing: 1px;
+.annonces-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8rem;
+  margin: 1.2rem auto 0.8rem auto;
 }
-.protected-annonce{
-  text-transform: uppercase;
-  font-size: 1.1rem;
-  color: #659904;
-  background: rgba(0, 0, 0, 0.5);
+
+.annonce-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 140px;
+  max-width: 220px;
+  background: rgba(30, 30, 30, 0.85);
   border-radius: 12px;
-  padding: 1rem 1rem;
-  margin: 1rem auto 1rem auto;
+  box-shadow: 0 2px 10px #0006, 0 0 0 2px #ffae0033 inset;
+  padding: 0.7rem 1.1rem 0.7rem 1.1rem;
+  position: relative;
   text-align: center;
-  box-shadow: 0 0 12px #ffae0033;
-  max-width: 400px;
-  font-weight: bold;
-  letter-spacing: 1px;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  color: #fff;
+  overflow: hidden;
+  transition: transform 0.12s, box-shadow 0.12s;
 }
-.amoureux-annonce {
-  text-transform: uppercase;
-  font-size: 1.1rem;
-  color: #ec03f4;
-  background:  rgba(0, 0, 0, 0.5);
-  border-radius: 12px;
-  padding: 1rem 1rem;
-  margin: 1rem auto 1rem auto;
-  text-align: center;
-  box-shadow: 0 0 12px #ffae0033;
-  max-width: 400px;
-  font-weight: bold;
+.annonce-block:hover {
+  transform: translateY(-2px) scale(1.025);
+  box-shadow: 0 4px 16px #ffae0066, 0 0 0 2px #ffae0033 inset;
+}
+
+/* Bandeau coloré en haut, plus fin */
+.annonce-block::before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  border-radius: 12px 12px 0 0;
+}
+.victim-annonce::before    { background: linear-gradient(90deg, #f40303, #ff6a00); }
+.protected-annonce::before { background: linear-gradient(90deg, #659904, #b6ff00); }
+.amoureux-annonce::before  { background: linear-gradient(90deg, #ec03f4, #ff17dc); }
+.ancien-annonce::before    { background: linear-gradient(90deg, #1d4c04, #ffae00); }
+
+/* Emoji pour chaque type */
+.victim-annonce strong::before    { content: "💀 "; }
+.protected-annonce strong::before { content: "🛡️ "; }
+.amoureux-annonce strong::before  { content: "💘 "; }
+.ancien-annonce strong::before    { content: "👴 "; }
+
+/* Texte */
+.annonce-block strong {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-size: 1.05rem;
+  color: #ffae00;
   letter-spacing: 1px;
+  text-shadow: 0 1px 2px #000a;
 }
 </style>
