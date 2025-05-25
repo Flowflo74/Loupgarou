@@ -54,6 +54,12 @@
             <p class="dire"><strong>Meneur :</strong> {{ card.dire }}</p>
             <p class="description">{{ card.description }}</p>
           </div>
+
+          <!-- Logos pouvoir cupidon -->
+          <template v-if="card.name === 'Cupidon'">
+            <PouvoirCupidon @inlove1="setAmoureux" />
+          </template>
+
         </li>
       </ul>
       <button class="btn-next-phase" @click="nextPhase">Commencer la nuit</button>
@@ -114,11 +120,15 @@
     <section v-if="phase === 'night-elim'" class="phase-nuit-elim">
       <h2>💀 Qui a été éliminé cette nuit ? 💀</h2>
       <p class="vote">Sélectionne la ou les victimes de la nuit</p>
-      <div v-if="victimLGName" class="victim-annonce">
-        <strong>Victime des Loups-garous :</strong> {{ victimLGName }}
+
+      <div v-if="nomAmoureux1" class="amoureux-annonce">
+        <strong>Les amoureux sont :</strong> {{ nomAmoureux1 }} ❤ {{ nomAmoureux2 }}
       </div>
       <div v-if="personneProteger" class="protected-annonce">
         <strong>La personne protéger est :</strong> {{ personneProteger }}
+      </div>
+      <div v-if="victimLGName" class="victim-annonce">
+        <strong>Victime des Loups-garous :</strong> {{ victimLGName }}
       </div>
       <div v-if="victimSorName" class="victim-annonce">
         <strong>Victime de la Sorcière :</strong> {{ victimSorName }}
@@ -170,6 +180,7 @@ import LoupGarouButton from '@/components/LoupGarouButton.vue'
 import PotionsSorciere from '@/components/PotionsSorciere.vue'
 import PouvoirRenard from '@/components/PouvoirRenard.vue'
 import PouvoirSalva from '@/components/PouvoirSalva.vue'
+import PouvoirCupidon from '@/components/PouvoirCupidon.vue'
 
 // Etat
 const allCards = data
@@ -304,6 +315,13 @@ function openDialog() {
 const victimeLGName = ref('');
 const personneProteger = ref('');
 const victimSorName = ref('');
+const nomAmoureux1 = ref('');
+const nomAmoureux2 = ref('');
+
+function setAmoureux({ nomAmoureux1: n1, nomAmoureux2: n2 }) {
+  nomAmoureux1.value = n1;
+  nomAmoureux2.value = n2;
+}
 </script>
 
 <style scoped>
@@ -560,6 +578,7 @@ h2 {
 }
 
 .victim-annonce {
+  text-transform: uppercase;
   font-size: 1.1rem;
   color: #f40303;
   background:  rgba(0, 0, 0, 0.5);
@@ -573,9 +592,24 @@ h2 {
   letter-spacing: 1px;
 }
 .protected-annonce{
+  text-transform: uppercase;
   font-size: 1.1rem;
   color: #659904;
   background: rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+  padding: 1rem 1rem;
+  margin: 1rem auto 1rem auto;
+  text-align: center;
+  box-shadow: 0 0 12px #ffae0033;
+  max-width: 400px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+.amoureux-annonce {
+  text-transform: uppercase;
+  font-size: 1.1rem;
+  color: #ec03f4;
+  background:  rgba(0, 0, 0, 0.5);
   border-radius: 12px;
   padding: 1rem 1rem;
   margin: 1rem auto 1rem auto;

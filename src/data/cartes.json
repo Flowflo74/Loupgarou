@@ -2,7 +2,7 @@
   {
     "name": "Villageois",
     "image": "villageois.jpeg",
-    "order": 4,
+    "order": 1,
     "onlyFirstNight": false,
     "isCallable": false,
     "categorie": "Villageois",
@@ -11,7 +11,7 @@
   {
     "name": "Ancien",
     "image": "ancien.jpeg",
-    "order": 1,
+    "order": 2,
     "onlyFirstNight": true,
     "isCallable": false,
     "categorie": "Villageois",
@@ -21,7 +21,7 @@
   {
     "name": "Cupidon",
     "image": "cupidon.jpeg",
-    "order": 2,
+    "order": 3,
     "onlyFirstNight": true,
     "isCallable": false,
     "categorie": "Villageois",
@@ -41,7 +41,7 @@
   {
     "name": "Chasseur",
     "image": "chasseur.jpeg",
-    "order": 10,
+    "order": 5,
     "onlyFirstNight": false,
     "isCallable": false,
     "categorie": "Villageois",
@@ -49,9 +49,19 @@
     "dire": "Chasseur, tu es tombé… mais tu peux emmener quelqu un avec toi. Qui tombera à tes côtés ?"
   },
   {
+    "name": "Voleur",
+    "image": "voleur.jpg",
+    "order": 6,
+    "onlyFirstNight": true,
+    "isCallable": false,
+    "categorie": "Solitaire",
+    "description": "Peut échanger sa carte avec l'une des cartes restantes au début.",
+    "dire": "Quelle carte souhaites-tu voler ?"
+  },
+  {
     "name": "Deux Soeurs",
     "image": "Deuxsoeurs.jpeg",
-    "order": 5,
+    "order": 7,
     "onlyFirstNight": true,
     "isCallable": false,
     "categorie": "Villageois",
@@ -61,7 +71,7 @@
   {
     "name": "Voyante",
     "image": "voyante.jpeg",
-    "order": 6,
+    "order": 8,
     "onlyFirstNight": false,
     "isCallable": true,
     "categorie": "Villageois",
@@ -69,19 +79,9 @@
     "dire": "Voyante, ouvre les yeux… Dis-moi qui tu veux sonder cette nuit. Je te révélerai sa véritable nature"
   },
   {
-    "name": "Renard",
-    "image": "renard.jpeg",
-    "order": 7,
-    "onlyFirstNight": false,
-    "isCallable": true,
-    "categorie": "Villageois",
-    "description": "Renifle les rôles autour d un joueur pour détecter un loup-garou.",
-    "dire": "Veux-tu utiliser ton flair ce soir ?, si oui, quel groupe de 3 joueurs veux-tu flairer ?"
-  },
-  {
     "name": "Salvateur",
     "image": "salvateur.jpeg",
-    "order": 8,
+    "order": 9,
     "onlyFirstNight": false,
     "isCallable": true,
     "categorie": "Villageois",
@@ -89,9 +89,19 @@
     "dire": "Salvateur, réveille-toi… Qui veux-tu protéger cette nuit ?"
   },
   {
+    "name": "Chien-Loup",
+    "image": "chienloup.jpeg",
+    "order": 10,
+    "onlyFirstNight": true,
+    "isCallable": false,
+    "categorie": "Loup-garou",
+    "description": "Au début de la partie, il choisit son camp : Villageois ou Loup-Garou. Il gagne avec ce camp, mais sa véritable identité reste secrète jusqu'à la fin de la partie.",
+    "dire": "Chien-Loup, réveille-toi… Choisis si tu veux être un Simple Villageois ou un Loup-Garou."
+  },
+  {
     "name": "Loup-garou",
     "image": "LoupGarou.jpeg",
-    "order": 9,
+    "order": 11,
     "onlyFirstNight": false,
     "isCallable": true,
     "categorie": "Loup-garou",
@@ -101,7 +111,7 @@
   {
     "name": "Infect pere des loups",
     "image": "Infect.jpeg",
-    "order": 10,
+    "order": 12,
     "onlyFirstNight": false,
     "isCallable": true,
     "categorie": "Loup-garou",
@@ -111,7 +121,7 @@
   {
     "name": "Grand Mechant Loup",
     "image": "grandMechantLoup.jpeg",
-    "order": 11,
+    "order": 13,
     "onlyFirstNight": false,
     "isCallable": true,
     "categorie": "Loup-garou",
@@ -121,7 +131,7 @@
   {
     "name": "Loup Blanc",
     "image": "loupblanc.webp",
-    "order": 12,
+    "order": 14,
     "onlyFirstNight": false,
     "isCallable": true,
     "categorie": "Solitaire",
@@ -129,19 +139,19 @@
     "dire": "Souhaites-tu éliminer l'un de tes camarades ?"
   },
   {
-    "name": "Voleur",
-    "image": "voleur.jpg",
-    "order": 3,
-    "onlyFirstNight": true,
-    "isCallable": false,
-    "categorie": "Solitaire",
-    "description": "Peut échanger sa carte avec l'une des cartes restantes au début.",
-    "dire": "Quelle carte souhaites-tu voler ?"
+    "name": "Renard",
+    "image": "renard.jpeg",
+    "order": 15,
+    "onlyFirstNight": false,
+    "isCallable": true,
+    "categorie": "Villageois",
+    "description": "Renifle les rôles autour d un joueur pour détecter un loup-garou.",
+    "dire": "Veux-tu utiliser ton flair ce soir ?, si oui, quel groupe de 3 joueurs veux-tu flairer ?"
   },
   {
     "name": "Sorciere",
     "image": "sorciere.jpeg",
-    "order": 13,
+    "order": 16,
     "onlyFirstNight": false,
     "isCallable": true,
     "categorie": "Villageois",
@@ -151,7 +161,7 @@
     {
       "name": "Corbeau",
       "image": "corbeau.jpeg",
-      "order": 14,
+      "order": 17,
       "onlyFirstNight": false,
       "isCallable": true,
       "categorie": "Villageois",
@@ -161,7 +171,7 @@
     {
       "name": "Joueur de flute",
       "image": "flutiste.jpeg",
-      "order": 15,
+      "order": 18,
       "onlyFirstNight": false,
       "isCallable": true,
       "categorie": "Solitaire",
@@ -171,7 +181,7 @@
     {
       "name": "Idiot",
       "image": "idiot.jpeg",
-      "order": 16,
+      "order": 19,
       "onlyFirstNight": false,
       "isCallable": false,
       "categorie": "Villageois",
@@ -180,7 +190,7 @@
     {
       "name": "Ange",
       "image": "ange.jpeg",
-      "order": 17,
+      "order": 20,
       "onlyFirstNight": false,
       "isCallable": false,
       "categorie": "Solitaire",
@@ -189,7 +199,7 @@
     {
       "name": "Montreur d ours",
       "image": "ours.jpeg",
-      "order": 18,
+      "order": 21,
       "onlyFirstNight": false,
       "isCallable": false,
       "categorie": "Villageois",
@@ -198,7 +208,7 @@
     {
       "name": "Servante devouee",
       "image": "servante.jpeg",
-      "order": 19,
+      "order": 22,
       "onlyFirstNight": false,
       "isCallable": false,
       "categorie": "Villageois",
@@ -207,26 +217,16 @@
     {
       "name": "Dictateur",
       "image": "dictateurlg.png",
-      "order": 20,
+      "order": 23,
       "onlyFirstNight": false,
       "isCallable": false,
       "categorie": "Villageois",
       "description": "Au cours de la partie, il peut réaliser un coup d'état et éliminer un joueur au moment du vote du village. Si ce joueur est un Loup-Garou, le Dictateur devient le Maire du village sinon, il meurt."
     },
     {
-      "name": "Chien-Loup",
-      "image": "chienloup.jpeg",
-      "order": 21,
-      "onlyFirstNight": true,
-      "isCallable": false,
-      "categorie": "Loup-garou",
-      "description": "Au début de la partie, il choisit son camp : Villageois ou Loup-Garou. Il gagne avec ce camp, mais sa véritable identité reste secrète jusqu'à la fin de la partie.",
-      "dire": "Chien-Loup, réveille-toi… Choisis si tu veux être un Simple Villageois ou un Loup-Garou."
-    },
-    {
       "name": "Comedien",
       "image": "comedien.jpeg",
-      "order": 22,
+      "order": 24,
       "onlyFirstNight": false,
       "isCallable": true,
       "categorie": "Solitaire",
