@@ -8,7 +8,7 @@
     
     <main>
         
-        <h2>A quoi on joue</h2>
+        <h2>Selectionne ton jeu</h2>
 
         <div class="flexbox">
 
@@ -19,25 +19,11 @@
         </li>
         <li>
             <router-link to="/loupGarou" class="carte-lien"></router-link>
-                <span class="carte-titre">Loup Garou</span>
+                <span class="carte-titre">Loup Garou <br> officiel</span>
         </li>
         <li>
-            <router-link to="" class="carte-lien"></router-link>
-                <span class="carte-titre">Quizz Game</span>
-
-        </li>
-        <li>
-            <router-link to="" class="carte-lien"></router-link>
-                <span class="carte-titre">Time s Up</span>
-        </li>
-        <li>
-            <router-link to="/poker" class="carte-lien"></router-link>
-            <span class="carte-titre">Poker</span>
-
-        </li>
-        <li><router-link to="" class="carte-lien"></router-link>
-            <span class="carte-titre">Blind Test</span>
-
+            <router-link to="/lgbo" class="carte-lien"></router-link>
+            <span class="carte-titre">Loup Garou <br> Break Out</span>
         </li>
     </ul>
 </div>
@@ -142,65 +128,18 @@ h2 {
     transform: scale(1.1);
     transition: transform 0.3s ease;
 }
-/* Menu quizz */
+/* Menu lgob */
 .flexbox li:nth-child(3) {
-    background-image: url(../assets/assets-projet/autres/buzzer.jpg);
+    background-image: url(../assets/assets-projet/autres/imagelgbo.png);
     background-size: cover
 }
 
 .flexbox li:nth-child(3):hover {
-    background-image: url(../assets/assets-projet/autres/buzzer.jpg);
+    background-image: url(../assets/assets-projet/autres/imagelgbo.png);
     background-size: cover;
     transform: scale(1.1);
     transition: transform 0.3s ease;
 }
-/* Menu Time's up */
-.flexbox li:nth-child(4) {
-    background-image: url(../assets/assets-projet/autres/timesup.jpg);
-    background-size:cover;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-.flexbox li:nth-child(4):hover {
-    background-image: url(../assets/assets-projet/autres/timesup.jpg);
-    background-size:cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    transform: scale(1.1);
-    transition: transform 0.3s ease;
-}
-/* Menu poker */
-.flexbox li:nth-child(5) {
-    background-image: url(../assets/assets-projet/autres/pokertest.jpg);
-    background-size:cover;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-.flexbox li:nth-child(5):hover {
-    background-image: url(../assets/assets-projet/autres/pokertest.jpg);
-    background-size:cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    transform: scale(1.1);
-    transition: transform 0.3s ease;
-}
-/* Menu Blind test */
-.flexbox li:nth-child(6) {
-    background-image: url(../assets/assets-projet/autres/blindtest.jpg);
-    background-size:cover;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-.flexbox li:nth-child(6):hover {
-    background-image: url(../assets/assets-projet/autres/blindtest.jpg);
-    background-size:cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    transform: scale(1.1);
-    transition: transform 0.3s ease;
-}
-
 /* Le lien prend toute la carte */
 .carte-lien {
     display: flex;

@@ -4,7 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 // Importez vos composants de pages
 import Hub from '@/views/Hub.vue'
 import loupGarou from '@/views/loupGarou.vue'
-import Poker from '@/views/Poker.vue'
+import lgbo from '@/views/lgbo.vue'
 
 
 
@@ -20,9 +20,9 @@ const routes = [
     component: loupGarou
   },
   {
-    path: '/Poker',
-    name: 'Poker',
-    component: Poker
+    path: '/lgbo',
+    name: 'lgbo',
+    component: lgbo
   },
   // ajoutez d'autres routes ici
 ]

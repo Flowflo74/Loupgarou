@@ -1,7 +1,7 @@
 [
   {
     "name": "Villageois",
-    "image": "villageois.jpeg",
+    "image": "",
     "order": 1,
     "onlyFirstNight": false,
     "isCallable": false,
@@ -10,7 +10,7 @@
   },
   {
     "name": "Ancien",
-    "image": "ancien.jpeg",
+    "image": "",
     "order": 2,
     "onlyFirstNight": true,
     "isCallable": false,
@@ -20,7 +20,7 @@
   },
   {
     "name": "Cupidon",
-    "image": "cupidon.jpeg",
+    "image": "",
     "order": 3,
     "onlyFirstNight": true,
     "isCallable": false,
@@ -30,7 +30,7 @@
   },
   {
     "name": "Enfant Sauvage",
-    "image": "enfant.jpeg",
+    "image": "",
     "order": 4,
     "onlyFirstNight": true,
     "isCallable": false,
@@ -40,7 +40,7 @@
   },
   {
     "name": "Chasseur",
-    "image": "chasseur.jpeg",
+    "image": "",
     "order": 5,
     "onlyFirstNight": false,
     "isCallable": false,
@@ -50,7 +50,7 @@
   },
   {
     "name": "Voleur",
-    "image": "voleur.jpg",
+    "image": "",
     "order": 6,
     "onlyFirstNight": true,
     "isCallable": false,
@@ -60,7 +60,7 @@
   },
   {
     "name": "Deux Soeurs",
-    "image": "Deuxsoeurs.jpeg",
+    "image": "",
     "order": 7,
     "onlyFirstNight": true,
     "isCallable": false,
@@ -70,7 +70,7 @@
   },
   {
     "name": "Voyante",
-    "image": "voyante.jpeg",
+    "image": "",
     "order": 8,
     "onlyFirstNight": false,
     "isCallable": true,
@@ -80,7 +80,7 @@
   },
   {
     "name": "Salvateur",
-    "image": "salvateur.jpeg",
+    "image": "",
     "order": 9,
     "onlyFirstNight": false,
     "isCallable": true,
@@ -90,7 +90,7 @@
   },
   {
     "name": "Chien-Loup",
-    "image": "chienloup.jpeg",
+    "image": "",
     "order": 10,
     "onlyFirstNight": true,
     "isCallable": false,
@@ -100,7 +100,7 @@
   },
   {
     "name": "Loup-garou",
-    "image": "LoupGarou.jpeg",
+    "image": "",
     "order": 11,
     "onlyFirstNight": false,
     "isCallable": true,
@@ -110,7 +110,7 @@
   },
   {
     "name": "Infect pere des loups",
-    "image": "Infect.jpeg",
+    "image": "",
     "order": 12,
     "onlyFirstNight": false,
     "isCallable": true,
@@ -120,7 +120,7 @@
   },
   {
     "name": "Grand Mechant Loup",
-    "image": "grandMechantLoup.jpeg",
+    "image": "",
     "order": 13,
     "onlyFirstNight": false,
     "isCallable": true,
@@ -130,7 +130,7 @@
   },
   {
     "name": "Loup Blanc",
-    "image": "loupblanc.webp",
+    "image": "",
     "order": 14,
     "onlyFirstNight": false,
     "isCallable": true,
@@ -140,7 +140,7 @@
   },
   {
     "name": "Renard",
-    "image": "renard.jpeg",
+    "image": "",
     "order": 15,
     "onlyFirstNight": false,
     "isCallable": true,
@@ -150,7 +150,7 @@
   },
   {
     "name": "Sorciere",
-    "image": "sorciere.jpeg",
+    "image": "",
     "order": 16,
     "onlyFirstNight": false,
     "isCallable": true,
@@ -160,7 +160,7 @@
     },
     {
       "name": "Corbeau",
-      "image": "corbeau.jpeg",
+      "image": "",
       "order": 17,
       "onlyFirstNight": false,
       "isCallable": true,
@@ -170,7 +170,7 @@
     },
     {
       "name": "Joueur de flute",
-      "image": "flutiste.jpeg",
+      "image": "",
       "order": 18,
       "onlyFirstNight": false,
       "isCallable": true,
@@ -180,7 +180,7 @@
     },
     {
       "name": "Idiot",
-      "image": "idiot.jpeg",
+      "image": "",
       "order": 19,
       "onlyFirstNight": false,
       "isCallable": false,
@@ -189,7 +189,7 @@
     },
     {
       "name": "Ange",
-      "image": "ange.jpeg",
+      "image": "",
       "order": 20,
       "onlyFirstNight": false,
       "isCallable": false,
@@ -198,7 +198,7 @@
     },
     {
       "name": "Montreur d ours",
-      "image": "ours.jpeg",
+      "image": "",
       "order": 21,
       "onlyFirstNight": false,
       "isCallable": false,
@@ -207,7 +207,7 @@
     },
     {
       "name": "Servante devouee",
-      "image": "servante.jpeg",
+      "image": "",
       "order": 22,
       "onlyFirstNight": false,
       "isCallable": false,
@@ -215,12 +215,48 @@
       "description": "Prend le role d'un autre personnage en cas de deces."
     },
     {
+      "name": "Dictateur",
+      "image": "dictateurlg.png",
+      "order": 23,
+      "onlyFirstNight": false,
+      "isCallable": false,
+      "categorie": "Villageois",
+      "description": "Au cours de la partie, il peut réaliser un coup d'état et éliminer un joueur au moment du vote du village. Si ce joueur est un Loup-Garou, le Dictateur devient le Maire du village sinon, il meurt."
+    },
+    {
       "name": "Comedien",
-      "image": "comedien.jpeg",
+      "image": "",
       "order": 24,
       "onlyFirstNight": false,
       "isCallable": true,
       "categorie": "Solitaire",
       "description": "Peut imiter le pouvoir d’un autre joueur chaque nuit."
+    },
+    {
+      "name": "Moine",
+      "image": "",
+      "order": 25,
+      "onlyFirstNight": false,
+      "isCallable": true,
+      "categorie": "Villageois",
+      "description": "wait"
+    },
+    {
+      "name": "Avocat",
+      "image": "",
+      "order": 26,
+      "onlyFirstNight": false,
+      "isCallable": true,
+      "categorie": "Villageois",
+      "description": "wait"
+    },
+    {
+      "name": "Alchimiste",
+      "image": "",
+      "order": 26,
+      "onlyFirstNight": false,
+      "isCallable": true,
+      "categorie": "Villageois",
+      "description": "wait"
     }
 ]
