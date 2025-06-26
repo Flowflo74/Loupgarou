@@ -1,5 +1,5 @@
 <template>
-    <h1>On test des trucs ici</h1>
+    <h1>Loup-Garou de BreakOut v0.1</h1>
     <section v-if="phase === 'selection'" class="selection-phase">
       <p class="selection-perso">Sélectionne les personnages de la partie</p>
 
@@ -188,7 +188,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import data from '@/data/cartesbo.json'
-import LoupGarouCard from '@/components/LoupGarouCard.vue'
+import LoupGarouCard from '@/components/LoupGarouCardbo.vue'
 import LoupGarouButton from '@/components/LoupGarouButton.vue'
 import PotionsSorciere from '@/components/PotionsSorciere.vue'
 import PouvoirRenard from '@/components/PouvoirRenard.vue'

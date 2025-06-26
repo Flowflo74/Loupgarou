@@ -5,6 +5,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Hub from '@/views/Hub.vue'
 import loupGarou from '@/views/loupGarou.vue'
 import lgbo from '@/views/lgbo.vue'
+import escapegame from '@/views/escapegame.vue'
 
 
 
@@ -24,6 +25,11 @@ const routes = [
     name: 'lgbo',
     component: lgbo
   },
+  {
+    path: '/escapegame',
+    name: 'escapegame',
+    component: escapegame
+  }
   // ajoutez d'autres routes ici
 ]
 

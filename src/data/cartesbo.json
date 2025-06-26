@@ -1,7 +1,16 @@
 [
   {
     "name": "Villageois",
-    "image": "",
+    "image": "villageoisbo.png",
+    "order": 1,
+    "onlyFirstNight": false,
+    "isCallable": false,
+    "categorie": "Villageois",
+    "description": "N'a aucun pouvoir particulier, mais vote pour éliminer les loups."
+  },
+  {
+    "name": "Villageois révélé",
+    "image": "villageoisrevelebo.png",
     "order": 1,
     "onlyFirstNight": false,
     "isCallable": false,
@@ -10,7 +19,7 @@
   },
   {
     "name": "Ancien",
-    "image": "",
+    "image": "ancienbo.png",
     "order": 2,
     "onlyFirstNight": true,
     "isCallable": false,
@@ -20,7 +29,7 @@
   },
   {
     "name": "Cupidon",
-    "image": "",
+    "image": "cupidonbo.png",
     "order": 3,
     "onlyFirstNight": true,
     "isCallable": false,
@@ -30,7 +39,7 @@
   },
   {
     "name": "Enfant Sauvage",
-    "image": "",
+    "image": "enfantsauvagebo.png",
     "order": 4,
     "onlyFirstNight": true,
     "isCallable": false,
@@ -40,7 +49,7 @@
   },
   {
     "name": "Chasseur",
-    "image": "",
+    "image": "chasseurbo.png",
     "order": 5,
     "onlyFirstNight": false,
     "isCallable": false,
@@ -50,7 +59,7 @@
   },
   {
     "name": "Voleur",
-    "image": "",
+    "image": "voleurbo.png",
     "order": 6,
     "onlyFirstNight": true,
     "isCallable": false,
@@ -70,7 +79,7 @@
   },
   {
     "name": "Voyante",
-    "image": "",
+    "image": "voyantebo.png",
     "order": 8,
     "onlyFirstNight": false,
     "isCallable": true,
@@ -80,7 +89,7 @@
   },
   {
     "name": "Salvateur",
-    "image": "",
+    "image": "salvateurbo.png",
     "order": 9,
     "onlyFirstNight": false,
     "isCallable": true,
@@ -100,7 +109,7 @@
   },
   {
     "name": "Loup-garou",
-    "image": "",
+    "image": "loupgaroubo.png",
     "order": 11,
     "onlyFirstNight": false,
     "isCallable": true,
@@ -110,7 +119,7 @@
   },
   {
     "name": "Infect pere des loups",
-    "image": "",
+    "image": "infectbo.png",
     "order": 12,
     "onlyFirstNight": false,
     "isCallable": true,
@@ -120,7 +129,7 @@
   },
   {
     "name": "Grand Mechant Loup",
-    "image": "",
+    "image": "grandmechantloupbo.png",
     "order": 13,
     "onlyFirstNight": false,
     "isCallable": true,
@@ -150,7 +159,7 @@
   },
   {
     "name": "Sorciere",
-    "image": "",
+    "image": "sorcierebo.png",
     "order": 16,
     "onlyFirstNight": false,
     "isCallable": true,
@@ -160,7 +169,7 @@
     },
     {
       "name": "Corbeau",
-      "image": "",
+      "image": "corbeaubo.png",
       "order": 17,
       "onlyFirstNight": false,
       "isCallable": true,
@@ -170,7 +179,7 @@
     },
     {
       "name": "Joueur de flute",
-      "image": "",
+      "image": "flutebo.png",
       "order": 18,
       "onlyFirstNight": false,
       "isCallable": true,
@@ -180,7 +189,7 @@
     },
     {
       "name": "Idiot",
-      "image": "",
+      "image": "idiotduvillagebo.png",
       "order": 19,
       "onlyFirstNight": false,
       "isCallable": false,
@@ -189,7 +198,7 @@
     },
     {
       "name": "Ange",
-      "image": "",
+      "image": "angebo.png",
       "order": 20,
       "onlyFirstNight": false,
       "isCallable": false,
@@ -198,7 +207,7 @@
     },
     {
       "name": "Montreur d ours",
-      "image": "",
+      "image": "montreurdoursbo.png",
       "order": 21,
       "onlyFirstNight": false,
       "isCallable": false,
@@ -207,7 +216,7 @@
     },
     {
       "name": "Servante devouee",
-      "image": "",
+      "image": "servantedevbo.png",
       "order": 22,
       "onlyFirstNight": false,
       "isCallable": false,
@@ -216,7 +225,7 @@
     },
     {
       "name": "Dictateur",
-      "image": "dictateurlg.png",
+      "image": "dictateurbo.png",
       "order": 23,
       "onlyFirstNight": false,
       "isCallable": false,
@@ -225,7 +234,7 @@
     },
     {
       "name": "Comedien",
-      "image": "",
+      "image": "comedienbo.png",
       "order": 24,
       "onlyFirstNight": false,
       "isCallable": true,
@@ -234,7 +243,7 @@
     },
     {
       "name": "Moine",
-      "image": "",
+      "image": "moinebo.png",
       "order": 25,
       "onlyFirstNight": false,
       "isCallable": true,
@@ -243,7 +252,7 @@
     },
     {
       "name": "Avocat",
-      "image": "",
+      "image": "avocatbo.png",
       "order": 26,
       "onlyFirstNight": false,
       "isCallable": true,
@@ -252,10 +261,19 @@
     },
     {
       "name": "Alchimiste",
-      "image": "",
+      "image": "alchimistebo.png",
       "order": 26,
       "onlyFirstNight": false,
       "isCallable": true,
+      "categorie": "Villageois",
+      "description": "wait"
+    },
+    {
+      "name": "Petite Fille",
+      "image": "petitefillebo.png",
+      "order": 27,
+      "onlyFirstNight": false,
+      "isCallable": false,
       "categorie": "Villageois",
       "description": "wait"
     }

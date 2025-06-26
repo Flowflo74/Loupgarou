@@ -14,7 +14,7 @@
 
     <ul>
         <li>
-            <router-link to="" class="carte-lien"></router-link>
+            <router-link to="/escapegame" class="carte-lien"></router-link>
                 <span class="carte-titre">Escape Game</span>
         </li>
         <li>
