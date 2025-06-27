@@ -16,10 +16,10 @@
             </router-link>
           </li>
           <li>
-            <router-link to="" class="carte-lien">
+            <a href="http://192.168.0.100" class="carte-lien" target="_blank" rel="noopener">
               <div class="carte-img" style="background-image: url('../assets/assets-projet/salles/jura.jpg');"></div>
               <span class="carte-titre">Jurassic <br> Lab</span>
-            </router-link>
+            </a>
           </li>
           <li>
             <router-link to="" class="carte-lien">
@@ -111,8 +111,8 @@ h2 {
 
 .flexbox li:nth-child(1) {
     background-image: url(../assets/assets-projet/salles/viking.jpg);
-    background-size:cover
-    
+    background-size:cover;
+    box-shadow: 0px 0px 20px 4px #a78800;
 }
 .flexbox li:nth-child(1):hover {
     background-image: url(../assets/assets-projet/salles/viking.jpg);
@@ -124,7 +124,7 @@ h2 {
 .flexbox li:nth-child(2) {
     background-image: url(../assets/assets-projet/salles/jura.jpg);
     background-size: cover;
-    box-shadow: 0px 0px 20px 4px #ffd900 !important;
+    box-shadow: 0px 0px 20px 4px #007208;
 }
 
 .flexbox li:nth-child(2):hover {
@@ -136,7 +136,8 @@ h2 {
 /* Menu lgob */
 .flexbox li:nth-child(3) {
     background-image: url(../assets/assets-projet/salles/alien.jpg);
-    background-size: cover
+    background-size: cover;
+    box-shadow: 0px 0px 20px 4px #000472;
 }
 
 .flexbox li:nth-child(3):hover {

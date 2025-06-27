@@ -16,7 +16,7 @@ body {
 
 @font-face {
     font-family: "Noka";
-    src: url("../src/assets/assets-projet/police/NokaTrial-Medium-BF63bccdebda4ed.otf") format("truetype");
+    src: url("/public/police/Nokapolice.otf") format("truetype");
 }
 
 </style>

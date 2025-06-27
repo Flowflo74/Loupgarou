@@ -38,7 +38,7 @@
 
 h1 {
     color: white;
-    font-family: "nokabold", sans-serif;
+    font-family: "NOKAPOLICE";
     text-align: center;
     font-size: 3rem;
     text-transform: uppercase;
@@ -193,5 +193,10 @@ footer {
 @font-face {
     font-family: "NokaBold";
     src: url(../Police/NokaTrial-Bold-BF63bccdec13b50.otf) format("truetype");
+}
+
+@font-face {
+    font-family: "Nokapolice";
+    src: url(../Police/nokapolice.otf) format("truetype");
 }
 </style>

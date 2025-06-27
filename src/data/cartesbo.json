@@ -207,7 +207,7 @@
     },
     {
       "name": "Montreur d ours",
-      "image": "montreurdoursbo.png",
+      "image": "montreuroursbo.png",
       "order": 21,
       "onlyFirstNight": false,
       "isCallable": false,
@@ -272,6 +272,42 @@
       "name": "Petite Fille",
       "image": "petitefillebo.png",
       "order": 27,
+      "onlyFirstNight": false,
+      "isCallable": false,
+      "categorie": "Villageois",
+      "description": "wait"
+    },
+ {
+      "name": "Courtisane",
+      "image": "courtisanebo.png",
+      "order": 28,
+      "onlyFirstNight": false,
+      "isCallable": false,
+      "categorie": "Villageois",
+      "description": "wait"
+    },
+    {
+      "name": "Sectaire",
+      "image": "sectairebo.png",
+      "order": 29,
+      "onlyFirstNight": false,
+      "isCallable": false,
+      "categorie": "Solitaire",
+      "description": "wait"
+    },
+    {
+      "name": "Don QuiTousse",
+      "image": "donquitoussebo.png",
+      "order": 30,
+      "onlyFirstNight": false,
+      "isCallable": false,
+      "categorie": "Villageois",
+      "description": "wait"
+    },
+    {
+      "name": "Juge",
+      "image": "jugebo.png",
+      "order": 31,
       "onlyFirstNight": false,
       "isCallable": false,
       "categorie": "Villageois",

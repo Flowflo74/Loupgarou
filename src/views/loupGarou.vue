@@ -357,12 +357,6 @@ function setAncien({ nomAncien: n }) {
   background: url('../assets/assets-projet/dabo/1.png') center/cover no-repeat;
 }
 
-.loup-garou-app {
-  min-height: 100vh;
-  color: #fff;
-  font-family: 'Roboto', sans-serif;
-}
-
 /* Containers */
 .selection-phase .cartes-container {
   display: flex;

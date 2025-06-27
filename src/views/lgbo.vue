@@ -347,6 +347,17 @@ function setAncien({ nomAncien: n }) {
  
 <style scoped>
 
+@font-face {
+  font-family: "NOKAPOLICE";
+  src: url("/public/police/Nokapolice.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.loup-garou-app, body {
+  font-family: "NOKAPOLICE", Arial, sans-serif;
+}
+
 /* Thèmes Jour / Nuit */
 .day-theme {
   background: url('../assets/assets-projet/dabo/1.png') center/cover no-repeat;
@@ -354,12 +365,6 @@ function setAncien({ nomAncien: n }) {
 
 .night-theme {
   background: url('../assets/assets-projet/dabo/1.png') center/cover no-repeat;
-}
-
-.loup-garou-app {
-  min-height: 100vh;
-  color: #fff;
-  font-family: 'Roboto', sans-serif;
 }
 
 /* Containers */
