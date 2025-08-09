@@ -69,7 +69,7 @@
   },
   {
     "name": "Deux Soeurs",
-    "image": "",
+    "image": "villageois.jpg",
     "order": 7,
     "onlyFirstNight": true,
     "isCallable": false,
@@ -99,7 +99,7 @@
   },
   {
     "name": "Chien-Loup",
-    "image": "",
+    "image": "chienloupbo.jpg",
     "order": 10,
     "onlyFirstNight": true,
     "isCallable": false,
@@ -139,7 +139,7 @@
   },
   {
     "name": "Loup Blanc",
-    "image": "",
+    "image": "loupblancbo.jpg",
     "order": 14,
     "onlyFirstNight": false,
     "isCallable": true,
@@ -149,7 +149,7 @@
   },
   {
     "name": "Renard",
-    "image": "",
+    "image": "renardbo.jpg",
     "order": 15,
     "onlyFirstNight": false,
     "isCallable": true,
@@ -248,7 +248,7 @@
       "onlyFirstNight": false,
       "isCallable": true,
       "categorie": "Villageois",
-      "description": "wait"
+      "description": "Possède une potion de vie pour sauver quelqu'un pendant la nuit"
     },
     {
       "name": "Avocat",
@@ -256,8 +256,8 @@
       "order": 26,
       "onlyFirstNight": false,
       "isCallable": true,
-      "categorie": "Villageois",
-      "description": "wait"
+      "categorie": "Solitaire",
+      "description": "En début de partie tu choisis 2 clients. Ils ne sont pas au courant qu'ils sont tes clients. Si un de tes 2 clients gagne, tu gagnes aussi la partie."
     },
     {
       "name": "Alchimiste",
@@ -266,7 +266,7 @@
       "onlyFirstNight": false,
       "isCallable": true,
       "categorie": "Villageois",
-      "description": "wait"
+      "description": "Possède une potion de mort pour éliminer quelqu'un pendant la nuit"
     },
     {
       "name": "Petite Fille",
@@ -275,7 +275,7 @@
       "onlyFirstNight": false,
       "isCallable": false,
       "categorie": "Villageois",
-      "description": "wait"
+      "description": "La nuit elle peut discrètement ouvrir les yeux au moment où les loups-garous se réveillent"
     },
  {
       "name": "Courtisane",
@@ -293,7 +293,7 @@
       "onlyFirstNight": false,
       "isCallable": false,
       "categorie": "Solitaire",
-      "description": "wait"
+      "description": "Le meneur de Jeu constitue 2 groupes secrets en fonctions d'attributs physique (barbes, lunettes,...) et l'informe la première nuit.Le sectaire doit éliminer tous les joueurs du groupe adverse pour gagner."
     },
     {
       "name": "Don QuiTousse",
@@ -302,7 +302,7 @@
       "onlyFirstNight": false,
       "isCallable": false,
       "categorie": "Villageois",
-      "description": "wait"
+      "description": "Si il se fait dévorer, il contamine le premier loup-garou à sa gauche. Celui-ci mourra au début de la nuit suivante."
     },
     {
       "name": "Juge",
@@ -311,6 +311,6 @@
       "onlyFirstNight": false,
       "isCallable": false,
       "categorie": "Villageois",
-      "description": "wait"
+      "description": "En début de partie, il définis un signe avec le meneur de jeu. Une fois dans la partie, il peut refaire ce signe au meneur. Dans ce cas, un nouveau vote d'expulsion à lieu immédiatement et sans débat."
     }
 ]
