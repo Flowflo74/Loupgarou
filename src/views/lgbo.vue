@@ -82,6 +82,14 @@
               @use-vie="potionVieDispo = false" @use-mort="potionMortDispo = false" />
           </template>
 
+          <!-- Logos potions pour l'Alchimiste -->
+          <template v-if="card.name === 'Alchimiste'">
+            <PouvoirAlchimiste
+            @alch-victim-selected="victimAlchimiste = $event" 
+            :potion-mort-dispo="potionMortDispo"
+              @use-mort="potionMortDispo = false" />
+          </template>
+
           <!-- Logos tête de lg pour la victime -->
           <template v-if="card.name === 'Loup-garou'">
             <div class="position-logo victimelg">
@@ -134,6 +142,9 @@
         </div>
         <div v-if="victimSorName" class="annonce-block victim-annonce">
           <strong>Victime de la Sorcière :</strong> {{ victimSorName }}
+        </div>
+        <div v-if="victimAlchimiste" class="annonce-block victim-annonce">
+          <strong>Victime de l'Alchimiste :</strong> {{ victimAlchimiste }}
         </div>
       </div>
       <ul class="village-list">
@@ -195,6 +206,8 @@ import PouvoirRenard from '@/components/PouvoirRenard.vue'
 import PouvoirSalva from '@/components/PouvoirSalva.vue'
 import PouvoirCupidon from '@/components/PouvoirCupidon.vue'
 import PouvoirAncien from '@/components/PouvoirAncien.vue'
+import PouvoirAlchimiste from '@/components/PouvoirAlchimiste.vue'
+import PouvoirMoine from '@/components/PouvoirMoine.vue'
 
 // Etat
 const allCards = data
@@ -406,6 +419,13 @@ function setAncien({ nomAncien: n }) {
   list-style: none;
   padding: 0;
   justify-content: center;
+}
+
+.cartes-colonne ul li {
+  flex: 1 1 22%; 
+  max-width: 25%;
+  min-width: 120px; 
+  box-sizing: border-box;
 }
 
 .cartes-selectionnees {
