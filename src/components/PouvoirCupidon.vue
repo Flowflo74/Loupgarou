@@ -3,6 +3,7 @@
     <img class="position-logo" src="/public/logospouvoirs/pouvoircupidon.png" alt="pouvoircupidon" title="Choisir 2 personnes à rendre amoureux">
   </button>
   <dialog ref="testDialog">
+    <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
     <p>Cupidon choisi de rendre amoureux :</p>
     <div>
       <label for="nomamoureux1" class="font-semibold w-24">Les amoureux sont :</label>
@@ -40,6 +41,9 @@ function openDialog() {
 }
 function validate() {
   emit("inlove1", { nomAmoureux1: nomAmoureux1.value, nomAmoureux2: nomAmoureux2.value });
+  testDialog.value.close();
+}
+function closeDialog() {
   testDialog.value.close();
 }
 </script>
@@ -107,5 +111,23 @@ dialog button {
 }
 dialog button:hover {
   background: #ffd966;
+}
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: transparent;
+  border: none;
+  font-size: 1.15rem;
+  color: #ffae00bb; /* couleur plus douce et semi-transparente */
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+  z-index: 2;
+  opacity: 0.7;
+}
+.close-btn:hover {
+  color: #fff;
+  background: #ffae0022;
+  opacity: 1;
 }
 </style>

@@ -82,12 +82,20 @@
               @use-vie="potionVieDispo = false" @use-mort="potionMortDispo = false" />
           </template>
 
-          <!-- Logos potions pour l'Alchimiste -->
+          <!-- Logos potion pour l'Alchimiste -->
           <template v-if="card.name === 'Alchimiste'">
             <PouvoirAlchimiste
             @alch-victim-selected="victimAlchimiste = $event" 
             :potion-mort-dispo="potionMortDispo"
               @use-mort="potionMortDispo = false" />
+          </template>
+
+          <!-- Logo potions pour le moine -->
+          <template v-if="card.name === 'Moine'">
+            <PouvoirMoine
+            @alch-victim-selected="victimAlchimiste = $event"
+            :potion-vie-dispo="potionVieDispo" 
+              @use-vie="potionVieDispo = false" />
           </template>
 
           <!-- Logos tête de lg pour la victime -->

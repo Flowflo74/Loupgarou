@@ -3,6 +3,7 @@
     <img class="position-logo" src="../assets/assets-projet/logoperso/salvabouclierlogo.png" alt="bouclierSalvateur" title="Choisir la personne à protéger">
   </button>
   <dialog ref="testDialog">
+    <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
     <p>Le salvateur choisi de protéger :</p>
     <div>
       <label for="nomproteger" class="font-semibold w-24">La personne protéger est</label>
@@ -31,6 +32,9 @@ function openDialog() {
 }
 function validate() {
   emit("protected-person", personneProteger.value);
+  testDialog.value.close();
+}
+function closeDialog() {
   testDialog.value.close();
 }
 </script>
@@ -98,5 +102,23 @@ dialog button {
 }
 dialog button:hover {
   background: #ffd966;
+}
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: transparent;
+  border: none;
+  font-size: 1.15rem;
+  color: #ffae00bb; /* couleur plus douce et semi-transparente */
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+  z-index: 2;
+  opacity: 0.7;
+}
+.close-btn:hover {
+  color: #fff;
+  background: #ffae0022;
+  opacity: 1;
 }
 </style>

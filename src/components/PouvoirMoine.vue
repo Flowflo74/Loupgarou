@@ -3,7 +3,7 @@
     <button class="bouton" @click="openDialog" :disabled="!potionVieDispo">
       <img
         class="position-logo"
-        :src="potionVieDispo ? '/logospouvoirs/lifepotion.png' : '/logospouvoirs/potionviecroix.png'"
+        :src="potionVieDispo ? '/logospouvoirs/healthpotion.png' : '/logospouvoirs/potionviecroix.png'"
         :title="potionVieDispo ? 'Utiliser le pouvoir du Moine' : 'Pouvoir déjà utilisé'"
         :style="{ opacity: potionVieDispo ? 1 : 0.5 }"
       />
@@ -45,6 +45,9 @@ function openDialog() {
 function validate() {
   emit("moine-save", moineSaveName.value);
   moineDialog.value.close();
+}
+function closeDialog() {
+  testDialog.value.close();
 }
 </script>
 
@@ -100,5 +103,23 @@ dialog button {
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.2s;
+}
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: transparent;
+  border: none;
+  font-size: 1.15rem;
+  color: #ffae00bb; /* couleur plus douce et semi-transparente */
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+  z-index: 2;
+  opacity: 0.7;
+}
+.close-btn:hover {
+  color: #fff;
+  background: #ffae0022;
+  opacity: 1;
 }
 </style>

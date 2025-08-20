@@ -3,6 +3,7 @@
     <img class="position-logo" src="/logospouvoirs/pouvoirancien.png" alt="pouvoirancien" title="Qui est l'ancien ?">
   </button>
   <dialog ref="testDialog">
+    <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
     <p>Qui est l'ancien du village ?</p>
     <div>
       <label for="Ancienduvillage" class="font-semibold w-24">L'ancien du village est :</label>
@@ -26,9 +27,11 @@ const nomAncien = ref("");
 const emit = defineEmits(["ancienduvillage"]);
 
 function openDialog() {
-  nomAncien.value = ""; // Réinitialise le champ à chaque ouverture
-
+  nomAncien.value = "";
   testDialog.value.showModal();
+}
+function closeDialog() {
+  testDialog.value.close();
 }
 function validate() {
   emit("ancienduvillage", { nomAncien: nomAncien.value});
@@ -37,7 +40,7 @@ function validate() {
 </script>
 
 <style>
-  .position-logo {
+.position-logo {
   width: 75px;
   height: 75px;
   margin: 0 3px;
@@ -61,19 +64,35 @@ dialog {
   box-shadow: 0 8px 32px #000a;
   min-width: 320px;
   text-align: center;
+  position: relative;
 }
-
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: transparent;
+  border: none;
+  font-size: 1.15rem;
+  color: #ffae00bb; /* couleur plus douce et semi-transparente */
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+  z-index: 2;
+  opacity: 0.7;
+}
+.close-btn:hover {
+  color: #fff;
+  background: #ffae0022;
+  opacity: 1;
+}
 dialog::backdrop {
   background: rgba(0,0,0,0.55);
 }
-
 dialog label {
   display: block;
   margin-bottom: 0.7rem;
   font-size: 1.1rem;
   color: #ffae00;
 }
-
 dialog input[type="text"] {
   width: 80%;
   padding: 0.5rem;
@@ -84,7 +103,6 @@ dialog input[type="text"] {
   background: #181818;
   color: #fff;
 }
-
 dialog button {
   margin-top: 1rem;
   padding: 0.5rem 1.2rem;

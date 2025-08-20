@@ -11,6 +11,7 @@
       />
     </button>
     <dialog ref="testDialog">
+      <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
       <p>L'alchimiste choisit sa victime</p>
       <div>
         <label for="victimAlchimiste" class="font-semibold w-24">La victime est</label>
@@ -113,5 +114,23 @@ dialog button {
 }
 dialog button:hover {
   background: #ffd966;
+}
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: transparent;
+  border: none;
+  font-size: 1.15rem;
+  color: #ffae00bb; /* couleur plus douce et semi-transparente */
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+  z-index: 2;
+  opacity: 0.7;
+}
+.close-btn:hover {
+  color: #fff;
+  background: #ffae0022;
+  opacity: 1;
 }
 </style>
