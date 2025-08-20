@@ -198,6 +198,10 @@
       <router-link to="/"><button class="btn-retour-accueil">Accueil</button></router-link>
       <p>AMELINE-BOLLES Florian x L'école de la station</p>
     </footer>
+
+    <div v-if="transitioning" class="transition-overlay">
+      <span>{{ transitionText }}</span>
+    </div>
   </div>
 </template>
 
@@ -225,6 +229,8 @@ const winnerImage = ref('')
 const victimLGName = ref('')
 const victimeSorName = ref('')
 const nomAncien = ref('')
+const transitioning = ref(false);
+const transitionText = ref("🌞 Le village se réveille...")
 // Computed
 const prepCards = computed(() =>
   selectedCards.value
@@ -273,31 +279,44 @@ function startGame() {
 }
 
 function nextPhase() {
+  if (phase.value === 'night') {
+    transitionText.value = "🌞 Le village se réveille...";
+    transitioning.value = true;
+    setTimeout(() => {
+      phase.value = 'night-elim';
+      transitioning.value = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 2000);
+    return;
+  }
+  if (phase.value === 'day') {
+    transitionText.value = "🌙 La nuit tombe...";
+    transitioning.value = true;
+    setTimeout(() => {
+      nightCount.value += 1;
+      phase.value = 'night';
+      visible.value = false;
+      victimLGName.value = '';
+      personneProteger.value = '';
+      victimSorName.value = '';
+      transitioning.value = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 2000);
+    return;
+  }
   switch (phase.value) {
     case 'prep':
-      nightCount.value = 1
-      phase.value = 'night'
-      visible.value = false
-      break
-    case 'night':
-      phase.value = 'night-elim'
-      break
+      nightCount.value = 1;
+      phase.value = 'night';
+      visible.value = false;
+      break;
     case 'night-elim':
-      // Après l'élimination de la nuit, on passe au jour
-      dayCount.value += 1
-      phase.value = 'day'
-      visible.value = true
-      break
-    case 'day':
-      nightCount.value += 1
-      phase.value = 'night'
-      visible.value = false
-      victimLGName.value = ''
-      personneProteger.value = ''
-      victimSorName.value = ''
-      break   
+      dayCount.value += 1;
+      phase.value = 'day';
+      visible.value = true;
+      break;
   }
-  window.scrollTo({ top: 0, behavior: 'smooth' })
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // Watch for victory
@@ -676,5 +695,29 @@ h2 {
   color: #ffae00;
   letter-spacing: 1px;
   text-shadow: 0 1px 2px #000a;
+}
+
+.transition-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(25,34,50,0.85);
+  color: #ffae00;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+  font-weight: bold;
+  z-index: 1000;
+  opacity: 0;
+  animation: fadeIn 1s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
 }
 </style>
