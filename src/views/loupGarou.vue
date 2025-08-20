@@ -59,6 +59,12 @@
           <template v-if="card.name === 'Ancien'">
             <PouvoirAncien @ancienduvillage="setAncien" />
           </template>
+
+          <!-- Logo pouvoir Enfant Sauvage -->
+          <template v-if="card.name === 'Enfant Sauvage'">
+            <PouvoirEnfantSauvage @mentorduvillage="setMentor" />
+          </template>
+
           <!-- Logos pouvoir cupidon -->
           <template v-if="card.name === 'Cupidon'">
             <PouvoirCupidon @inlove1="setAmoureux" />
@@ -129,9 +135,15 @@
         <div v-if="nomAncien" class="annonce-block ancien-annonce">
           <strong>L’Ancien du village est :</strong> {{ nomAncien }}
         </div>
+
+        <div v-if="nomMentor" class="annonce-block mentor-annonce">
+          <strong>Le mentor du village est :</strong> {{ nomMentor }}
+        </div>
+
         <div v-if="nomAmoureux1" class="annonce-block amoureux-annonce">
           <strong>Les amoureux sont :</strong> {{ nomAmoureux1 }} ➕ {{ nomAmoureux2 }}
         </div>
+
         <div v-if="personneProteger" class="annonce-block protected-annonce">
           <strong>La personne protégée est :</strong> {{ personneProteger }}
         </div>
@@ -199,6 +211,7 @@ import PouvoirRenard from '@/components/PouvoirRenard.vue'
 import PouvoirSalva from '@/components/PouvoirSalva.vue'
 import PouvoirCupidon from '@/components/PouvoirCupidon.vue'
 import PouvoirAncien from '@/components/PouvoirAncien.vue'
+import PouvoirEnfantSauvage from '../components/PouvoirEnfantSauvage.vue'
 
 // Etat
 const allCards = data
@@ -325,6 +338,11 @@ const choixvictimelg = ref(true)
 const choixsalvateur = ref(true)
 const choixrenard = ref(true)
 const pouvoirflute = ref(true)
+
+const nomMentor = ref('');
+function setMentor({ nomMentor: n }) {
+  nomMentor.value = n;
+}
 
 // test pour la popup
 const testDialog = ref(null)
@@ -599,7 +617,7 @@ h2 {
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.8rem;
-  margin: 1.2rem auto 0.8rem auto;
+  margin: 1.2rem auto 3rem auto;
 }
 
 .annonce-block {
@@ -614,7 +632,7 @@ h2 {
   padding: 0.7rem 1.1rem 0.7rem 1.1rem;
   position: relative;
   text-align: center;
-  font-size: 1rem;
+  font-size: 1.15rem;
   font-weight: 500;
   letter-spacing: 0.5px;
   color: #fff;
@@ -639,18 +657,22 @@ h2 {
 .protected-annonce::before { background: linear-gradient(90deg, #659904, #b6ff00); }
 .amoureux-annonce::before  { background: linear-gradient(90deg, #ec03f4, #ff17dc); }
 .ancien-annonce::before    { background: linear-gradient(90deg, #1d4c04, #ffae00); }
+.mentor-annonce::before {
+  background: linear-gradient(90deg, #00c3ff, #ffae00);
+}
 
 /* Emoji pour chaque type */
 .victim-annonce strong::before    { content: "💀 "; }
 .protected-annonce strong::before { content: "🛡️ "; }
 .amoureux-annonce strong::before  { content: "💘 "; }
 .ancien-annonce strong::before    { content: "👴 "; }
+.mentor-annonce strong::before    {content: "🧑 "; }
 
 /* Texte */
 .annonce-block strong {
   display: block;
   margin-bottom: 0.3rem;
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   color: #ffae00;
   letter-spacing: 1px;
   text-shadow: 0 1px 2px #000a;
