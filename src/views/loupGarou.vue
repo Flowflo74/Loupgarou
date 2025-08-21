@@ -114,9 +114,9 @@
           </template>
 
           <!-- Logo pour le pouvoir de la servante -->
-          <template v-if="card.name === 'Servante dévouée'"></template>
+          <template v-if="card.name === 'Servantedevouee'">
             <PouvoirServante @servante-choix="choixServante = $event" />
-
+          </template>
           <!-- logo pour pour le pouvoir du joueur de flute -->
           <template v-if="card.name === 'Joueur de flute'">
             <div class="position-logo Joueur de flute">
