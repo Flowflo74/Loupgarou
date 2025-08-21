@@ -112,6 +112,11 @@
           <template v-if="card.name === 'Renard'">
             <PouvoirRenard :choixrenard="choixrenard" @use-flair="choixrenard = false" />
           </template>
+
+          <!-- Logo pour le pouvoir de la servante -->
+          <template v-if="card.name === 'Servante dévouée'"></template>
+            <PouvoirServante @servante-choix="choixServante = $event" />
+
           <!-- logo pour pour le pouvoir du joueur de flute -->
           <template v-if="card.name === 'Joueur de flute'">
             <div class="position-logo Joueur de flute">
@@ -129,7 +134,7 @@
     <!-- Phase : élimination de la nuit -->
     <section v-if="phase === 'night-elim'" class="phase-nuit-elim">
       <h2>💀 Qui a été éliminé cette nuit ? 💀</h2>
-      <p class="vote">Sélectionne la ou les victimes de la nuit</p>
+      <p class="vote">Annonce la ou les victimes de la nuit</p>
 
       <div class="annonces-row">
         <div v-if="nomAncien" class="annonce-block ancien-annonce">
@@ -142,6 +147,11 @@
 
         <div v-if="nomAmoureux1" class="annonce-block amoureux-annonce">
           <strong>Les amoureux sont :</strong> {{ nomAmoureux1 }} ➕ {{ nomAmoureux2 }}
+        </div>
+        <div v-if="choixServante" class="annonce-block servante-annonce">
+          <strong>Servante dévouée :</strong>
+        <span v-if="choixServante.choix === 'chez-elle'">Elle est restée chez elle.</span>
+        <span v-else>Elle est allée chez {{ choixServante.personne }}.</span>
         </div>
 
         <div v-if="personneProteger" class="annonce-block protected-annonce">
@@ -216,6 +226,7 @@ import PouvoirSalva from '@/components/PouvoirSalva.vue'
 import PouvoirCupidon from '@/components/PouvoirCupidon.vue'
 import PouvoirAncien from '@/components/PouvoirAncien.vue'
 import PouvoirEnfantSauvage from '../components/PouvoirEnfantSauvage.vue'
+import PouvoirServante from '../components/PouvoirServante.vue'
 
 // Etat
 const allCards = data
@@ -357,11 +368,7 @@ const choixvictimelg = ref(true)
 const choixsalvateur = ref(true)
 const choixrenard = ref(true)
 const pouvoirflute = ref(true)
-
 const nomMentor = ref('');
-function setMentor({ nomMentor: n }) {
-  nomMentor.value = n;
-}
 
 // test pour la popup
 const testDialog = ref(null)
@@ -374,13 +381,15 @@ const victimSorName = ref('');
 const nomAmoureux1 = ref('');
 const nomAmoureux2 = ref('');
 
-
 function setAmoureux({ nomAmoureux1: n1, nomAmoureux2: n2 }) {
   nomAmoureux1.value = n1;
   nomAmoureux2.value = n2;
 }
 function setAncien({ nomAncien: n }) {
   nomAncien.value = n;
+}
+function setMentor({ nomMentor: n }) {
+  nomMentor.value = n;
 }
 </script>
 
@@ -652,6 +661,7 @@ h2 {
   position: relative;
   text-align: center;
   font-size: 1.15rem;
+  text-transform: uppercase;
   font-weight: 500;
   letter-spacing: 0.5px;
   color: #fff;
@@ -679,6 +689,9 @@ h2 {
 .mentor-annonce::before {
   background: linear-gradient(90deg, #00c3ff, #ffae00);
 }
+.servante-annonce::before {
+  background: linear-gradient(90deg, #00e6b8, #ffae00);
+}
 
 /* Emoji pour chaque type */
 .victim-annonce strong::before    { content: "💀 "; }
@@ -686,6 +699,9 @@ h2 {
 .amoureux-annonce strong::before  { content: "💘 "; }
 .ancien-annonce strong::before    { content: "👴 "; }
 .mentor-annonce strong::before    {content: "🧑 "; }
+.servante-annonce strong::before {
+  content: "🧹 ";
+}
 
 /* Texte */
 .annonce-block strong {

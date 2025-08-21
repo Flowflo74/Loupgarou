@@ -210,9 +210,9 @@
       "image": "servante.jpeg",
       "order": 22,
       "onlyFirstNight": false,
-      "isCallable": false,
+      "isCallable": true,
       "categorie": "Villageois",
-      "description": "Prend le role d'un autre personnage en cas de deces."
+      "description": "Peut se rendre chez un client chaque nuit. Si elle est tuée, le client meurt aussi."
     },
     {
       "name": "Comedien",
