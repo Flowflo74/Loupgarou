@@ -114,9 +114,13 @@
           </template>
 
           <!-- Logo pour le pouvoir de la servante -->
-          <template v-if="card.name === 'Servantedevouee'">
-            <PouvoirServante @servante-choix="choixServante = $event" />
+          <template v-if="card.name === 'Servante dévouée'">
+            <PouvoirServante
+  :nom-servante="nomServante"
+  @servante-choix="setServante"
+/>
           </template>
+          
           <!-- logo pour pour le pouvoir du joueur de flute -->
           <template v-if="card.name === 'Joueur de flute'">
             <div class="position-logo Joueur de flute">
@@ -138,24 +142,24 @@
 
       <div class="annonces-row">
         <div v-if="nomAncien" class="annonce-block ancien-annonce">
-          <strong>L’Ancien du village est :</strong> {{ nomAncien }}
+          <strong>L’Ancien du village est </strong> {{ nomAncien }}
         </div>
 
         <div v-if="nomMentor" class="annonce-block mentor-annonce">
-          <strong>Le mentor du village est :</strong> {{ nomMentor }}
+          <strong>Le mentor de <span class="highlight">{{ nomEnfantSauvage }}</span> est </strong> {{ nomMentor }}
         </div>
 
         <div v-if="nomAmoureux1" class="annonce-block amoureux-annonce">
-          <strong>Les amoureux sont :</strong> {{ nomAmoureux1 }} ➕ {{ nomAmoureux2 }}
+          <strong>Les amoureux sont </strong><span class="highlight"> {{ nomAmoureux1 }} ➕ {{ nomAmoureux2 }}</span>
         </div>
         <div v-if="choixServante" class="annonce-block servante-annonce">
-          <strong>Servante dévouée :</strong>
-        <span v-if="choixServante.choix === 'chez-elle'">Elle est restée chez elle.</span>
-        <span v-else>Elle est allée chez {{ choixServante.personne }}.</span>
+          <strong><span class="highlight">{{ nomServante }}</span>, la Servante dévouée</strong>
+        <span v-if="choixServante.choix === 'chez-elle'">est restée chez elle.</span>
+        <span v-else>est allée chez {{ choixServante.personne }}.</span>
         </div>
 
         <div v-if="personneProteger" class="annonce-block protected-annonce">
-          <strong>La personne protégée est :</strong> {{ personneProteger }}
+          <strong>La personne protégée est </strong> {{ personneProteger }}
         </div>
         <div v-if="victimLGName" class="annonce-block victim-annonce">
           <strong>Victime des Loups-garous :</strong> {{ victimLGName }}
@@ -185,6 +189,9 @@
       <div v-if="nomAmoureux1" class="annonce-block amoureux-annonce">
         <strong>Les amoureux sont :</strong> ❤ {{ nomAmoureux1 }} ➕ {{ nomAmoureux2 }} ❤
       </div>
+       <div v-if="nomMentor" class="annonce-block mentor-annonce">
+          <strong>Le mentor de <span class="highlight">{{ nomEnfantSauvage }}</span> est :</strong> {{ nomMentor }}
+        </div>
       </div>
       <ul class="village-list">
         <li v-for="(card, index) in selectedCards" :key="'vote-' + index" class="remaining-card">
@@ -381,6 +388,9 @@ const personneProteger = ref('');
 const victimSorName = ref('');
 const nomAmoureux1 = ref('');
 const nomAmoureux2 = ref('');
+const nomEnfantSauvage = ref('');
+const nomServante = ref('');
+const choixServante = ref(null);
 
 function setAmoureux({ nomAmoureux1: n1, nomAmoureux2: n2 }) {
   nomAmoureux1.value = n1;
@@ -389,8 +399,13 @@ function setAmoureux({ nomAmoureux1: n1, nomAmoureux2: n2 }) {
 function setAncien({ nomAncien: n }) {
   nomAncien.value = n;
 }
-function setMentor({ nomMentor: n }) {
-  nomMentor.value = n;
+function setMentor({ nomEnfantSauvage: n1, nomMentor: n2 }) {
+  nomEnfantSauvage.value = n1;
+  nomMentor.value = n2;
+}
+function setServante({ choix, personne, nomServante: nom }) {
+  choixServante.value = { choix, personne };
+  if (!nomServante.value) nomServante.value = nom;
 }
 </script>
 
@@ -736,5 +751,17 @@ h2 {
   to {
     opacity: 1;
   }
+}
+
+.highlight {
+  display: inline-block;
+  color: #ffffff;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 16px;
+  /* font-size: 1.15em; */
+  letter-spacing: 1px;
+  /* border: 2px solid #ffae00; */
+  margin: 0 4px;
 }
 </style>

@@ -10,6 +10,19 @@
     </button>
     <dialog ref="servanteDialog">
       <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
+      <div v-if="!nomServante">
+        <label for="nomServante" class="font-semibold w-24">La servante est :</label>
+        <input
+          id="nomServante"
+          v-model="nomServante"
+          type="text"
+          class="flex-auto"
+          autocomplete="off"
+        />
+      </div>
+      <div v-else>
+        <strong>Servante : {{ nomServante }}</strong>
+      </div>
       <p>Que fait la servante dévouée ?</p>
       <div class="choix-servante">
         <label>
@@ -34,12 +47,16 @@
 </template>
 
 <script setup>
-import { ref, defineEmits } from "vue";
+import { ref, defineEmits, defineProps } from "vue";
 
 const servanteDialog = ref(null);
 const choixServante = ref("chez-elle");
 const nomPersonne = ref("");
 const emit = defineEmits(["servante-choix"]);
+const props = defineProps({
+  nomServante: String
+});
+const nomServante = ref(props.nomServante || "");
 
 function openDialog() {
   choixServante.value = "chez-elle";
@@ -53,6 +70,7 @@ function validate() {
   emit("servante-choix", {
     choix: choixServante.value,
     personne: choixServante.value === "autre" ? nomPersonne.value : null,
+    nomServante: nomServante.value
   });
   servanteDialog.value.close();
 }

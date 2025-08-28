@@ -4,6 +4,16 @@
   </button>
   <dialog ref="testDialog">
     <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
+    <div>
+      <label for="nomEnfantSauvage" class="font-semibold w-24">L'enfant sauvage est :</label>
+      <input
+        id="nomEnfantSauvage"
+        v-model="nomEnfantSauvage"
+        type="text"
+        class="flex-auto"
+        autocomplete="off"
+      />
+    </div>
     <p>Qui est le mentor de l'enfant sauvage ?</p>
     <div>
       <label for="mentorduvillage" class="font-semibold w-24">L'enfant sauvage a pour mentor :</label>
@@ -23,10 +33,12 @@
 import { ref, defineEmits } from "vue";
 
 const testDialog = ref(null);
+const nomEnfantSauvage = ref("");
 const nomMentor = ref("");
 const emit = defineEmits(["mentorduvillage"]);
 
 function openDialog() {
+  nomEnfantSauvage.value = "";
   nomMentor.value = "";
   testDialog.value.showModal();
 }
@@ -34,7 +46,10 @@ function closeDialog() {
   testDialog.value.close();
 }
 function validate() {
-  emit("mentorduvillage", { nomMentor: nomMentor.value});
+  emit("mentorduvillage", { 
+    nomEnfantSauvage: nomEnfantSauvage.value,
+    nomMentor: nomMentor.value
+  });
   testDialog.value.close();
 }
 </script>
