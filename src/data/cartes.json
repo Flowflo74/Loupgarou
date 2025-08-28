@@ -206,9 +206,9 @@
       "description": "Chaque matin, si un Loup-Garou est assis à sa gauche ou à sa droite, le meneur émet un grognement pour signaler la présence du danger."
     },
     {
-      "name": "Servantedevouee",
+      "name": "Servante dévouée",
       "image": "servante.jpeg",
-      "order": 22,
+      "order": 9,
       "onlyFirstNight": false,
       "isCallable": true,
       "categorie": "Villageois",

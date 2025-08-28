@@ -1,11 +1,7 @@
-<script setup>
-
-</script>
-
 <template>
 
      <h1 class="Bienvenue">Bienvenue</h1>
-    
+     <Boutonfullscreen />
     <main>
         
         <h2>Selectionne ton jeu</h2>
@@ -33,6 +29,10 @@
 </footer>
 
 </template>
+
+<script setup>
+import Boutonfullscreen from '@/components/Boutonfullscreen.vue'
+</script>
 
 <style scoped>
 
@@ -199,4 +199,5 @@ footer {
     font-family: "Nokapolice";
     src: url(../Police/nokapolice.otf) format("truetype");
 }
+
 </style>

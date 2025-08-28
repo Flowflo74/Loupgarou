@@ -3,7 +3,7 @@
 
     <header>
       <h1>Interface Loup-Garou v1</h1>
-
+      <Boutonfullscreen />
     </header>
 
     <section v-if="phase === 'selection'" class="selection-phase">
@@ -227,6 +227,7 @@ import PouvoirCupidon from '@/components/PouvoirCupidon.vue'
 import PouvoirAncien from '@/components/PouvoirAncien.vue'
 import PouvoirEnfantSauvage from '../components/PouvoirEnfantSauvage.vue'
 import PouvoirServante from '../components/PouvoirServante.vue'
+import Boutonfullscreen from '@/components/Boutonfullscreen.vue'
 
 // Etat
 const allCards = data

@@ -1,5 +1,6 @@
 <template>
     <h1>Loup-Garou de BreakOut v0.1</h1>
+    <Boutonfullscreen />
     <section v-if="phase === 'selection'" class="selection-phase">
       <p class="selection-perso">Sélectionne les personnages de la partie</p>
 
@@ -216,6 +217,7 @@ import PouvoirCupidon from '@/components/PouvoirCupidon.vue'
 import PouvoirAncien from '@/components/PouvoirAncien.vue'
 import PouvoirAlchimiste from '@/components/PouvoirAlchimiste.vue'
 import PouvoirMoine from '@/components/PouvoirMoine.vue'
+import Boutonfullscreen from '@/components/Boutonfullscreen.vue'
 
 // Etat
 const allCards = data
