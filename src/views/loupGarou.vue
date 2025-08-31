@@ -2,8 +2,14 @@
   <div class="loup-garou-app" :class="phase === 'day' ? 'day-theme' : 'night-theme'">
 
     <header>
-      <h1>Interface Loup-Garou v1</h1>
+      <h1>Interface Loup-Garou</h1>
       <Boutonfullscreen />
+                <Listedesjoueurs
+          v-if="phase === 'selection' || phase === 'day'"
+          :joueurs="joueurs"
+          :phase="phase"
+          @update-joueurs="updateJoueurs"
+        />
     </header>
 
     <section v-if="phase === 'selection'" class="selection-phase">
@@ -195,7 +201,7 @@
       </div>
       <ul class="village-list">
         <li v-for="(card, index) in selectedCards" :key="'vote-' + index" class="remaining-card">
-          <img src="../assets/assets-projet/CarteLoupGarou/exclusion.png" alt="Exclure" class="exclusion-logo"
+          <img src="/public/logospouvoirs/eliminationvote.png" alt="Exclure" class="exclusion-logo"
             @click="removeCard(index)" />
           <LoupGarouCard :lgcard="card" />
         </li>
@@ -214,6 +220,7 @@
     <footer v-if="phase !== 'end'" class="footer">
       <router-link to="/"><button class="btn-retour-accueil">Accueil</button></router-link>
       <p>AMELINE-BOLLES Florian x L'école de la station</p>
+      <p>Version 1.3</p>
     </footer>
 
     <div v-if="transitioning" class="transition-overlay">
@@ -235,6 +242,7 @@ import PouvoirAncien from '@/components/PouvoirAncien.vue'
 import PouvoirEnfantSauvage from '../components/PouvoirEnfantSauvage.vue'
 import PouvoirServante from '../components/PouvoirServante.vue'
 import Boutonfullscreen from '@/components/Boutonfullscreen.vue'
+import Listedesjoueurs from '../components/Listedesjoueurs.vue'
 
 // Etat
 const allCards = data
@@ -391,7 +399,14 @@ const nomAmoureux2 = ref('');
 const nomEnfantSauvage = ref('');
 const nomServante = ref('');
 const choixServante = ref(null);
+const joueurs = ref([]);
 
+function updateJoueurs(list) {
+  // Si la liste contient des chaînes, transforme-les en objets
+  joueurs.value = list.map(j =>
+    typeof j === "string" ? { nom: j, votes: 0 } : j
+  );
+}
 function setAmoureux({ nomAmoureux1: n1, nomAmoureux2: n2 }) {
   nomAmoureux1.value = n1;
   nomAmoureux2.value = n2;
@@ -410,14 +425,6 @@ function setServante({ choix, personne, nomServante: nom }) {
 </script>
 
 <style scoped>
-/* Thèmes Jour / Nuit */
-.day-theme {
-  background: url('../assets/assets-projet/dabo/1.png') center/cover no-repeat;
-}
-
-.night-theme {
-  background: url('../assets/assets-projet/dabo/1.png') center/cover no-repeat;
-}
 
 /* Containers */
 .selection-phase .cartes-container {

@@ -1,6 +1,7 @@
 <template>
     <h1>Loup-Garou de BreakOut v0.1</h1>
     <Boutonfullscreen />
+    
     <section v-if="phase === 'selection'" class="selection-phase">
       <p class="selection-perso">Sélectionne les personnages de la partie</p>
 
@@ -180,7 +181,7 @@
       </div>
       <ul class="village-list">
         <li v-for="(card, index) in selectedCards" :key="'vote-' + index" class="remaining-card">
-          <img src="../assets/assets-projet/CarteLoupGarou/exclusion.png" alt="Exclure" class="exclusion-logo"
+          <img src="/public/logospouvoirs/eliminationvote.png" alt="Exclure" class="exclusion-logo"
             @click="removeCard(index)" />
           <LoupGarouCard :lgcard="card" />
         </li>
@@ -218,6 +219,7 @@ import PouvoirAncien from '@/components/PouvoirAncien.vue'
 import PouvoirAlchimiste from '@/components/PouvoirAlchimiste.vue'
 import PouvoirMoine from '@/components/PouvoirMoine.vue'
 import Boutonfullscreen from '@/components/Boutonfullscreen.vue'
+import Listedesjoueurs from '../components/Listedesjoueurs.vue'
 
 // Etat
 const allCards = data
