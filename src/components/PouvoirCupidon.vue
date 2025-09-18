@@ -7,32 +7,40 @@
     <p>Cupidon choisi de rendre amoureux :</p>
     <div>
       <label for="nomamoureux1" class="font-semibold w-24">Les amoureux sont :</label>
-      <input
+      <select
         id="nomamoureux1"
         v-model="nomAmoureux1"
-        type="text"
         class="flex-auto"
-        autocomplete="off"
-      />
-      <input
+      >
+        <option value="" disabled>Choisir le premier joueur</option>
+        <option v-for="joueur in props.joueurs" :key="joueur.nom + '-1'" :value="joueur.nom">
+          {{ joueur.nom }}
+        </option>
+      </select>
+      <select
         id="nomamoureux2"
         v-model="nomAmoureux2"
-        type="text"
         class="flex-auto"
-        autocomplete="off"
-      />
+      >
+        <option value="" disabled>Choisir le second joueur</option>
+        <option v-for="joueur in props.joueurs" :key="joueur.nom + '-2'" :value="joueur.nom">
+          {{ joueur.nom }}
+        </option>
+      </select>
     </div>
     <button @click="validate">Valider</button>
   </dialog>
 </template>
 
 <script setup>
-import { ref, defineEmits } from "vue";
+import { ref, defineEmits, defineProps } from "vue";
 
 const testDialog = ref(null);
+const props = defineProps({ joueurs: Array });
 const nomAmoureux1 = ref("");
 const nomAmoureux2 = ref("");
 const emit = defineEmits(["inlove1"]);
+
 
 function openDialog() {
   nomAmoureux1.value = ""; // Réinitialise le champ à chaque ouverture
@@ -86,7 +94,7 @@ dialog label {
   color: #ffae00;
 }
 
-dialog input[type="text"] {
+dialog select {
   width: 80%;
   padding: 0.5rem;
   border-radius: 8px;

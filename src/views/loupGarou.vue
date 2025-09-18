@@ -2,7 +2,7 @@
   <div class="loup-garou-app" :class="phase === 'day' ? 'day-theme' : 'night-theme'">
 
     <header>
-      <h1>Interface Loup-Garou</h1>
+      <h1>Loup-Garou officiel</h1>
       <Boutonfullscreen />
                 <Listedesjoueurs
           v-if="phase === 'selection' || phase === 'day'"
@@ -13,7 +13,7 @@
     </header>
 
     <section v-if="phase === 'selection'" class="selection-phase">
-      <p class="selection-perso">Sélectionne les personnages de la partie</p>
+      <p class="selection-perso">Sélectionne les cartes de la partie</p>
 
       <button class="btn-lancer-partie" @click="startGame" :disabled="!selectedCards.length">
         Lancer la partie
@@ -63,7 +63,7 @@
           
           <!-- Logo pouvoir ancien -->
           <template v-if="card.name === 'Ancien'">
-            <PouvoirAncien @ancienduvillage="setAncien" />
+            <PouvoirAncien :joueurs="joueurs" @ancienduvillage="setAncien" />
           </template>
 
           <!-- Logo pouvoir Enfant Sauvage -->
@@ -73,7 +73,7 @@
 
           <!-- Logos pouvoir cupidon -->
           <template v-if="card.name === 'Cupidon'">
-            <PouvoirCupidon @inlove1="setAmoureux" />
+            <PouvoirCupidon :joueurs="joueurs" @inlove1="setAmoureux" />
           </template>
 
         </li>
@@ -94,7 +94,7 @@
 
           <!-- Logos potions pour la Sorcière -->
           <template v-if="card.name === 'Sorciere'">
-            <PotionsSorciere
+            <PotionsSorciere :joueurs="joueurs"
             @sor-victim-selected="victimSorName = $event" 
             :potion-vie-dispo="potionVieDispo" :potion-mort-dispo="potionMortDispo"
               @use-vie="potionVieDispo = false" @use-mort="potionMortDispo = false" />
@@ -111,7 +111,7 @@
 
           <!-- Logo bouclier pour le salva -->
           <template v-if="card.name === 'Salvateur'">
-            <PouvoirSalva @protected-person="personneProteger = $event" />
+            <PouvoirSalva :joueurs="joueurs" @protected-person="personneProteger = $event" />
           </template>
 
           <!-- Logo renard pour le pouvoir du renard -->
@@ -128,14 +128,13 @@
           </template>
           
           <!-- logo pour pour le pouvoir du joueur de flute -->
-          <template v-if="card.name === 'Joueur de flute'">
-            <div class="position-logo Joueur de flute">
-              <img v-if="pouvoirflute" class="position-logo Joueur de flute"
-                src="../assets/assets-projet/logoperso/pouvoirflute.png"
-                title="Le joueur de flute peut choisir 1/2 joueurs à charmer" @click="pouvoirflute = false" />
-            </div>
-          </template>
-
+          <template v-if="card.name === 'Joueur de flute'">                 
+            <PouvoirFlute
+  :joueurs="joueurs"
+  :charmes="joueursCharmes"
+  @update-charmes="setCharmes"
+/>
+            </template>
         </li>
       </ul>
       <button class="btn-next-phase" @click="nextPhase">Passer au jour</button>
@@ -219,7 +218,7 @@
     <!-- Footer persistent -->
     <footer v-if="phase !== 'end'" class="footer">
       <router-link to="/"><button class="btn-retour-accueil">Accueil</button></router-link>
-      <p>AMELINE-BOLLES Florian x L'école de la station</p>
+      <p>- AMELINE-BOLLES Florian -</p>
       <p>Version 1.3</p>
     </footer>
 
@@ -241,6 +240,7 @@ import PouvoirCupidon from '@/components/PouvoirCupidon.vue'
 import PouvoirAncien from '@/components/PouvoirAncien.vue'
 import PouvoirEnfantSauvage from '../components/PouvoirEnfantSauvage.vue'
 import PouvoirServante from '../components/PouvoirServante.vue'
+import PouvoirFlute from '../components/PouvoirFlute.vue'
 import Boutonfullscreen from '@/components/Boutonfullscreen.vue'
 import Listedesjoueurs from '../components/Listedesjoueurs.vue'
 
@@ -400,6 +400,7 @@ const nomEnfantSauvage = ref('');
 const nomServante = ref('');
 const choixServante = ref(null);
 const joueurs = ref([]);
+const joueursCharmes = ref([]); // tableau des noms charmés
 
 function updateJoueurs(list) {
   // Si la liste contient des chaînes, transforme-les en objets
@@ -421,6 +422,9 @@ function setMentor({ nomEnfantSauvage: n1, nomMentor: n2 }) {
 function setServante({ choix, personne, nomServante: nom }) {
   choixServante.value = { choix, personne };
   if (!nomServante.value) nomServante.value = nom;
+}
+function setCharmes(nomsCharmes) {
+  joueursCharmes.value = nomsCharmes;
 }
 </script>
 
@@ -642,7 +646,6 @@ h2 {
   text-align: center;
   margin-bottom: 2rem;
   margin-top: 2rem;
-  text-shadow: 0 0 8px #fff70099;
 }
 
 .phase-end {

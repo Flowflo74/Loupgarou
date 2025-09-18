@@ -17,14 +17,17 @@
       <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
     <p>La sorcière choisi sa victime</p>
     <div>
-      <label for="nomvictimesor" class="font-semibold w-24">La victime de la sorcière est</label>
-      <input
+      <label for="victimSorName" class="font-semibold w-24">La victime de la sorcière est :</label>
+      <select
         id="victimSorName"
         v-model="victimSorName"
-        type="text"
         class="flex-auto"
-        autocomplete="off"
-      />
+      >
+        <option value="" disabled>Choisir un joueur</option>
+        <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
+          {{ joueur.nom }}
+        </option>
+      </select>
     </div>
     <button @click="validate">Valider</button>
   </dialog>
@@ -35,13 +38,13 @@
 import { ref, defineProps, defineEmits } from "vue";
 
 
-const props = defineProps({
-  potionVieDispo: Boolean,
-  potionMortDispo: Boolean
-});
-
 const testDialog = ref(null);
 const victimSorName = ref("");
+const props = defineProps({
+  potionVieDispo: Boolean,
+  potionMortDispo: Boolean,
+  joueurs: Array
+});
 const emit = defineEmits(["use-vie", "use-mort", "sor-victim-selected"]);
 
 function openDialog() {

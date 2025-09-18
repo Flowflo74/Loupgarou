@@ -61,7 +61,9 @@ function removeVote(idx) {
 </script>
 
 <style scoped>
+
 .joueurs-block {
+  text-align: center;
   max-width: 80%;
   margin: 2rem auto;
   padding: 1.5rem;

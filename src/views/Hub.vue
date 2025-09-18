@@ -25,7 +25,7 @@
 </div>
 </main>
 <footer>
-    <p>AMELINE-BOLLES Florian X 2025 Ecole de la station.</p>
+    <p>- AMELINE-BOLLES Florian -</p>
 </footer>
 
 </template>

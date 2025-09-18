@@ -1,40 +1,51 @@
 <template>
   <button class="bouton" @click="openDialog">
-    <img class="position-logo" src="/logospouvoirs/pouvoirancien.png" alt="pouvoirancien" title="Qui est l'ancien ?">
+    <img class="position-logo" src="/src/assets/assets-projet/logoperso/pouvoirflute.png" alt="pouvoirflute" title="Qui a charmé le flutiste ?">
   </button>
   <dialog ref="testDialog">
     <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
-    <p>Qui est l'ancien du village ?</p>
-    <div>
-      <label for="nomAncien" class="font-semibold w-24">L'ancien du village est :</label>
-      <select id="nomAncien" v-model="nomAncien" class="flex-auto">
-        <option value="" disabled>Choisir un joueur</option>
-        <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
+    <p>Qui a été charmé par la douce mélodie ?</p>
+    <form @submit.prevent="validate">
+      <div class="liste-charmes">
+        <label
+          v-for="joueur in props.joueurs"
+          :key="joueur.nom"
+          class="charm-label"
+        >
+          <input
+            type="checkbox"
+            :value="joueur.nom"
+            v-model="charmesLocaux"
+          />
           {{ joueur.nom }}
-        </option>
-      </select>
-    </div>
-    <button @click="validate">Valider</button>
+          <span v-if="charmesLocaux.includes(joueur.nom)" class="charm-icon">🎶</span>
+        </label>
+      </div>
+      <button type="submit">Valider</button>
+    </form>
   </dialog>
 </template>
 
 <script setup>
 import { ref, defineEmits } from "vue";
 
+const props = defineProps({
+  joueurs: Array,
+  charmes: Array
+});
+const emit = defineEmits(["update-charmes"]);
 const testDialog = ref(null);
-const props = defineProps({ joueurs: Array });
-const nomAncien = ref("");
-const emit = defineEmits(["ancienduvillage"]);
+const charmesLocaux = ref([]);
 
 function openDialog() {
-  nomAncien.value = "";
+  charmesLocaux.value = [...props.charmes];
   testDialog.value.showModal();
 }
 function closeDialog() {
   testDialog.value.close();
 }
 function validate() {
-  emit("ancienduvillage", { nomAncien: nomAncien.value});
+  emit("update-charmes", [...charmesLocaux.value]);
   testDialog.value.close();
 }
 </script>
@@ -73,7 +84,7 @@ dialog {
   background: transparent;
   border: none;
   font-size: 1.15rem;
-  color: #ffae00bb; /* couleur plus douce et semi-transparente */
+  color: #ffae00bb;
   cursor: pointer;
   transition: color 0.2s, background 0.2s;
   z-index: 2;
@@ -117,5 +128,24 @@ dialog button {
 }
 dialog button:hover {
   background: #ffd966;
+}
+.liste-charmes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  align-items: flex-start;
+  margin: 1rem 0;
+}
+.charm-label {
+  font-size: 1.15rem;
+  color: #ffae00;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.charm-icon {
+  font-size: 1.3rem;
+  margin-left: 0.3rem;
 }
 </style>

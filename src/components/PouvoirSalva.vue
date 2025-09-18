@@ -6,14 +6,17 @@
     <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
     <p>Le salvateur choisi de protéger :</p>
     <div>
-      <label for="nomproteger" class="font-semibold w-24">La personne protéger est</label>
-      <input
+      <label for="personneProteger" class="font-semibold w-24">La personne protégée est :</label>
+      <select
         id="personneProteger"
         v-model="personneProteger"
-        type="text"
         class="flex-auto"
-        autocomplete="off"
-      />
+      >
+        <option value="" disabled>Choisir un joueur</option>
+        <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
+          {{ joueur.nom }}
+        </option>
+      </select>
     </div>
     <button @click="validate">Valider</button>
   </dialog>
@@ -25,6 +28,7 @@ import { ref, defineEmits } from "vue";
 const testDialog = ref(null);
 const personneProteger = ref("");
 const emit = defineEmits(["protected-person"]);
+const props = defineProps({ joueurs: Array });
 
 function openDialog() {
   personneProteger.value = ""; // Réinitialise le champ à chaque ouverture
