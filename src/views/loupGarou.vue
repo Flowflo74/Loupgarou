@@ -4,14 +4,13 @@
     <header>
       <h1>Loup-Garou officiel</h1>
       <Boutonfullscreen />
-                <Listedesjoueurs
+    </header>
+<Listedesjoueurs
           v-if="phase === 'selection' || phase === 'day'"
           :joueurs="joueurs"
           :phase="phase"
           @update-joueurs="updateJoueurs"
         />
-    </header>
-
     <section v-if="phase === 'selection'" class="selection-phase">
       <p class="selection-perso">Sélectionne les cartes de la partie</p>
 
@@ -102,11 +101,7 @@
 
           <!-- Logos tête de lg pour la victime -->
           <template v-if="card.name === 'Loup-garou'">
-            <div class="position-logo victimelg">
-              <!-- teeeeeeest -->
-              <LoupGarouButton @victim-selected="victimLGName = $event" />
-              
-            </div>
+              <LoupGarouButton :joueurs="joueurs" @victim-selected="victimLGName = $event" />
           </template>
 
           <!-- Logo bouclier pour le salva -->
@@ -186,7 +181,7 @@
     <!-- Jour -->
     <section v-if="phase === 'day'" class="phase-jour">
       <h2>🌕 Jour {{ dayCount }}</h2>
-      <p class="vote">Vote du village : Qui a été éliminer par le village ?</p>
+      <p class="vote">Le joueur éliminer par le vote du village est :</p>
       <div class="annonces-row">
       <div v-if="nomAncien" class="annonce-block ancien-annonce">
           <strong>L’Ancien du village est :</strong> {{ nomAncien }}
@@ -202,7 +197,8 @@
         <li v-for="(card, index) in selectedCards" :key="'vote-' + index" class="remaining-card">
           <img src="/public/logospouvoirs/eliminationvote.png" alt="Exclure" class="exclusion-logo"
             @click="removeCard(index)" />
-          <LoupGarouCard :lgcard="card" />
+            <div class="card-image-container">
+          <LoupGarouCard :lgcard="card" /></div> 
         </li>
       </ul>
       <button class="btn-next-phase" @click="nextPhase">Nuit suivante</button>
@@ -562,23 +558,30 @@ h2 {
 }
 
 .remaining-card {
+  position: relative;
   background: rgba(0, 0, 0, 0.5);
   border-radius: 10px;
   padding: 0.5rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  justify-content: center;
+  min-width: 120px;
+  min-height: 120px;
 }
 
 .exclusion-logo {
-  width: 50px;
-  cursor: pointer;
-  transition: transform 0.15s;
+  position: absolute;
+  pointer-events: auto; /* <-- Permet le clic */
+  z-index: 5;
+  opacity: 0.95;
+  width: 50%;
+  height: auto;
+  max-width: 70px;
 }
 
 .exclusion-logo:hover {
-  transform: scale(1.15) rotate(-10deg);
-  filter: drop-shadow(0 0 8px #ffae00cc);
+  transform: scale(1.10) rotate(-10deg);
 }
 
 /* Boutons */

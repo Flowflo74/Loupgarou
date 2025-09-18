@@ -6,14 +6,16 @@
     <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
     <p>Les loups-garous choisissent leur victime</p>
     <div>
-      <label for="nomvictime" class="font-semibold w-24">La victime est</label>
-      <input
+      <label for="victimLGName" class="font-semibold w-24">La victime est</label>
+      <select
         id="victimLGName"
         v-model="victimLGName"
-        type="text"
-        class="flex-auto"
-        autocomplete="off"
-      />
+        class="flex-auto">
+        <option value="" disabled>Choisir un joueur</option>
+        <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
+          {{ joueur.nom }}
+        </option>
+      </select>
     </div>
     <button @click="validate">Valider</button>
   </dialog>
@@ -24,6 +26,7 @@
 import { ref, defineEmits } from "vue";
 
 const testDialog = ref(null);
+const props = defineProps({ joueurs: Array });
 const victimLGName = ref("");
 const emit = defineEmits(["victim-selected"]);
 
