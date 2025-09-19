@@ -67,7 +67,7 @@
 
           <!-- Logo pouvoir Enfant Sauvage -->
           <template v-if="card.name === 'Enfant Sauvage'">
-            <PouvoirEnfantSauvage @mentorduvillage="setMentor" />
+            <PouvoirEnfantSauvage :joueurs="joueurs" @mentorduvillage="setMentor" />
           </template>
 
           <!-- Logos pouvoir cupidon -->
@@ -117,6 +117,7 @@
           <!-- Logo pour le pouvoir de la servante -->
           <template v-if="card.name === 'Servante dévouée'">
             <PouvoirServante
+  :joueurs="joueurs"         
   :nom-servante="nomServante"
   @servante-choix="setServante"
 />

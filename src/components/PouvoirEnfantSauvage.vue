@@ -6,13 +6,15 @@
     <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
     <div>
       <label for="nomEnfantSauvage" class="font-semibold w-24">L'enfant sauvage est :</label>
-      <input
+      <select
         id="nomEnfantSauvage"
         v-model="nomEnfantSauvage"
-        type="text"
-        class="flex-auto"
-        autocomplete="off"
-      />
+        class="flex-auto">
+        <option value="" disabled>Choisir un joueur</option>
+        <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
+          {{ joueur.nom }}
+        </option>
+      </select>
     </div>
     <p>Qui est le mentor de l'enfant sauvage ?</p>
     <div>
@@ -33,7 +35,9 @@
 import { ref, defineEmits } from "vue";
 
 const testDialog = ref(null);
-const nomEnfantSauvage = ref("");
+
+const nomEnfantSauvage = ref('');
+const props = defineProps({ joueurs: Array });
 const nomMentor = ref("");
 const emit = defineEmits(["mentorduvillage"]);
 

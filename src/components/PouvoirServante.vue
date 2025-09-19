@@ -12,13 +12,15 @@
       <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
       <div v-if="!nomServante">
         <label for="nomServante" class="font-semibold w-24">La servante est :</label>
-        <input
-          id="nomServante"
-          v-model="nomServante"
-          type="text"
-          class="flex-auto"
-          autocomplete="off"
-        />
+        <select
+        id="nomServante"
+        v-model="nomServante"
+        class="flex-auto">
+        <option value="" disabled>Choisir un joueur</option>
+        <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
+          {{ joueur.nom }}
+        </option>
+      </select>
       </div>
       <div v-else>
         <strong>Servante : {{ nomServante }}</strong>
@@ -54,6 +56,7 @@ const choixServante = ref("chez-elle");
 const nomPersonne = ref("");
 const emit = defineEmits(["servante-choix"]);
 const props = defineProps({
+  joueurs: Array,
   nomServante: String
 });
 const nomServante = ref(props.nomServante || "");
