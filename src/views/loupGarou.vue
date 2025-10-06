@@ -1,5 +1,5 @@
 <template>
-  <div class="loup-garou-app" :class="phase === 'day' ? 'day-theme' : 'night-theme'">
+  <div class="loup-garou-app app-flex" :class="phase === 'day' ? 'day-theme' : 'night-theme'">
 
     <header>
       <h1>Loup-Garou officiel</h1>
@@ -99,9 +99,14 @@
               @use-vie="potionVieDispo = false" @use-mort="potionMortDispo = false" />
           </template>
 
-          <!-- Logos tête de lg pour la victime -->
+          <!-- Logo tête de lg pour la victime -->
           <template v-if="card.name === 'Loup-garou'">
               <LoupGarouButton :joueurs="joueurs" @victim-selected="victimLGName = $event" />
+          </template>
+
+          <!-- Logo tête de lg pour l'infecté --> 
+          <template v-if="card.name === 'Infect pere des loups'">
+              <Pouvoirinfectperedesloups :joueurs="joueurs" @victim-selected="victiminfectLGName = $event" />
           </template>
 
           <!-- Logo bouclier pour le salva -->
@@ -163,9 +168,12 @@
           <strong>La personne protégée est </strong> {{ personneProteger }}
         </div>
         <div v-if="victimLGName" class="annonce-block victim-annonce">
-          <strong>Victime des Loups-garous :</strong> {{ victimLGName }}
+          <strong>La victime des Loups-garous est :</strong> {{ victimLGName }}
         </div>
-        <div v-if="victimSorName" class="annonce-block victim-annonce">
+        <div v-if="victiminfectLGName" class="annonce-block infecte-annonce">
+        {{ victiminfectLGName }} <strong> est désormais un loup-garou ! </strong>
+        </div>
+        <div v-if="victimSorName" class="annonce-block victim-annonce sorciere-annonce">
           <strong>Victime de la Sorcière :</strong> {{ victimSorName }}
         </div>
       </div>
@@ -182,7 +190,7 @@
     <!-- Jour -->
     <section v-if="phase === 'day'" class="phase-jour">
       <h2>🌕 Jour {{ dayCount }}</h2>
-      <p class="vote">Le joueur éliminer par le vote du village est :</p>
+      <p class="vote">Le joueur éliminer par le vote du village étais :</p>
       <div class="annonces-row">
       <div v-if="nomAncien" class="annonce-block ancien-annonce">
           <strong>L’Ancien du village est :</strong> {{ nomAncien }}
@@ -203,13 +211,16 @@
         </li>
       </ul>
       <button class="btn-next-phase" @click="nextPhase">Nuit suivante</button>
+      <Boutonrejouer @rejouer="rejouer" />
+      <button class="nouvellepartie" @click="nouvellepartie">Rejouer</button>
     </section>
 
     <!-- Résultat -->
     <section v-if="phase === 'end'" class="phase-end">
       <h2>{{ winnerMessage }}</h2>
       <img :src="winnerImage" class="winnerimage" />
-      <button class="nouvellepartie" @click="nouvellepartie">Nouvelle partie</button>
+      <Boutonrejouer @rejouer="rejouer" />
+      <button class="nouvellepartie" @click="nouvellepartie">Rejouer</button>
     </section>
 
     <!-- Footer persistent -->
@@ -240,6 +251,7 @@ import PouvoirServante from '../components/PouvoirServante.vue'
 import PouvoirFlute from '../components/PouvoirFlute.vue'
 import Boutonfullscreen from '@/components/Boutonfullscreen.vue'
 import Listedesjoueurs from '../components/Listedesjoueurs.vue'
+import Pouvoirinfectperedesloups from '@/components/Pouvoirinfectperedesloups.vue'
 
 // Etat
 const allCards = data
@@ -251,6 +263,7 @@ const visible = ref(false)
 const winnerMessage = ref('')
 const winnerImage = ref('')
 const victimLGName = ref('')
+const victiminfectLGName = ref('')
 const victimeSorName = ref('')
 const nomAncien = ref('')
 const transitioning = ref(false);
@@ -297,11 +310,6 @@ function removeCard(index) {
   }
 }
 
-function startGame() {
-  if (!selectedCards.value.length) return
-  phase.value = 'prep'
-}
-
 function nextPhase() {
   if (phase.value === 'night') {
     transitionText.value = "🌞 Le village se réveille...";
@@ -322,7 +330,7 @@ function nextPhase() {
       visible.value = false;
       victimLGName.value = '';
       personneProteger.value = '';
-      victimSorName.value = '';
+      victimeSorName.value = '';
       transitioning.value = false;
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }, 2000);
@@ -343,7 +351,7 @@ function nextPhase() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Watch for victory
+// Vérifie les conditions de victoire
 watch(
   selectedCards,
   cards => {
@@ -398,6 +406,27 @@ const nomServante = ref('');
 const choixServante = ref(null);
 const joueurs = ref([]);
 const joueursCharmes = ref([]); // tableau des noms charmés
+const joueursInitial = ref([]); // tableau initial des joueurs pour réinitialiser les votes
+
+//fonction pour recopier les joueurs au début de la partie
+function startGame() {
+  if (!selectedCards.value.length) return;
+  joueursInitial.value = joueurs.value.map(j => ({ ...j })); // copie profonde
+  phase.value = 'prep'; 
+}
+//fonction pour recommencer une partie avec les mêmes joueurs
+function rejouer() {
+  selectedCards.value = [];
+  phase.value = 'selection';
+  dayCount.value = 0;
+  nightCount.value = 0;
+  visible.value = false;
+  potionVieDispo.value = true;
+  potionMortDispo.value = true;
+  choixrenard.value = true;
+  // Réinjecte la liste initiale des joueurs
+  joueurs.value = joueursInitial.value.map(j => ({ ...j }));
+}
 
 function updateJoueurs(list) {
   // Si la liste contient des chaînes, transforme-les en objets
@@ -630,6 +659,9 @@ h2 {
 .nouvellepartie {
   background: linear-gradient(90deg, #ffec70, #ffae00);
   color: #192232;
+  margin-top: 2em;   /* marge basée sur la taille du texte */
+  margin-top: 20%;   /* marge relative à la hauteur du conteneur */
+  margin-top: 5vh;   /* marge relative à la hauteur de la fenêtre */
 }
 
 .nouvellepartie:hover,
@@ -668,6 +700,15 @@ h2 {
 .footer {
   text-align: center;
   padding: 1rem;
+  margin-top: 5rem;
+  background: rgba(25, 34, 50, 0.92);
+  border-top: 2px solid #ffae00;
+  box-shadow: 0 -2px 16px #000a;
+  padding: 1.5rem 0 1rem 0;
+  font-size: 1.1rem;
+  color: #ffffff;
+  text-align: center;
+  width: 100%;
 }
 
 .annonces-row {
@@ -725,6 +766,8 @@ h2 {
 
 /* Emoji pour chaque type */
 .victim-annonce strong::before    { content: "💀 "; }
+.infecte-annonce strong::after { content: "🐺 "; }
+.sorciere-annonce strong::before { content: "🧪 "; }
 .protected-annonce strong::before { content: "🛡️ "; }
 .amoureux-annonce strong::before  { content: "💘 "; }
 .ancien-annonce strong::before    { content: "👴 "; }
