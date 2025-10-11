@@ -10,18 +10,16 @@
         @click="!props.potionMortDispo || emit('use-mort')"
       />
     </button>
-    <dialog ref="testDialog">
-      <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
+    <dialog ref="alchiDialog">
       <p>L'alchimiste choisit sa victime</p>
       <div>
         <label for="victimAlchimiste" class="font-semibold w-24">La victime est</label>
-        <input
-          id="victimAlchimiste"
-          v-model="victimAlchimiste"
-          type="text"
-          class="flex-auto"
-          autocomplete="off"
-        />
+        <select id="victimAlchimiste" v-model="victimAlchimiste" class="flex-auto">
+        <option value="" disabled>Choisir un joueur</option>
+        <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
+          {{ joueur.nom }}
+        </option>
+      </select>
       </div>
       <button @click="validate">Valider</button>
     </dialog>
@@ -31,22 +29,21 @@
 <script setup>
 import { ref, defineProps, defineEmits } from "vue";
 
-
-const props = defineProps({
-  potionMortDispo: Boolean
-});
-
-const testDialog = ref(null);
+const alchiDialog = ref(null);
 const victimAlchimiste = ref("");
-const emit = defineEmits(["use-mort", "alch-victim-selected"]);
+const props = defineProps({
+  potionMortDispo: Boolean,
+  joueurs: Array
+});
+const emit = defineEmits(["alch-victim-selected"]);
 
 function openDialog() {
-  victimAlchimiste.value = ""; // Réinitialise le champ à chaque ouverture
-  testDialog.value.showModal();
+  victimAlchimiste.value = "";
+  alchiDialog.value.showModal();
 }
 function validate() {
   emit("alch-victim-selected", victimAlchimiste.value);
-  testDialog.value.close();
+  alchiDialog.value.close();
 }
 
 </script>

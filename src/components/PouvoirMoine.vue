@@ -11,14 +11,13 @@
     <dialog ref="moineDialog">
       <p>Le Moine choisit qui sauver</p>
       <div>
-        <label for="moineSaveName" class="font-semibold w-24">Personne à sauver :</label>
-        <input
-          id="moineSaveName"
-          v-model="moineSaveName"
-          type="text"
-          class="flex-auto"
-          autocomplete="off"
-        />
+        <label for="moineSaveName" class="font-semibold w-24">Personne sauver :</label>
+        <select id="moineSaveName" v-model="moineSaveName" class="flex-auto">
+        <option value="" disabled>Choisir un joueur</option>
+        <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
+          {{ joueur.nom }}
+        </option>
+      </select>
       </div>
       <button @click="validate">Valider</button>
     </dialog>
@@ -26,14 +25,14 @@
 </template>
 
 <script setup>
-import { ref, defineEmits } from "vue";
-
-const props = defineProps({
-  potionVieDispo: Boolean
-});
+import { ref, defineEmits, defineProps } from "vue";
 
 const moineDialog = ref(null);
 const moineSaveName = ref("");
+const props = defineProps({
+  joueurs: Array,
+  potionVieDispo: Boolean
+});
 const emit = defineEmits(["moine-save"]);
 
 function openDialog() {
@@ -42,13 +41,12 @@ function openDialog() {
     moineDialog.value.showModal();
   }
 }
+
 function validate() {
   emit("moine-save", moineSaveName.value);
   moineDialog.value.close();
 }
-function closeDialog() {
-  testDialog.value.close();
-}
+
 </script>
 
 <style scoped>

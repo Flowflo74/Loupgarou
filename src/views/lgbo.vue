@@ -92,17 +92,17 @@
           <!-- Logos potion pour l'Alchimiste -->
           <template v-if="card.name === 'Alchimiste'">
             <PouvoirAlchimiste
-            @alch-victim-selected="victimAlchimiste = $event" 
-            :potion-mort-dispo="potionMortDispo"
-              @use-mort="potionMortDispo = false" />
+            :joueurs="joueurs"
+  :potionMortDispo="potionMortDispo"
+  @alch-victim-selected="handleAlchimisteVictim"/>
           </template>
 
           <!-- Logo potions pour le moine -->
           <template v-if="card.name === 'Moine'">
             <PouvoirMoine
-            @alch-victim-selected="victimAlchimiste = $event"
-            :potion-vie-dispo="potionVieDispo" 
-              @use-vie="potionVieDispo = false" />
+              :joueurs="joueurs"
+              :potionVieDispo="potionVieDispo"
+              @moine-save="handleMoineSave"/>
           </template>
 
           <!-- Logos tête de lg pour la victime -->
@@ -175,6 +175,11 @@
     <!-- Jour -->
     <section v-if="phase === 'day'" class="phase-jour">
       <h2>🌕 Jour {{ dayCount }}</h2>
+      <Phasedevote
+  v-if="phase === 'day'"
+  :joueurs="joueurs"
+  @update-joueurs="updateJoueurs"
+/>
       <p class="vote">Vote du village : Qui a été éliminer par le village ?</p>
       <div class="annonces-row">
       <div v-if="nomAncien" class="annonce-block ancien-annonce">
@@ -226,6 +231,7 @@ import PouvoirMoine from '@/components/PouvoirMoine.vue'
 import Boutonfullscreen from '@/components/Boutonfullscreen.vue'
 import Listedesjoueurs from '../components/Listedesjoueurs.vue'
 import Boutonrejouer from '@/components/Boutonrejouer.vue'
+import Phasedevote from '@/components/Phasedevote.vue'
 
 // Etat
 const allCards = data
@@ -358,6 +364,14 @@ function setAmoureux({ nomAmoureux1: n1, nomAmoureux2: n2 }) {
 }
 function setAncien({ nomAncien: n }) {
   nomAncien.value = n;
+}
+function handleMoineSave(joueur) {
+  // ...traite la sauvegarde...
+  potionVieDispo.value = false;
+}
+function handleAlchimisteVictim(joueur) {
+  // ...traite la victime...
+  potionMortDispo.value = false;
 }
 
 const joueurs = ref([]);
