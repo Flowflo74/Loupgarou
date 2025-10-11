@@ -215,15 +215,6 @@
       "description": "Chaque matin, si un Loup-Garou est assis à sa gauche ou à sa droite, le meneur émet un grognement pour signaler la présence du danger."
     },
     {
-      "name": "Servante dévouée",
-      "image": "servantedevbo.png",
-      "order": 9,
-      "onlyFirstNight": false,
-      "isCallable": true,
-      "categorie": "Villageois",
-      "description": "Prend le role d'un autre personnage en cas de deces."
-    },
-    {
       "name": "Dictateur",
       "image": "dictateurbo.png",
       "order": 23,
@@ -282,9 +273,9 @@
       "image": "courtisanebo.png",
       "order": 28,
       "onlyFirstNight": false,
-      "isCallable": false,
+      "isCallable": true,
       "categorie": "Villageois",
-      "description": "wait"
+      "description": "Chaque nuit, elle peut soit rester chez elle, soit choisir un joueur chez qui elle va se réfugier. Si ce joueur est attaqué par les loups-garous, elle meurt avec lui."
     },
     {
       "name": "Sectaire",
@@ -307,10 +298,19 @@
     {
       "name": "Juge",
       "image": "jugebo.png",
-      "order": 31,
-      "onlyFirstNight": false,
+      "order": 4,
+      "onlyFirstNight": true,
       "isCallable": false,
       "categorie": "Villageois",
       "description": "En début de partie, il définis un signe avec le meneur de jeu. Une fois dans la partie, il peut refaire ce signe au meneur. Dans ce cas, un nouveau vote d'expulsion à lieu immédiatement et sans débat."
+    },
+     {
+      "name": "Servante devouee",
+      "image": "servantedevbo.png",
+      "order": 32,
+      "onlyFirstNight": false,
+      "isCallable": true,
+      "categorie": "Villageois",
+      "description": "Prend le role d'un autre personnage en cas de deces."
     }
 ]

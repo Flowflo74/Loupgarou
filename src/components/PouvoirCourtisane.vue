@@ -3,18 +3,18 @@
     <button class="bouton" @click="openDialog">
       <img
         class="position-logo"
-        src="/logospouvoirs/servantedevouee.png"
-        alt="Servante dévouée"
-        title="Pouvoir de la servante"
+        src="/logospouvoirs/courtisanedevouee.png"
+        alt="courtisane dévouée"
+        title="Pouvoir de la courtisane"
       />
     </button>
-    <dialog ref="servanteDialog">
+    <dialog ref="courtisaneDialog">
       <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
-      <div v-if="!nomServante">
-        <label for="nomServante" class="font-semibold w-24">La servante est :</label>
+      <div v-if="!nomcourtisane">
+        <label for="nomcourtisane" class="font-semibold w-24">La courtisane est :</label>
         <select
-        id="nomServante"
-        v-model="nomServante"
+        id="nomcourtisane"
+        v-model="nomcourtisane"
         class="flex-auto">
         <option value="" disabled>Choisir un joueur</option>
         <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
@@ -23,20 +23,20 @@
       </select>
       </div>
       <div v-else>
-        <strong>Servante : {{ nomServante }}</strong>
+        <strong>courtisane : {{ nomcourtisane }}</strong>
       </div>
-      <p>Que fait la servante dévouée ?</p>
-      <div class="choix-servante">
+      <p>Que fait la courtisane dévouée ?</p>
+      <div class="choix-courtisane">
         <label>
-          <input type="radio" value="chez-elle" v-model="choixServante" />
+          <input type="radio" value="chez-elle" v-model="choixcourtisane" />
           Elle reste chez elle
         </label>
         <label>
-          <input type="radio" value="autre" v-model="choixServante" />
+          <input type="radio" value="autre" v-model="choixcourtisane" />
           Elle va chez quelqu’un d’autre
         </label>
         <input
-          v-if="choixServante === 'autre'"
+          v-if="choixcourtisane === 'autre'"
           type="text"
           v-model="nomPersonne"
           placeholder="Nom de la personne"
@@ -51,31 +51,31 @@
 <script setup>
 import { ref, defineEmits, defineProps } from "vue";
 
-const servanteDialog = ref(null);
-const choixServante = ref("chez-elle");
+const courtisaneDialog = ref(null);
+const choixcourtisane = ref("chez-elle");
 const nomPersonne = ref("");
-const emit = defineEmits(["servante-choix"]);
+const emit = defineEmits(["courtisaneduvillage"]);
 const props = defineProps({
   joueurs: Array,
-  nomServante: String
+  nomcourtisane: String
 });
-const nomServante = ref(props.nomServante || "");
+const nomcourtisane = ref(props.nomcourtisane || "");
 
 function openDialog() {
-  choixServante.value = "chez-elle";
+  choixcourtisane.value = "chez-elle";
   nomPersonne.value = "";
-  servanteDialog.value.showModal();
+  courtisaneDialog.value.showModal();
 }
 function closeDialog() {
-  servanteDialog.value.close();
+  courtisaneDialog.value.close();
 }
 function validate() {
-  emit("servante-choix", {
-    choix: choixServante.value,
-    personne: choixServante.value === "autre" ? nomPersonne.value : null,
-    nomServante: nomServante.value
+  emit("courtisane-choix", {
+    choix: choixcourtisane.value,
+    personne: choixcourtisane.value === "autre" ? nomPersonne.value : null,
+    nomcourtisane: nomcourtisane.value
   });
-  servanteDialog.value.close();
+  courtisaneDialog.value.close();
 }
 </script>
 
@@ -124,7 +124,7 @@ dialog {
   background: #ffae0022;
   opacity: 1;
 }
-.choix-servante {
+.choix-courtisane {
   margin: 1.2rem 0;
   text-align: left;
 }

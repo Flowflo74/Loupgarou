@@ -60,6 +60,14 @@
           <template v-if="card.name === 'Ancien'">
             <PouvoirAncien :joueurs="joueurs" @ancienduvillage="setAncien" />
           </template>
+          <!-- Logo pouvoir juge -->
+          <template v-if="card.name === 'Juge'">
+            <PouvoirJuge :joueurs="joueurs" @jugeduvillage="setJuge" />
+          </template>
+          <!-- Logos potion pour les soeurs -->
+          <template v-if="card.name === 'Deux Soeurs'">
+            <Pouvoirdeuxsoeurs :joueurs="joueurs" @soeurs="setSoeurs" />
+            </template>
           <!-- Logos pouvoir cupidon -->
           <template v-if="card.name === 'Cupidon'">
             <PouvoirCupidon :joueurs="joueurs" @inlove1="setAmoureux" />
@@ -72,6 +80,9 @@
           <template v-if="card.name === 'Enfant Sauvage'">
             <PouvoirEnfantSauvage :joueurs="joueurs" @mentorduvillage="setMentor" />
           </template>
+          <!-- Logo pouvoir courtisane -->
+          <template v-if="card.name === 'Courtisane'"></template>
+            <PouvoirCourtisane :joueurs="joueurs" @courtisaneduvillage="setcourtisane" />
         </li>
       </ul>
       <button class="btn-next-phase" @click="nextPhase">Commencer la nuit</button>
@@ -253,6 +264,8 @@ import Boutonrejouer from '@/components/Boutonrejouer.vue'
 import Phasedevote from '@/components/Phasedevote.vue'
 import PouvoirChasseur from '../components/PouvoirChasseur.vue'
 import PouvoirEnfantSauvage from '../components/PouvoirEnfantSauvage.vue'
+import PouvoirCourtisane from '../components/PouvoirCourtisane.vue'
+import Pouvoirdeuxsoeurs from '../components/Pouvoirdeuxsoeurs.vue'
 
 // Etat
 const allCards = data
@@ -366,20 +379,21 @@ watch(
 // ça c'est pour les logos à côté des cartes
 const potionVieDispo = ref(true)
 const potionMortDispo = ref(true)
-const choixvictimelg = ref(true)
-const choixsalvateur = ref(true)
 const choixrenard = ref(true)
 const pouvoirflute = ref(true)
-const nomChasseur = ref(true);
+
 
 // Pop up des pouvoirs
 const victimeLGName = ref('');
+const nomSoeur1 = ref('');
+const nomSoeur2 = ref('');
 const personneProteger = ref('');
 const victimSorName = ref('');
 const nomAmoureux1 = ref('');
 const nomAmoureux2 = ref('');
 const nomEnfantSauvage = ref('');
-
+const nomCourtisane = ref('');
+const choixCourtisane = ref('');
 
 function setAmoureux({ nomAmoureux1: n1, nomAmoureux2: n2 }) {
   nomAmoureux1.value = n1;
@@ -391,17 +405,24 @@ function setAncien({ nomAncien: n }) {
 function setChasseur({ nomChasseur: n }) {
   nomAncien.value = n;
 }
-
+function setSoeurs({ nomSoeur1: n1, nomSoeur2: n2 }) {
+  nomSoeur1.value = n1;
+  nomSoeur2.value = n2;
+}
 function setMentor({ nomEnfantSauvage: n1, nomMentor: n2 }) {
   nomEnfantSauvage.value = n1;
   nomMentor.value = n2;
 }
+
+function setCourtisane({ choix, personne, nomCourtisane: nom }) {
+  choixCourtisane.value = { choix, personne };
+  if (!nomCourtisane.value) nomCourtisane.value = nom;
+}
+
 function handleMoineSave(joueur) {
-  // ...traite la sauvegarde...
   potionVieDispo.value = false;
 }
 function handleAlchimisteVictim(joueur) {
-  // ...traite la victime...
   potionMortDispo.value = false;
 }
 
