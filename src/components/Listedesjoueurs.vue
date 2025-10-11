@@ -41,14 +41,15 @@ const isDay = computed(() => props.phase === "day");
 
 function addJoueur() {
   if (nouveauJoueur.value.trim()) {
-    // Émet une liste de noms (chaînes)
-    emit("update-joueurs", [...props.joueurs.map(j => j.nom), nouveauJoueur.value.trim()]);
+    emit("update-joueurs", [
+      ...props.joueurs,
+      { nom: nouveauJoueur.value.trim(), votes: 0, mort: false }
+    ]);
     nouveauJoueur.value = "";
   }
 }
 function removeJoueur(idx) {
-  // Émet une liste de noms (chaînes)
-  const newList = props.joueurs.map(j => j.nom);
+  const newList = props.joueurs.slice();
   newList.splice(idx, 1);
   emit("update-joueurs", newList);
 }

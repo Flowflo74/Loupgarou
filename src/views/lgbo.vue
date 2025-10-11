@@ -4,11 +4,16 @@
     
     <section v-if="phase === 'selection'" class="selection-phase">
       <p class="selection-perso">Sélectionne les personnages de la partie</p>
-
       <button class="btn-lancer-partie" @click="startGame" :disabled="!selectedCards.length">
         Lancer la partie
       </button>
-
+      <!-- Liste des joueurs -->
+<Listedesjoueurs
+  :joueurs="joueurs"
+  :phase="phase"
+  @update-joueurs="updateJoueurs"
+/>
+      <!-- Cartes -->
       <div class="cartes-selectionnees">
         <p class="label">Cartes sélectionnées</p>
         <ul>
@@ -53,11 +58,11 @@
           
           <!-- Logo pouvoir ancien -->
           <template v-if="card.name === 'Ancien'">
-            <PouvoirAncien @ancienduvillage="setAncien" />
+            <PouvoirAncien :joueurs="joueurs" @ancienduvillage="setAncien" />
           </template>
           <!-- Logos pouvoir cupidon -->
           <template v-if="card.name === 'Cupidon'">
-            <PouvoirCupidon @inlove1="setAmoureux" />
+            <PouvoirCupidon :joueurs="joueurs" @inlove1="setAmoureux" />
           </template>
 
         </li>
@@ -104,14 +109,14 @@
           <template v-if="card.name === 'Loup-garou'">
             <div class="position-logo victimelg">
               <!-- teeeeeeest -->
-              <LoupGarouButton @victim-selected="victimLGName = $event" />
+              <LoupGarouButton :joueurs="joueurs" @victim-selected="victimLGName = $event" />
               
             </div>
           </template>
 
           <!-- Logo bouclier pour le salva -->
           <template v-if="card.name === 'Salvateur'">
-            <PouvoirSalva @protected-person="personneProteger = $event" />
+            <PouvoirSalva :joueurs="joueurs" @protected-person="personneProteger = $event" />
           </template>
 
           <!-- Logo renard pour le pouvoir du renard -->
@@ -193,7 +198,7 @@
     <section v-if="phase === 'end'" class="phase-end">
       <h2>{{ winnerMessage }}</h2>
       <img :src="winnerImage" class="winnerimage" />
-      <button class="nouvellepartie" @click="nouvellepartie">Nouvelle partie</button>
+      <Boutonrejouer v-if="phase === 'jour' || phase === 'end'" @rejouer="rejouer" />
     </section>
 
     <!-- Footer persistent -->
@@ -220,6 +225,7 @@ import PouvoirAlchimiste from '@/components/PouvoirAlchimiste.vue'
 import PouvoirMoine from '@/components/PouvoirMoine.vue'
 import Boutonfullscreen from '@/components/Boutonfullscreen.vue'
 import Listedesjoueurs from '../components/Listedesjoueurs.vue'
+import Boutonrejouer from '@/components/Boutonrejouer.vue'
 
 // Etat
 const allCards = data
@@ -274,12 +280,12 @@ function removeCard(index) {
     winnerImage.value = '/victoire/victoireange.jpg'
   }
 }
-
+/// Lancer une nouvelle partie
 function startGame() {
-  if (!selectedCards.value.length) return
-  phase.value = 'prep'
+  joueursInitial.value = joueurs.value.map(j => ({ ...j }));
+  phase.value = 'prep';
 }
-
+///Phases de jeu
 function nextPhase() {
   switch (phase.value) {
     case 'prep':
@@ -308,7 +314,7 @@ function nextPhase() {
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
-// Watch for victory
+// On regarde pour la victoire
 watch(
   selectedCards,
   cards => {
@@ -328,16 +334,7 @@ watch(
   { deep: true }
 )
 
-function nouvellepartie() {
-  selectedCards.value = []
-  phase.value = 'selection'
-  dayCount.value = 0
-  nightCount.value = 0
-  visible.value = false
-  potionVieDispo.value = true
-  potionMortDispo.value = true
-  choixrenard.value = true
-}
+
 
 // ça c'est pour les logos à côté des cartes
 const potionVieDispo = ref(true)
@@ -347,11 +344,7 @@ const choixsalvateur = ref(true)
 const choixrenard = ref(true)
 const pouvoirflute = ref(true)
 
-// test pour la popup
-const testDialog = ref(null)
-function openDialog() {
-  testDialog.value.showModal()
-}
+// Pop up des pouvoirs
 const victimeLGName = ref('');
 const personneProteger = ref('');
 const victimSorName = ref('');
@@ -365,6 +358,17 @@ function setAmoureux({ nomAmoureux1: n1, nomAmoureux2: n2 }) {
 }
 function setAncien({ nomAncien: n }) {
   nomAncien.value = n;
+}
+
+const joueurs = ref([]);
+const joueursInitial = ref([]);
+function updateJoueurs(list) {
+  joueurs.value = list;
+}
+
+function rejouer() {
+  joueurs.value = joueursInitial.value.map(j => ({ ...j }));
+  phase.value = 'selection';
 }
 </script>
 
@@ -551,7 +555,6 @@ h2 {
 }
 
 /* Boutons */
-.nouvellepartie,
 .btn-lancer-partie,
 .btn-next-phase,
 .btn-phase-jour,
@@ -590,19 +593,18 @@ h2 {
   background: transparent;
   border: 2px solid #ffae00;
   color: #ffae00;
+  font-family: inherit;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border-radius: 25px;
+  padding: 0.75rem 1.5rem;
+  margin: 1rem auto;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
 }
 
-.nouvellepartie {
-  background: linear-gradient(90deg, #ffec70, #ffae00);
-  color: #192232;
-}
-
-.nouvellepartie:hover,
-.btn-lancer-partie:hover,
-.btn-next-phase:hover,
-.btn-phase-jour:hover,
-.btn-retour-accueil:hover,
-.btn-lancer-partie:hover {
+.btn-retour-accueil:hover {
   transform: scale(1.08);
   box-shadow: 0 8px 30px 0 #fff70099;
   background: linear-gradient(90deg, #ffec70 0%, #ffae00 100%);
@@ -634,6 +636,15 @@ h2 {
 .footer {
   text-align: center;
   padding: 1rem;
+  margin-top: 5rem;
+  background: rgba(25, 34, 50, 0.92);
+  border-top: 2px solid #ffae00;
+  box-shadow: 0 -2px 16px #000a;
+  padding: 1.5rem 0 1rem 0;
+  font-size: 1.1rem;
+  color: #ffffff;
+  text-align: center;
+  width: 100%;
 }
 
 .annonces-row {
