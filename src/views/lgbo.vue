@@ -64,7 +64,14 @@
           <template v-if="card.name === 'Cupidon'">
             <PouvoirCupidon :joueurs="joueurs" @inlove1="setAmoureux" />
           </template>
-
+          <!-- Logo pouvoir chasseur -->
+          <template v-if="card.name === 'Chasseur'">
+            <PouvoirChasseur :joueurs="joueurs" @chasseurduvillage="setChasseur" />
+          </template>
+          <!-- Logo pouvoir enfant sauvage -->
+          <template v-if="card.name === 'Enfant Sauvage'">
+            <PouvoirEnfantSauvage :joueurs="joueurs" @mentorduvillage="setMentor" />
+          </template>
         </li>
       </ul>
       <button class="btn-next-phase" @click="nextPhase">Commencer la nuit</button>
@@ -84,6 +91,7 @@
           <!-- Logos potions pour la Sorcière -->
           <template v-if="card.name === 'Sorciere'">
             <PotionsSorciere
+            :joueurs="joueurs"
             @sor-victim-selected="victimSorName = $event" 
             :potion-vie-dispo="potionVieDispo" :potion-mort-dispo="potionMortDispo"
               @use-vie="potionVieDispo = false" @use-mort="potionMortDispo = false" />
@@ -146,21 +154,32 @@
         <div v-if="nomAncien" class="annonce-block ancien-annonce">
           <strong>L’Ancien du village est :</strong> {{ nomAncien }}
         </div>
+
+        <div v-if="nomMentor" class="annonce-block mentor-annonce">
+          <strong>Le mentor de <span class="highlight">{{ nomEnfantSauvage }}</span> est </strong> {{ nomMentor }}
+        </div>
+
         <div v-if="nomAmoureux1" class="annonce-block amoureux-annonce">
+
           <strong>Les amoureux sont :</strong> {{ nomAmoureux1 }} ➕ {{ nomAmoureux2 }}
         </div>
+
         <div v-if="personneProteger" class="annonce-block protected-annonce">
           <strong>La personne protégée est :</strong> {{ personneProteger }}
         </div>
+
         <div v-if="victimLGName" class="annonce-block victim-annonce">
           <strong>Victime des Loups-garous :</strong> {{ victimLGName }}
         </div>
+
         <div v-if="victimSorName" class="annonce-block victim-annonce">
           <strong>Victime de la Sorcière :</strong> {{ victimSorName }}
         </div>
+
         <div v-if="victimAlchimiste" class="annonce-block victim-annonce">
           <strong>Victime de l'Alchimiste :</strong> {{ victimAlchimiste }}
         </div>
+
       </div>
       <ul class="village-list">
         <li v-for="(card, index) in selectedCards" :key="'nightelim-' + index" class="remaining-card">
@@ -232,6 +251,8 @@ import Boutonfullscreen from '@/components/Boutonfullscreen.vue'
 import Listedesjoueurs from '../components/Listedesjoueurs.vue'
 import Boutonrejouer from '@/components/Boutonrejouer.vue'
 import Phasedevote from '@/components/Phasedevote.vue'
+import PouvoirChasseur from '../components/PouvoirChasseur.vue'
+import PouvoirEnfantSauvage from '../components/PouvoirEnfantSauvage.vue'
 
 // Etat
 const allCards = data
@@ -349,6 +370,7 @@ const choixvictimelg = ref(true)
 const choixsalvateur = ref(true)
 const choixrenard = ref(true)
 const pouvoirflute = ref(true)
+const nomChasseur = ref(true);
 
 // Pop up des pouvoirs
 const victimeLGName = ref('');
@@ -356,6 +378,7 @@ const personneProteger = ref('');
 const victimSorName = ref('');
 const nomAmoureux1 = ref('');
 const nomAmoureux2 = ref('');
+const nomEnfantSauvage = ref('');
 
 
 function setAmoureux({ nomAmoureux1: n1, nomAmoureux2: n2 }) {
@@ -364,6 +387,14 @@ function setAmoureux({ nomAmoureux1: n1, nomAmoureux2: n2 }) {
 }
 function setAncien({ nomAncien: n }) {
   nomAncien.value = n;
+}
+function setChasseur({ nomChasseur: n }) {
+  nomAncien.value = n;
+}
+
+function setMentor({ nomEnfantSauvage: n1, nomMentor: n2 }) {
+  nomEnfantSauvage.value = n1;
+  nomMentor.value = n2;
 }
 function handleMoineSave(joueur) {
   // ...traite la sauvegarde...

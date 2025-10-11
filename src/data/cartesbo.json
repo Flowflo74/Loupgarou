@@ -51,7 +51,7 @@
     "name": "Chasseur",
     "image": "chasseurbo.png",
     "order": 5,
-    "onlyFirstNight": false,
+    "onlyFirstNight": true,
     "isCallable": false,
     "categorie": "Villageois",
     "description": "Peut tirer sur un joueur s'il meurt.",

@@ -1,28 +1,13 @@
 <template>
   <button class="bouton" @click="openDialog">
-    <img class="position-logo" src="/logospouvoirs/logoenfantsauvage.png" alt="pouvoirEnfantSauvage" title="Enfant Sauvage">
+    <img class="position-logo" src="/logospouvoirs/pouvoirchasseur.png" alt="pouvoirchasseur" title="Qui est le chasseur ?">
   </button>
-  <dialog ref="enfDialog">
+  <dialog ref="ChasseurDialog">
     <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
+    <p>Qui est le chasseur du village ?</p>
     <div>
-      <label for="nomEnfantSauvage" class="font-semibold w-24">L'enfant sauvage est :</label>
-      <select
-        id="nomEnfantSauvage"
-        v-model="nomEnfantSauvage"
-        class="flex-auto">
-        <option value="" disabled>Choisir un joueur</option>
-        <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
-          {{ joueur.nom }}
-        </option>
-      </select>
-    </div>
-    <p>Qui est le mentor de l'enfant sauvage ?</p>
-    <div>
-      <label for="mentorduvillage" class="font-semibold w-24">L'enfant sauvage a pour mentor :</label>
-      <select
-        id="nomMentor"
-        v-model="nomMentor"
-        class="flex-auto">
+      <label for="nomChasseur" class="font-semibold w-24">L'ancien du village est :</label>
+      <select id="nomChasseur" v-model="nomChasseur" class="flex-auto">
         <option value="" disabled>Choisir un joueur</option>
         <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
           {{ joueur.nom }}
@@ -36,27 +21,21 @@
 <script setup>
 import { ref, defineEmits } from "vue";
 
-const enfDialog = ref(null);
-
-const nomEnfantSauvage = ref('');
+const ChasseurDialog = ref(null);
 const props = defineProps({ joueurs: Array });
-const nomMentor = ref("");
-const emit = defineEmits(["mentorduvillage"]);
+const nomChasseur = ref("");
+const emit = defineEmits(["chasseurduvillage"]);
 
 function openDialog() {
-  nomEnfantSauvage.value = "";
-  nomMentor.value = "";
-  enfDialog.value.showModal();
+  nomChasseur.value = "";
+  ChasseurDialog.value.showModal();
 }
 function closeDialog() {
-  enfDialog.value.close();
+  ChasseurDialog.value.close();
 }
 function validate() {
-  emit("mentorduvillage", { 
-    nomEnfantSauvage: nomEnfantSauvage.value,
-    nomMentor: nomMentor.value
-  });
-  enfDialog.value.close();
+  emit("chasseurduvillage", { nomChasseur: nomChasseur.value});
+  ChasseurDialog.value.close();
 }
 </script>
 
@@ -114,7 +93,7 @@ dialog label {
   font-size: 1.1rem;
   color: #ffae00;
 }
-dialog input[type="text"] {
+dialog input[type="text"], dialog select {
   width: 80%;
   padding: 0.5rem;
   border-radius: 8px;
