@@ -1,20 +1,15 @@
 <template>
   <div>
     <button class="bouton" @click="openDialog">
-      <img
-        class="position-logo"
-        src="/logospouvoirs/courtisanedevouee.png"
-        alt="courtisane dévouée"
-        title="Pouvoir de la courtisane"
-      />
+      <img class="position-logo" src="/public/logospouvoirs/pouvoircourtisane.png" alt="pouvoircourtisane" title="Qui est la courtisane ?">
     </button>
     <dialog ref="courtisaneDialog">
       <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
-      <div v-if="!nomcourtisane">
+      <div v-if="!nomCourtisane">
         <label for="nomcourtisane" class="font-semibold w-24">La courtisane est :</label>
         <select
         id="nomcourtisane"
-        v-model="nomcourtisane"
+        v-model="nomCourtisane"
         class="flex-auto">
         <option value="" disabled>Choisir un joueur</option>
         <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
@@ -23,20 +18,20 @@
       </select>
       </div>
       <div v-else>
-        <strong>courtisane : {{ nomcourtisane }}</strong>
+        <strong>courtisane : {{ nomCourtisane }}</strong>
       </div>
       <p>Que fait la courtisane dévouée ?</p>
       <div class="choix-courtisane">
         <label>
-          <input type="radio" value="chez-elle" v-model="choixcourtisane" />
+          <input type="radio" value="chez-elle" v-model="choixCourtisane" />
           Elle reste chez elle
         </label>
         <label>
-          <input type="radio" value="autre" v-model="choixcourtisane" />
+          <input type="radio" value="autre" v-model="choixCourtisane" />
           Elle va chez quelqu’un d’autre
         </label>
         <input
-          v-if="choixcourtisane === 'autre'"
+          v-if="choixCourtisane === 'autre'"
           type="text"
           v-model="nomPersonne"
           placeholder="Nom de la personne"
@@ -52,17 +47,17 @@
 import { ref, defineEmits, defineProps } from "vue";
 
 const courtisaneDialog = ref(null);
-const choixcourtisane = ref("chez-elle");
+const choixCourtisane = ref("chez-elle");
 const nomPersonne = ref("");
 const emit = defineEmits(["courtisaneduvillage"]);
 const props = defineProps({
   joueurs: Array,
-  nomcourtisane: String
+  nomCourtisane: String
 });
-const nomcourtisane = ref(props.nomcourtisane || "");
+const nomCourtisane = ref(props.nomCourtisane || "");
 
 function openDialog() {
-  choixcourtisane.value = "chez-elle";
+  choixCourtisane.value = "chez-elle";
   nomPersonne.value = "";
   courtisaneDialog.value.showModal();
 }
@@ -71,9 +66,9 @@ function closeDialog() {
 }
 function validate() {
   emit("courtisane-choix", {
-    choix: choixcourtisane.value,
-    personne: choixcourtisane.value === "autre" ? nomPersonne.value : null,
-    nomcourtisane: nomcourtisane.value
+    choix: choixCourtisane.value,
+    personne: choixCourtisane.value === "autre" ? nomPersonne.value : null,
+    nomcourtisane: nomCourtisane.value
   });
   courtisaneDialog.value.close();
 }

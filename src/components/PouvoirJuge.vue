@@ -13,6 +13,7 @@
           {{ joueur.nom }}
         </option>
       </select>
+      <p>Le Juge du village réalise un signe secret qui sera le signal pour lancer un second vote</p>
     </div>
     <button @click="validate">Valider</button>
   </dialog>

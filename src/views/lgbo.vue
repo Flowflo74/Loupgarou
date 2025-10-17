@@ -80,9 +80,6 @@
           <template v-if="card.name === 'Enfant Sauvage'">
             <PouvoirEnfantSauvage :joueurs="joueurs" @mentorduvillage="setMentor" />
           </template>
-          <!-- Logo pouvoir courtisane -->
-          <template v-if="card.name === 'Courtisane'"></template>
-            <PouvoirCourtisane :joueurs="joueurs" @courtisaneduvillage="setcourtisane" />
         </li>
       </ul>
       <button class="btn-next-phase" @click="nextPhase">Commencer la nuit</button>
@@ -99,6 +96,11 @@
             <p class="description">{{ card.description }}</p>
           </div>
 
+          <!-- Logo pouvoir courtisane -->
+          <template v-if="card.name === 'Courtisane'">
+            <PouvoirCourtisane :joueurs="joueurs" @courtisaneduvillage="setCourtisane" />
+          </template>
+
           <!-- Logos potions pour la Sorcière -->
           <template v-if="card.name === 'Sorciere'">
             <PotionsSorciere
@@ -108,7 +110,7 @@
               @use-vie="potionVieDispo = false" @use-mort="potionMortDispo = false" />
           </template>
 
-          <!-- Logos potion pour l'Alchimiste -->
+          <!-- Logo potion pour l'Alchimiste -->
           <template v-if="card.name === 'Alchimiste'">
             <PouvoirAlchimiste
             :joueurs="joueurs"
@@ -116,7 +118,7 @@
   @alch-victim-selected="handleAlchimisteVictim"/>
           </template>
 
-          <!-- Logo potions pour le moine -->
+          <!-- Logo potion pour le moine -->
           <template v-if="card.name === 'Moine'">
             <PouvoirMoine
               :joueurs="joueurs"
@@ -266,6 +268,7 @@ import PouvoirChasseur from '../components/PouvoirChasseur.vue'
 import PouvoirEnfantSauvage from '../components/PouvoirEnfantSauvage.vue'
 import PouvoirCourtisane from '../components/PouvoirCourtisane.vue'
 import Pouvoirdeuxsoeurs from '../components/Pouvoirdeuxsoeurs.vue'
+import PouvoirJuge from '../components/PouvoirJuge.vue'
 
 // Etat
 const allCards = data
@@ -277,8 +280,9 @@ const visible = ref(false)
 const winnerMessage = ref('')
 const winnerImage = ref('')
 const victimLGName = ref('')
-const victimeSorName = ref('')
 const nomAncien = ref('')
+const nomJuge = ref('')
+
 // Computed
 const prepCards = computed(() =>
   selectedCards.value
@@ -384,7 +388,6 @@ const pouvoirflute = ref(true)
 
 
 // Pop up des pouvoirs
-const victimeLGName = ref('');
 const nomSoeur1 = ref('');
 const nomSoeur2 = ref('');
 const personneProteger = ref('');
@@ -413,8 +416,10 @@ function setMentor({ nomEnfantSauvage: n1, nomMentor: n2 }) {
   nomEnfantSauvage.value = n1;
   nomMentor.value = n2;
 }
-
-function setCourtisane({ choix, personne, nomCourtisane: nom }) {
+function setJuge({ nomJuge: nom }) {
+  nomJuge.value = nom;
+}
+function setCourtisane({ nomCourtisane: nom }) {
   choixCourtisane.value = { choix, personne };
   if (!nomCourtisane.value) nomCourtisane.value = nom;
 }
