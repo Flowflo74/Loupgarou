@@ -114,24 +114,22 @@
           <template v-if="card.name === 'Alchimiste'">
             <PouvoirAlchimiste
             :joueurs="joueurs"
-  :potionMortDispo="potionMortDispo"
-  @alch-victim-selected="handleAlchimisteVictim"/>
+            :pouvoir-alchi-dispo="pouvoirAlchiDispo"
+            @alch-victim-selected="handleAlchimisteVictim"/>
           </template>
 
           <!-- Logo potion pour le moine -->
           <template v-if="card.name === 'Moine'">
             <PouvoirMoine
               :joueurs="joueurs"
-              :potionVieDispo="potionVieDispo"
+              :pouvoir-moine-dispo="pouvoirMoineDispo"
               @moine-save="handleMoineSave"/>
           </template>
 
           <!-- Logos tête de lg pour la victime -->
           <template v-if="card.name === 'Loup-garou'">
             <div class="position-logo victimelg">
-              <!-- teeeeeeest -->
               <LoupGarouButton :joueurs="joueurs" @victim-selected="victimLGName = $event" />
-              
             </div>
           </template>
 
@@ -144,14 +142,23 @@
           <template v-if="card.name === 'Renard'">
             <PouvoirRenard :choixrenard="choixrenard" @use-flair="choixrenard = false" />
           </template>
+
           <!-- logo pour pour le pouvoir du joueur de flute -->
-          <template v-if="card.name === 'Joueur de flute'">
-            <div class="position-logo Joueur de flute">
-              <img v-if="pouvoirflute" class="position-logo Joueur de flute"
-                src="../assets/assets-projet/logoperso/pouvoirflute.png"
-                title="Le joueur de flute peut choisir 1/2 joueurs à charmer" @click="pouvoirflute = false" />
-            </div>
+          <template v-if="card.name === 'Joueur de flute'">                 
+            <PouvoirFlute
+            :joueurs="joueurs"
+            :charmes="joueursCharmes"
+            @update-charmes="setCharmes"/>
+            </template>
+
+          <!-- Logo potion pour la servante dévouée -->
+          <template v-if="card.name === 'Servante devouee'">
+            <PouvoirServantedevouee
+              :joueurs="joueurs"
+              :pouvoirServDispo="pouvoirServDispo"
+              @servante-save="handleServanteSave"/>
           </template>
+
 
         </li>
       </ul>
@@ -269,6 +276,8 @@ import PouvoirEnfantSauvage from '../components/PouvoirEnfantSauvage.vue'
 import PouvoirCourtisane from '../components/PouvoirCourtisane.vue'
 import Pouvoirdeuxsoeurs from '../components/Pouvoirdeuxsoeurs.vue'
 import PouvoirJuge from '../components/PouvoirJuge.vue'
+import PouvoirServantedevouee from '../components/PouvoirServantedevouee.vue'
+
 
 // Etat
 const allCards = data
@@ -341,7 +350,6 @@ function nextPhase() {
       phase.value = 'night-elim'
       break
     case 'night-elim':
-      // Après l'élimination de la nuit, on passe au jour
       dayCount.value += 1
       phase.value = 'day'
       visible.value = true
@@ -381,7 +389,7 @@ watch(
 
 
 // ça c'est pour les logos à côté des cartes
-const potionVieDispo = ref(true)
+const pouvoirServDispo = ref(true)
 const potionMortDispo = ref(true)
 const choixrenard = ref(true)
 const pouvoirflute = ref(true)
@@ -397,6 +405,10 @@ const nomAmoureux2 = ref('');
 const nomEnfantSauvage = ref('');
 const nomCourtisane = ref('');
 const choixCourtisane = ref('');
+const potionVieDispo = ref('');
+const pouvoirMoineDispo = ref('');
+const pouvoirAlchiDispo = ref('');
+
 
 function setAmoureux({ nomAmoureux1: n1, nomAmoureux2: n2 }) {
   nomAmoureux1.value = n1;
@@ -425,10 +437,14 @@ function setCourtisane({ nomCourtisane: nom }) {
 }
 
 function handleMoineSave(joueur) {
-  potionVieDispo.value = false;
+  pouvoirMoineDispo.value = false;
 }
+
 function handleAlchimisteVictim(joueur) {
-  potionMortDispo.value = false;
+  pouvoirAlchiDispo.value = false;
+}
+function handleServanteSave(joueur) {
+  pouvoirServDispo.value = false;
 }
 
 const joueurs = ref([]);

@@ -1,52 +1,66 @@
 <template>
   <div>
-    <button class="bouton" @click="openDialog" :disabled="!potionVieDispo">
+    <button class="bouton" @click="openDialog" :disabled="!props.pouvoirMoineDispo">
       <img
         class="position-logo"
-        :src="potionVieDispo ? '/logospouvoirs/healthpotion.png' : '/logospouvoirs/potionviecroix.png'"
-        :title="potionVieDispo ? 'Utiliser le pouvoir du Moine' : 'Pouvoir déjà utilisé'"
-        :style="{ opacity: potionVieDispo ? 1 : 0.5 }"
+        :src="props.pouvoirMoineDispo ? '/logospouvoirs/healthpotion2.png' : '/logospouvoirs/potionviecroix2.png'"
+        :title="props.pouvoirMoineDispo ? 'Utiliser le pouvoir du Moine' : 'Pouvoir déjà utilisé'"
+        :style="{ opacity: props.pouvoirMoineDispo ? 1 : 0.5 }"
       />
     </button>
+
     <dialog ref="moineDialog">
-      <p>Le Moine choisit qui sauver</p>
-      <div>
-        <label for="moineSaveName" class="font-semibold w-24">Personne sauver :</label>
-        <select id="moineSaveName" v-model="moineSaveName" class="flex-auto">
-        <option value="" disabled>Choisir un joueur</option>
-        <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
-          {{ joueur.nom }}
-        </option>
-      </select>
-      </div>
-      <button @click="validate">Valider</button>
+      <form @submit.prevent="validate">
+        <p>Le Moine choisit qui sauver</p>
+        <div>
+          <label for="moineSaveName" class="font-semibold w-24">Personne à sauver :</label>
+          <select id="moineSaveName" v-model="moineSaveName" required>
+            <option value="" disabled>Choisir un joueur</option>
+            <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
+              {{ joueur.nom }}
+            </option>
+          </select>
+        </div>
+        <div style="margin-top:1rem; display:flex; gap:.5rem; justify-content:center;">
+          <button type="button" @click="closeDialog">Annuler</button>
+          <button type="submit">Valider</button>
+        </div>
+      </form>
     </dialog>
   </div>
 </template>
 
 <script setup>
-import { ref, defineEmits, defineProps } from "vue";
+import { ref, defineProps, defineEmits } from "vue";
 
-const moineDialog = ref(null);
-const moineSaveName = ref("");
 const props = defineProps({
-  joueurs: Array,
-  potionVieDispo: Boolean
+  joueurs: { type: Array, default: () => [] },
+  pouvoirMoineDispo: { type: Boolean, default: true }
 });
 const emit = defineEmits(["moine-save"]);
 
+const moineDialog = ref(null);
+const moineSaveName = ref("");
+
 function openDialog() {
-  if (props.potionVieDispo) {
-    moineSaveName.value = "";
+  if (!props.pouvoirMoineDispo) return;
+  moineSaveName.value = "";
+  if (moineDialog.value && typeof moineDialog.value.showModal === 'function') {
     moineDialog.value.showModal();
+  } else {
+    // fallback : focus la sélection si dialog natif non supporté
   }
 }
-
-function validate() {
-  emit("moine-save", moineSaveName.value);
-  moineDialog.value.close();
+function closeDialog() {
+  if (moineDialog.value && typeof moineDialog.value.close === 'function') {
+    moineDialog.value.close();
+  }
 }
-
+function validate() {
+  // si required, le navigateur empêche l'appel si rien n'est choisi
+  emit("moine-save", moineSaveName.value);
+  closeDialog();
+}
 </script>
 
 <style scoped>

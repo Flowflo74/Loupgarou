@@ -311,6 +311,6 @@
       "onlyFirstNight": false,
       "isCallable": true,
       "categorie": "Villageois",
-      "description": "Prend le role d'un autre personnage en cas de deces."
+      "description": "Peut se sacrifier à la place d'un joueur attaqué par les loups-garous."
     }
 ]

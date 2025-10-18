@@ -1,20 +1,18 @@
 <template>
-  <div class="potion-alchimiste">
-    
-    <button class="bouton" @click="openDialog" :disabled="!props.pouvoirAlchiDispo">
+  <div>
+    <button class="bouton" @click="openDialog" :disabled="!pouvoirServDispo">
       <img
         class="position-logo"
-        :src="props.pouvoirAlchiDispo ? '/logospouvoirs/deathpotion2.png' : '/logospouvoirs/potionmortcroix2.png'"
-        :title="props.pouvoirAlchiDispo ? 'Utiliser la potion de mort' : 'Potion de mort déjà utilisée'"
-        :style="{ opacity: props.pouvoirAlchiDispo ? 1 : 0.5 }"
-        @click="!props.pouvoirAlchiDispo || emit('use-mort')"
+        :src="pouvoirServDispo ? '/logospouvoirs/pouvoirservante.png' : '/logospouvoirs/servantedevcroix.png'"
+        :title="pouvoirServDispo ? 'Utiliser le pouvoir de la Servante dévouée' : 'Pouvoir déjà utilisé'"
+        :style="{ opacity: pouvoirServDispo ? 1 : 0.5 }"
       />
     </button>
-    <dialog ref="alchiDialog">
-      <p>L'alchimiste choisit sa victime</p>
+    <dialog ref="servanteDialog">
+      <p>La servante dévouée choisit qui sauver</p>
       <div>
-        <label for="victimAlchimiste" class="font-semibold w-24">La victime est</label>
-        <select id="victimAlchimiste" v-model="victimAlchimiste" class="flex-auto">
+        <label for="servanteSaveName" class="font-semibold w-24">Personne sauver :</label>
+        <select id="servanteSaveName" v-model="servanteSaveName" class="flex-auto">
         <option value="" disabled>Choisir un joueur</option>
         <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
           {{ joueur.nom }}
@@ -27,28 +25,31 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits } from "vue";
+import { ref, defineEmits, defineProps } from "vue";
 
-const alchiDialog = ref(null);
-const victimAlchimiste = ref("");
+const servanteDialog = ref(null);
+const servanteSaveName = ref("");
 const props = defineProps({
-  pouvoirAlchiDispo: Boolean,
-  joueurs: Array
+  joueurs: Array,
+  pouvoirServDispo: Boolean
 });
-const emit = defineEmits(["alch-victim-selected"]);
+const emit = defineEmits(["servante-save"]);
 
 function openDialog() {
-  victimAlchimiste.value = "";
-  alchiDialog.value.showModal();
+  if (props.pouvoirServDispo) {
+    servanteSaveName.value = "";
+    servanteDialog.value.showModal();
+  }
 }
+
 function validate() {
-  emit("alch-victim-selected", victimAlchimiste.value);
-  alchiDialog.value.close();
+  emit("servante-save", servanteSaveName.value);
+  servanteDialog.value.close();
 }
 
 </script>
 
-<style>
+<style scoped>
 .position-logo {
   width: 75px;
   height: 75px;
@@ -65,27 +66,20 @@ button.bouton {
   cursor: pointer;
 }
 dialog {
-  border: none;
-  border-radius: 16px;
-  padding: 2rem 2.5rem;
-  background: #232323;
   color: #fff;
   box-shadow: 0 8px 32px #000a;
   min-width: 320px;
   text-align: center;
 }
-
 dialog::backdrop {
   background: rgba(0,0,0,0.55);
 }
-
 dialog label {
   display: block;
   margin-bottom: 0.7rem;
   font-size: 1.1rem;
   color: #ffae00;
 }
-
 dialog input[type="text"] {
   width: 80%;
   padding: 0.5rem;
@@ -96,7 +90,6 @@ dialog input[type="text"] {
   background: #181818;
   color: #fff;
 }
-
 dialog button {
   margin-top: 1rem;
   padding: 0.5rem 1.2rem;
@@ -108,9 +101,6 @@ dialog button {
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.2s;
-}
-dialog button:hover {
-  background: #ffd966;
 }
 .close-btn {
   position: absolute;

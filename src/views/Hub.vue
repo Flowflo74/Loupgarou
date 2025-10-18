@@ -119,7 +119,7 @@ h2 {
 .flexbox li:nth-child(2) {
     background-image: url(../assets/assets-projet/autres/lg.jpg);
     background-size: cover;
-    box-shadow: 0px 0px 20px 4px #00ff44 !important;
+    box-shadow: 0px 0px 20px 4px #e1ff00 !important;
 }
 
 .flexbox li:nth-child(2):hover {
@@ -131,7 +131,8 @@ h2 {
 /* Menu lgob */
 .flexbox li:nth-child(3) {
     background-image: url(../assets/assets-projet/autres/imagelgbo.png);
-    background-size: cover
+    background-size: cover;
+    box-shadow: 0px 0px 20px 4px #00ff44 !important;
 }
 
 .flexbox li:nth-child(3):hover {

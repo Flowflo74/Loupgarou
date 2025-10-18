@@ -20,7 +20,7 @@
       <div v-else>
         <strong>courtisane : {{ nomCourtisane }}</strong>
       </div>
-      <p>Que fait la courtisane dévouée ?</p>
+      <p>Que fait la courtisane ?</p>
       <div class="choix-courtisane">
         <label>
           <input type="radio" value="chez-elle" v-model="choixCourtisane" />
