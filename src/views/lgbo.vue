@@ -133,6 +133,11 @@
             </div>
           </template>
 
+          <!-- Logo tête de lg pour l'infecté --> 
+          <template v-if="card.name === 'Infect pere des loups'">
+              <Pouvoirinfectperedesloups :joueurs="joueurs" @victim-selected="victiminfectLGName = $event" />
+          </template>
+
           <!-- Logo bouclier pour le salva -->
           <template v-if="card.name === 'Salvateur'">
             <PouvoirSalva :joueurs="joueurs" @protected-person="personneProteger = $event" />
@@ -168,8 +173,7 @@
     <!-- Phase : élimination de la nuit -->
     <section v-if="phase === 'night-elim'" class="phase-nuit-elim">
       <h2>💀 Qui a été éliminé cette nuit ? 💀</h2>
-      <p class="vote">Sélectionne la ou les victimes de la nuit</p>
-
+<!-- Annonces classiques -->
       <div class="annonces-row">
         <div v-if="nomAncien" class="annonce-block ancien-annonce">
           <strong>L’Ancien du village est :</strong> {{ nomAncien }}
@@ -180,26 +184,30 @@
         </div>
 
         <div v-if="nomAmoureux1" class="annonce-block amoureux-annonce">
-
           <strong>Les amoureux sont :</strong> {{ nomAmoureux1 }} ➕ {{ nomAmoureux2 }}
         </div>
-
         <div v-if="personneProteger" class="annonce-block protected-annonce">
           <strong>La personne protégée est :</strong> {{ personneProteger }}
         </div>
+        <div v-if="MoineSave" class="annonce-block protected-annonce">
+          <strong>La personne sauvé est :</strong> {{ MoineSave }}
+        </div>
 
+<!-- Annonces des Victimes -->
+        <div class="annonces-row annonces-row-elim">
         <div v-if="victimLGName" class="annonce-block victim-annonce">
           <strong>Victime des Loups-garous :</strong> {{ victimLGName }}
         </div>
-
+        <div v-if="victiminfectLGName" class="annonce-block victim-annonce">
+         {{ victiminfectLGName }}<strong> a été infecté !</strong>
+        </div>
         <div v-if="victimSorName" class="annonce-block victim-annonce">
           <strong>Victime de la Sorcière :</strong> {{ victimSorName }}
         </div>
-
         <div v-if="victimAlchimiste" class="annonce-block victim-annonce">
           <strong>Victime de l'Alchimiste :</strong> {{ victimAlchimiste }}
         </div>
-
+</div>
       </div>
       <ul class="village-list">
         <li v-for="(card, index) in selectedCards" :key="'nightelim-' + index" class="remaining-card">
@@ -277,6 +285,8 @@ import PouvoirCourtisane from '../components/PouvoirCourtisane.vue'
 import Pouvoirdeuxsoeurs from '../components/Pouvoirdeuxsoeurs.vue'
 import PouvoirJuge from '../components/PouvoirJuge.vue'
 import PouvoirServantedevouee from '../components/PouvoirServantedevouee.vue'
+import PouvoirFlute from '@/components/PouvoirFlute.vue'
+import Pouvoirinfectperedesloups from '@/components/Pouvoirinfectperedesloups.vue'
 
 
 // Etat
@@ -289,6 +299,7 @@ const visible = ref(false)
 const winnerMessage = ref('')
 const winnerImage = ref('')
 const victimLGName = ref('')
+const victiminfectLGName = ref('')
 const nomAncien = ref('')
 const nomJuge = ref('')
 
@@ -393,9 +404,7 @@ const pouvoirServDispo = ref(true)
 const potionMortDispo = ref(true)
 const choixrenard = ref(true)
 const pouvoirflute = ref(true)
-
-
-// Pop up des pouvoirs
+const joueursCharmes = ref([]);
 const nomSoeur1 = ref('');
 const nomSoeur2 = ref('');
 const personneProteger = ref('');
@@ -408,6 +417,8 @@ const choixCourtisane = ref('');
 const potionVieDispo = ref('');
 const pouvoirMoineDispo = ref('');
 const pouvoirAlchiDispo = ref('');
+const MoineSave = ref('');
+const victimAlchimiste = ref('');
 
 
 function setAmoureux({ nomAmoureux1: n1, nomAmoureux2: n2 }) {
@@ -436,12 +447,18 @@ function setCourtisane({ nomCourtisane: nom }) {
   if (!nomCourtisane.value) nomCourtisane.value = nom;
 }
 
+function setCharmes(nomsCharmes) {
+  joueursCharmes.value = nomsCharmes;
+}
+
 function handleMoineSave(joueur) {
   pouvoirMoineDispo.value = false;
+  MoineSave.value = joueur;
 }
 
 function handleAlchimisteVictim(joueur) {
   pouvoirAlchiDispo.value = false;
+  victimAlchimiste.value = joueur;
 }
 function handleServanteSave(joueur) {
   pouvoirServDispo.value = false;
@@ -735,11 +752,39 @@ h2 {
 }
 
 .annonces-row {
+ display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  justify-content: center;
+  margin: 1rem auto;
+  width: 100%;
+  max-width: 900px;
+}
+
+.annonces-row-elim {
+  margin-top: 1.5rem;
+  border-top: 2px ridge #ffae00;
+  padding-top: 1.2rem;
   display: flex;
   flex-wrap: wrap;
+  gap: 0.7rem;
   justify-content: center;
-  gap: 0.8rem;
-  margin: 1.2rem auto 0.8rem auto;
+  width: 100%;
+  max-width: 900px;
+}
+
+@media (max-width: 700px) {
+  .annonces-row,
+  .annonces-row-elim {
+    flex-direction: column;
+    align-items: stretch;
+    max-width: 98vw;
+  }
+  .annonce-block {
+    width: 100%;
+    min-width: 0;
+    max-width: 100vw;
+  }
 }
 
 .annonce-block {
@@ -794,5 +839,18 @@ h2 {
   color: #ffae00;
   letter-spacing: 1px;
   text-shadow: 0 1px 2px #000a;
+}
+
+.carte-juge-nom {
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
+  color: #ffae00;
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 1px;
+}
+.carte-juge-nom span {
+  color: #fff700;
+  margin-left: 0.3rem;
 }
 </style>

@@ -147,35 +147,40 @@
       <p class="vote">Annonce la ou les victimes de la nuit</p>
 
       <div class="annonces-row">
-        <div v-if="nomAncien" class="annonce-block ancien-annonce">
-          <strong>L’Ancien du village est </strong> {{ nomAncien }}
+        <div v-if="nomAncien" class="annonce-block classique-annonce">
+          <strong>L’Ancien du village est</strong> {{ nomAncien }}
         </div>
 
-        <div v-if="nomMentor" class="annonce-block mentor-annonce">
-          <strong>Le mentor de <span class="highlight">{{ nomEnfantSauvage }}</span> est </strong> {{ nomMentor }}
+        <div v-if="nomMentor" class="annonce-block classique-annonce">
+          <strong>Le mentor de <span class="highlight">{{ nomEnfantSauvage }}</span> est</strong> {{ nomMentor }}
         </div>
 
-        <div v-if="nomAmoureux1" class="annonce-block amoureux-annonce">
-          <strong>Les amoureux sont </strong><span class="highlight"> {{ nomAmoureux1 }} ➕ {{ nomAmoureux2 }}</span>
+        <div v-if="nomAmoureux1" class="annonce-block classique-annonce">
+          <strong>Les amoureux sont</strong> <span class="highlight">{{ nomAmoureux1 }} ➕ {{ nomAmoureux2 }}</span>
         </div>
-        <div v-if="choixServante" class="annonce-block servante-annonce">
+        <div v-if="choixServante" class="annonce-block classique-annonce">
           <strong><span class="highlight">{{ nomServante }}</span>, la Servante dévouée</strong>
-        <span v-if="choixServante.choix === 'chez-elle'">est restée chez elle.</span>
-        <span v-else>est allée chez {{ choixServante.personne }}.</span>
+          <span v-if="choixServante.choix === 'chez-elle'">est restée chez elle.</span>
+          <span v-else>est allée chez {{ choixServante.personne }}.</span>
         </div>
 
         <div v-if="personneProteger" class="annonce-block protected-annonce">
-          <strong>La personne protégée est </strong> {{ personneProteger }}
+          <strong>Protégé :</strong> <span class="highlight">{{ personneProteger }}</span>
         </div>
+
+
         <div v-if="victimLGName" class="annonce-block victim-annonce">
-          <strong>La victime des Loups-garous est :</strong> {{ victimLGName }}
+          <strong>Victime des Loups-garous :</strong> <span class="highlight">{{ victimLGName }}</span>
         </div>
-        <div v-if="victiminfectLGName" class="annonce-block infecte-annonce">
-        {{ victiminfectLGName }} <strong> est désormais un loup-garou ! </strong>
+        <div v-if="victiminfectLGName" class="annonce-block victim-annonce infecte-annonce">
+          <strong>Infecté :</strong> <span class="highlight">{{ victiminfectLGName }}</span>
         </div>
         <div v-if="victimSorName" class="annonce-block victim-annonce sorciere-annonce">
-          <strong>Victime de la Sorcière :</strong> {{ victimSorName }}
+          <strong>Victime de la Sorcière :</strong> <span class="highlight">{{ victimSorName }}</span>
         </div>
+
+
+
       </div>
       <ul class="village-list">
         <li v-for="(card, index) in selectedCards" :key="'nightelim-' + index" class="remaining-card">
@@ -757,10 +762,10 @@ h2 {
 .protected-annonce::before { background: linear-gradient(90deg, #659904, #b6ff00); }
 .amoureux-annonce::before  { background: linear-gradient(90deg, #ec03f4, #ff17dc); }
 .ancien-annonce::before    { background: linear-gradient(90deg, #1d4c04, #ffae00); }
-.mentor-annonce::before {
+.mentor-annonce strong::before {
   background: linear-gradient(90deg, #00c3ff, #ffae00);
 }
-.servante-annonce::before {
+.servante-annonce strong::before {
   background: linear-gradient(90deg, #00e6b8, #ffae00);
 }
 
@@ -820,5 +825,39 @@ h2 {
   letter-spacing: 1px;
   /* border: 2px solid #ffae00; */
   margin: 0 4px;
+}
+
+.annonces-blocs {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 0 auto;
+  max-width: 800px;
+}
+
+.annonces-col {
+  flex: 1 1 0;
+  min-width: 220px;
+  max-width: 300px;
+}
+
+.annonces-classiques {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.annonces-victimes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.annonces-protections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 </style>

@@ -15,7 +15,7 @@
         </li>
         <li>
             <router-link to="/loupGarou" class="carte-lien"></router-link>
-                <span class="carte-titre">Loup Garou <br> officiel</span>
+                <span class="carte-titre">Loup Garou <br> TEST</span>
         </li>
         <li>
             <router-link to="/lgbo" class="carte-lien"></router-link>
@@ -119,7 +119,7 @@ h2 {
 .flexbox li:nth-child(2) {
     background-image: url(../assets/assets-projet/autres/lg.jpg);
     background-size: cover;
-    box-shadow: 0px 0px 20px 4px #e1ff00 !important;
+    box-shadow: 0px 0px 20px 4px rgba(190, 5, 5, 0.619);
 }
 
 .flexbox li:nth-child(2):hover {

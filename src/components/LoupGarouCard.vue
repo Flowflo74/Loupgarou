@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 const props = defineProps({
   lgcard: Object,
+  nomJuge: String // facultatif, utilisé seulement pour la carte du juge
 })
 const imageUrl = computed(() =>
   new URL(`../assets/assets-projet/CarteLoupGarou/${props.lgcard.image}`, import.meta.url).href
