@@ -51,13 +51,15 @@
       <h2>Préparation de la première nuit</h2>
       <ul class="appel-list">
         <li v-for="card in prepCards" :key="card.name + '-prep'" class="appel-row">
-          <div class="carte-loupgarou" :style="{ backgroundImage: `url('${imageUrl}')` }">
-          <div v-if="card.name === 'Ancien' && nomAncien" class="carte-nom-haut"></div> 
-          </div>
-
+          
           <LoupGarouCard :lgcard="card" 
-          :nomAncien="card.name === 'Ancien' ? nomAncien : undefined"
-/>
+          :nomAncien="card.name === 'Ancien' ? nomAncien : undefined" 
+          :nomChasseur="card.name === 'Chasseur' ? nomChasseur : undefined"
+          :nomJuge="card.name === 'Juge' ? nomJuge : undefined"
+          :nomSoeur1="card.name === 'Deux Soeurs' ? nomSoeur1 : undefined"
+          :nomSoeur2="card.name === 'Deux Soeurs' ? nomSoeur2 : undefined"
+          :nomOurs="card.name === 'Montreur d ours' ? nomOurs : undefined"
+          />
           <div class="appel-info">
             <p class="dire"><strong>Meneur :</strong> {{ card.dire }}</p>
             <p class="description">{{ card.description }}</p>
@@ -66,6 +68,10 @@
           <!-- Logo pouvoir ancien -->
           <template v-if="card.name === 'Ancien'">
             <PouvoirAncien :joueurs="joueurs" @ancienduvillage="setAncien" />
+          </template>
+          <!-- Logo pouvoir Ours -->
+          <template v-if="card.name === 'Montreur d ours'">
+            <PouvoirOurs :joueurs="joueurs" @oursduvillage="setOurs" />
           </template>
           <!-- Logo pouvoir juge -->
           <template v-if="card.name === 'Juge'">
@@ -228,7 +234,15 @@
         <li v-for="(card, index) in selectedCards" :key="'nightelim-' + index" class="remaining-card">
           <img src="../assets/assets-projet/autres/tomberip2.png" alt="Exclure" class="exclusion-logo"
             @click="removeCard(index)" />
-          <LoupGarouCard :lgcard="card" />
+
+          <LoupGarouCard :lgcard="card"
+          :nomAncien="card.name === 'Ancien' ? nomAncien : undefined" 
+          :nomChasseur="card.name === 'Chasseur' ? nomChasseur : undefined"
+          :nomJuge="card.name === 'Juge' ? nomJuge : undefined"
+          :nomSoeur1="card.name === 'Deux Soeurs' ? nomSoeur1 : undefined"
+          :nomSoeur2="card.name === 'Deux Soeurs' ? nomSoeur2 : undefined"
+          :nomOurs="card.name === 'Montreur d ours' ? nomOurs : undefined"
+          />
         </li>
       </ul>
       <button class="btn-next-phase" @click="nextPhase">Passer au vote du village</button>
@@ -255,7 +269,11 @@
         <li v-for="(card, index) in selectedCards" :key="'vote-' + index" class="remaining-card">
           <img src="/public/logospouvoirs/eliminationvote.png" alt="Exclure" class="exclusion-logo"
             @click="removeCard(index)" />
-          <LoupGarouCard :lgcard="card" />
+          <LoupGarouCard :lgcard="card" 
+          :nomAncien="card.name === 'Ancien' ? nomAncien : undefined" 
+          :nomChasseur="card.name === 'Chasseur' ? nomChasseur : undefined"
+          :nomJuge="card.name === 'Juge' ? nomJuge : undefined"
+          :nomOurs="card.name === 'Montreur d ours' ? nomOurs : undefined" />
         </li>
       </ul>
       <button class="btn-next-phase" @click="nextPhase">Nuit suivante</button>
@@ -303,6 +321,7 @@ import PouvoirServantedevouee from '../components/PouvoirServantedevouee.vue'
 import PouvoirFlute from '@/components/PouvoirFlute.vue'
 import Pouvoirinfectperedesloups from '@/components/Pouvoirinfectperedesloups.vue'
 import PouvoirGrandmechantloup from '@/components/PouvoirGrandmechantloup.vue'
+import PouvoirOurs from '../components/PouvoirOurs.vue'
 
 
 // Etat
@@ -319,6 +338,8 @@ const victiminfectLGName = ref('')
 const victimGrandLGName = ref('')
 const nomAncien = ref('')
 const nomJuge = ref('')
+const nomChasseur = ref('')
+const nomOurs = ref('')
 
 // Computed
 const prepCards = computed(() =>
@@ -445,8 +466,11 @@ function setAmoureux({ nomAmoureux1: n1, nomAmoureux2: n2 }) {
 function setAncien({ nomAncien: n }) {
   nomAncien.value = n;
 }
+function setOurs({ nomOurs: n }) {
+  nomOurs.value = n;
+}
 function setChasseur({ nomChasseur: n }) {
-  nomAncien.value = n;
+  nomChasseur.value = n;
 }
 function setSoeurs({ nomSoeur1: n1, nomSoeur2: n2 }) {
   nomSoeur1.value = n1;
@@ -871,6 +895,7 @@ h2 {
   box-shadow: 0 2px 8px #0008;
   pointer-events: none;
 }
+
 .carte-loupgarou {
   position: relative;
 }

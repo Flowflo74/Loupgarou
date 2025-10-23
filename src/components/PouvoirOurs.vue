@@ -1,19 +1,18 @@
 <template>
   <button class="bouton" @click="openDialog">
-    <img class="position-logo" src="/logospouvoirs/pouvoirjuge.png" alt="pouvoirjuge" title="Qui est le juge ?">
+    <img class="position-logo" src="/public/logospouvoirs/ours.png" alt="pouvoirours" title="Qui est le montreur d'ours ?">
   </button>
-  <dialog ref="jugeDialog">
+  <dialog ref="oursDialog">
     <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
-    <p>Qui est le juge du village ?</p>
+    <p>Qui est le montreur d'ours du village ?</p>
     <div>
-      <label for="nomJuge" class="font-semibold w-24">Le juge du village est :</label>
-      <select id="nomJuge" v-model="nomJuge" class="flex-auto">
+      <label for="nomOurs" class="font-semibold w-24">Le montreur d'ours du village est :</label>
+      <select id="nomOurs" v-model="nomOurs" class="flex-auto">
         <option value="" disabled>Choisir un joueur</option>
         <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
           {{ joueur.nom }}
         </option>
       </select>
-      <p>Le Juge du village réalise un signe secret qui sera le signal pour lancer un second vote</p>
     </div>
     <button @click="validate">Valider</button>
   </dialog>
@@ -22,21 +21,21 @@
 <script setup>
 import { ref, defineEmits } from "vue";
 
-const jugeDialog = ref(null);
+const oursDialog = ref(null);
 const props = defineProps({ joueurs: Array });
-const nomJuge = ref("");
-const emit = defineEmits(["jugeduvillage"]);
+const nomOurs = ref("");
+const emit = defineEmits(["oursduvillage"]);
 
 function openDialog() {
-  nomJuge.value = "";
-  jugeDialog.value.showModal();
+  nomOurs.value = "";
+  oursDialog.value.showModal();
 }
 function closeDialog() {
-  jugeDialog.value.close();
+  oursDialog.value.close();
 }
 function validate() {
-  emit("jugeduvillage", { nomJuge: nomJuge.value});
-  jugeDialog.value.close();
+  emit("oursduvillage", { nomOurs: nomOurs.value});
+  oursDialog.value.close();
 }
 </script>
 

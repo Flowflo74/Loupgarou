@@ -209,7 +209,7 @@
       "name": "Montreur d ours",
       "image": "montreuroursbo.png",
       "order": 21,
-      "onlyFirstNight": false,
+      "onlyFirstNight": true,
       "isCallable": false,
       "categorie": "Villageois",
       "description": "Chaque matin, si un Loup-Garou est assis à sa gauche ou à sa droite, le meneur émet un grognement pour signaler la présence du danger."

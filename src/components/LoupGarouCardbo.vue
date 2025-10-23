@@ -1,10 +1,18 @@
 <template>
   <div class="carte-loupgarou" :style="{ backgroundImage: `url('${imageUrl}')` }">
     <div class="carte-overlay">
-      <span class="carte-nom">{{ lgcard.name }}</span>
-    </div>
-    <div v-if="lgcard.name === 'Ancien' && props.nomAncien" class="carte-ancien-nom">
+    <div v-if="lgcard.name === 'Ancien' && props.nomAncien" class="carte-nom-nom">
     {{ props.nomAncien }}</div>
+    <div v-if="lgcard.name === 'Chasseur' && props.nomChasseur" class="carte-nom-nom">
+    {{ props.nomChasseur }}</div>
+    <div v-if="lgcard.name === 'Juge' && props.nomJuge" class="carte-nom-nom">
+    {{ props.nomJuge }}</div>
+    <div v-if="lgcard.name === 'Deux Soeurs' && props.nomSoeur1 && props.nomSoeur2" class="carte-nom-nom">
+    {{ props.nomSoeur1}} & {{ props.nomSoeur2}}</div>
+    <div v-if="lgcard.name === 'Montreur d ours' && props.nomOurs" class="carte-nom-nom">
+    {{ props.nomOurs }}</div>
+    <span class="carte-nom">{{ lgcard.name }}</span>
+  </div>
   </div>
 </template>
 
@@ -12,7 +20,12 @@
 import { computed } from 'vue'
 const props = defineProps({
   lgcard: Object,
-  nomAncien: String
+  nomAncien: String,
+  nomChasseur: String,
+  nomJuge: String,
+  nomSoeur1: String,
+  nomSoeur2: String,
+  nomOurs: String
 })
 const imageUrl = computed(() =>
   new URL(`../assets/assets-projet/imagecartelgbo/${props.lgcard.image}`, import.meta.url).href
@@ -20,6 +33,7 @@ const imageUrl = computed(() =>
 </script>
 
 <style scoped>
+
 .carte-loupgarou {
   position: relative;
   display: flex;
@@ -74,30 +88,16 @@ const imageUrl = computed(() =>
   box-shadow: 0 2px 8px #0004;
 }
 
-.carte-ancien-nom {
-  position: absolute;
-  top: 60%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.22);
+.carte-nom-nom {
+ background: rgba(0, 0, 0, 0.22);
   color: #ffffff;
   font-family: "NokaBold", sans-serif;
   font-weight: bold;
   padding: 2px 10px 2px 10px;
   border-radius: 12px;
   font-size: 1rem;
+  margin-bottom: 2px;
+  text-align: center;
 }
 
-@media (max-width: 600px) {
-  .carte-loupgarou {
-    height: 110px;
-    width: 70px;
-    border-radius: 10px;
-    margin: 6px;
-  }
-  .carte-nom {
-    font-size: 0.85rem;
-    padding: 2px 5px 1px 5px;
-  }
-}
 </style>

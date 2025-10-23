@@ -6,10 +6,10 @@
     <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
     <p>Qui sont les deux soeurs :</p>
     <div>
-      <label for="nomsoeur1" class="font-semibold w-24">Les deux soeurs sont :</label>
+      <label for="nomSoeur1" class="font-semibold w-24">Les deux soeurs sont :</label>
       <select
-        id="nomsoeur1"
-        v-model="nomsoeur1"
+        id="nomSoeur1"
+        v-model="nomSoeur1"
         class="flex-auto"
       >
         <option value="" disabled>Première Soeur</option>
@@ -18,8 +18,8 @@
         </option>
       </select>
       <select
-        id="nomsoeur2"
-        v-model="nomsoeur2"
+        id="nomSoeur2"
+        v-model="nomSoeur2"
         class="flex-auto"
       >
         <option value="" disabled>Deuxième Soeur</option>
@@ -37,18 +37,18 @@ import { ref, defineEmits, defineProps } from "vue";
 
 const soeurDialog = ref(null);
 const props = defineProps({ joueurs: Array });
-const nomsoeur1 = ref("");
-const nomsoeur2 = ref("");
+const nomSoeur1 = ref("");
+const nomSoeur2 = ref("");
 const emit = defineEmits(["soeurs"]);
 
 
 function openDialog() {
-  nomsoeur1.value = "";
-  nomsoeur2.value = "";
+  nomSoeur1.value = "";
+  nomSoeur2.value = "";
   soeurDialog.value.showModal();
 }
 function validate() {
-  emit("soeurs", { nomsoeur1: nomsoeur1.value, nomsoeur2: nomsoeur2.value });
+  emit("soeurs", { nomSoeur1: nomSoeur1.value, nomSoeur2: nomSoeur2.value });
   soeurDialog.value.close();
 }
 function closeDialog() {
