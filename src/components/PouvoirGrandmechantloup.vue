@@ -1,14 +1,15 @@
 <template>
+  <!-- teeeeeeest -->
   <button class="bouton" @click="openDialog">
-    <img class="position-logo" src="../assets/assets-projet/logoperso/infectlg.png" title="Choisir la victime"></button>
-  <dialog ref="testDialog">
+    <img class="position-logo" src="/public/logospouvoirs/Grandmechantloup.png" title="Choisir la victime"></button>
+  <dialog ref="grandlgDialog">
     <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
-    <p>L'infect père des loups choisis qui sera infecté</p>
+    <p>Le Grand loup-garou choisis sa victime</p>
     <div>
-      <label for="victiminfectLGName" class="font-semibold w-24">L'infecté est</label>
+      <label for="victimGrandLGName" class="font-semibold w-24">La victime est</label>
       <select
-        id="victiminfectLGName"
-        v-model="victiminfectLGName"
+        id="victimGrandLGName"
+        v-model="victimGrandLGName"
         class="flex-auto">
         <option value="" disabled>Choisir un joueur</option>
         <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
@@ -18,27 +19,27 @@
     </div>
     <button @click="validate">Valider</button>
   </dialog>
- 
+  <!-- fin du bouton de test -->
 </template>
 
 <script setup>
 import { ref, defineEmits } from "vue";
 
-const testDialog = ref(null);
+const grandlgDialog = ref(null);
 const props = defineProps({ joueurs: Array });
-const victimLGName = ref("");
-const emit = defineEmits(["infect-selected"]);
+const victimGrandLGName = ref("");
+const emit = defineEmits(["victim2-selected"]);
 
 function openDialog() {
-  victimLGName.value = ""; // Réinitialise le champ à chaque ouverture
-  testDialog.value.showModal();
+  victimGrandLGName.value = "";
+  grandlgDialog.value.showModal();
 }
 function validate() {
-  emit("infect-selected", victiminfectLGName.value);
-  testDialog.value.close();
+  emit("victim2-selected", victimGrandLGName.value);
+  grandlgDialog.value.close();
 }
 function closeDialog() {
-  testDialog.value.close();
+  grandlgDialog.value.close();
 }
 </script>
 

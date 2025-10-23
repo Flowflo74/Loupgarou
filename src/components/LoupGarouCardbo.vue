@@ -3,6 +3,8 @@
     <div class="carte-overlay">
       <span class="carte-nom">{{ lgcard.name }}</span>
     </div>
+    <div v-if="lgcard.name === 'Ancien' && props.nomAncien" class="carte-ancien-nom">
+    {{ props.nomAncien }}</div>
   </div>
 </template>
 
@@ -10,6 +12,7 @@
 import { computed } from 'vue'
 const props = defineProps({
   lgcard: Object,
+  nomAncien: String
 })
 const imageUrl = computed(() =>
   new URL(`../assets/assets-projet/imagecartelgbo/${props.lgcard.image}`, import.meta.url).href
@@ -50,7 +53,7 @@ const imageUrl = computed(() =>
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  background: linear-gradient(to top, rgba(25,25,21,0.82) 60%, transparent 100%);
+  background: linear-gradient(to top, rgba(25,25,21,0.82) 0%, transparent 100%);
   position: absolute;
   bottom: 0;
   left: 0;
@@ -69,6 +72,20 @@ const imageUrl = computed(() =>
   padding: 4px 10px 2px 10px;
   margin-bottom: 2px;
   box-shadow: 0 2px 8px #0004;
+}
+
+.carte-ancien-nom {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.22);
+  color: #ffffff;
+  font-family: "NokaBold", sans-serif;
+  font-weight: bold;
+  padding: 2px 10px 2px 10px;
+  border-radius: 12px;
+  font-size: 1rem;
 }
 
 @media (max-width: 600px) {

@@ -18,7 +18,8 @@
         <p class="label">Cartes sélectionnées</p>
         <ul>
           <li v-for="(card, index) in selectedCards" :key="index" @click="removeCard(index)">
-            <LoupGarouCard :lgcard="card" />
+            <LoupGarouCard :lgcard="card"
+             />
           </li>
         </ul>
       </div>
@@ -50,7 +51,13 @@
       <h2>Préparation de la première nuit</h2>
       <ul class="appel-list">
         <li v-for="card in prepCards" :key="card.name + '-prep'" class="appel-row">
-          <LoupGarouCard :lgcard="card" />
+          <div class="carte-loupgarou" :style="{ backgroundImage: `url('${imageUrl}')` }">
+          <div v-if="card.name === 'Ancien' && nomAncien" class="carte-nom-haut"></div> 
+          </div>
+
+          <LoupGarouCard :lgcard="card" 
+          :nomAncien="card.name === 'Ancien' ? nomAncien : undefined"
+/>
           <div class="appel-info">
             <p class="dire"><strong>Meneur :</strong> {{ card.dire }}</p>
             <p class="description">{{ card.description }}</p>
@@ -135,7 +142,12 @@
 
           <!-- Logo tête de lg pour l'infecté --> 
           <template v-if="card.name === 'Infect pere des loups'">
-              <Pouvoirinfectperedesloups :joueurs="joueurs" @victim-selected="victiminfectLGName = $event" />
+              <Pouvoirinfectperedesloups :joueurs="joueurs" @infect-selected="victiminfectLGName = $event" />
+          </template>
+
+           <!-- Logo Grand méchant loup --> 
+          <template v-if="card.name === 'Grand Mechant Loup'">
+              <PouvoirGrandmechantloup :joueurs="joueurs" @victim2-selected="victimGrandLGName = $event" />
           </template>
 
           <!-- Logo bouclier pour le salva -->
@@ -200,6 +212,9 @@
         </div>
         <div v-if="victiminfectLGName" class="annonce-block victim-annonce">
          {{ victiminfectLGName }}<strong> a été infecté !</strong>
+        </div>
+        <div v-if="victimGrandLGName" class="annonce-block victim-annonce">
+          <strong>Victime du grand méchant loup :</strong> {{ victimGrandLGName }}
         </div>
         <div v-if="victimSorName" class="annonce-block victim-annonce">
           <strong>Victime de la Sorcière :</strong> {{ victimSorName }}
@@ -287,6 +302,7 @@ import PouvoirJuge from '../components/PouvoirJuge.vue'
 import PouvoirServantedevouee from '../components/PouvoirServantedevouee.vue'
 import PouvoirFlute from '@/components/PouvoirFlute.vue'
 import Pouvoirinfectperedesloups from '@/components/Pouvoirinfectperedesloups.vue'
+import PouvoirGrandmechantloup from '@/components/PouvoirGrandmechantloup.vue'
 
 
 // Etat
@@ -300,6 +316,7 @@ const winnerMessage = ref('')
 const winnerImage = ref('')
 const victimLGName = ref('')
 const victiminfectLGName = ref('')
+const victimGrandLGName = ref('')
 const nomAncien = ref('')
 const nomJuge = ref('')
 
@@ -489,15 +506,6 @@ function rejouer() {
 
 .loup-garou-app, body {
   font-family: "NOKAPOLICE", Arial, sans-serif;
-}
-
-/* Thèmes Jour / Nuit */
-.day-theme {
-  background: url('../assets/assets-projet/dabo/1.png') center/cover no-repeat;
-}
-
-.night-theme {
-  background: url('../assets/assets-projet/dabo/1.png') center/cover no-repeat;
 }
 
 /* Containers */
@@ -841,16 +849,29 @@ h2 {
   text-shadow: 0 1px 2px #000a;
 }
 
-.carte-juge-nom {
-  margin-top: 0.5rem;
-  font-size: 1.1rem;
-  color: #ffae00;
-  font-weight: bold;
+.carte-nom-haut {
+  position: relative;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
   text-align: center;
+  font-size: 1.2rem;
+  color: #ffec70;
+  font-weight: bold;
+  z-index: 10;
   letter-spacing: 1px;
+  padding: 4px 8px;
+  background: rgba(25, 34, 50, 0.82); /* Fond sombre semi-transparent */
+  border-radius: 8px;
+  text-shadow:
+    0 2px 8px #000,
+    0 0 2px #fff,
+    0 0 10px #ffae0099;
+  box-shadow: 0 2px 8px #0008;
+  pointer-events: none;
 }
-.carte-juge-nom span {
-  color: #fff700;
-  margin-left: 0.3rem;
+.carte-loupgarou {
+  position: relative;
 }
 </style>
