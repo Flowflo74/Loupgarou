@@ -59,7 +59,10 @@
           :nomSoeur1="card.name === 'Deux Soeurs' ? nomSoeur1 : undefined"
           :nomSoeur2="card.name === 'Deux Soeurs' ? nomSoeur2 : undefined"
           :nomOurs="card.name === 'Montreur d ours' ? nomOurs : undefined"
+          :nomEnfantSauvage="card.name === 'Enfant Sauvage' ? nomEnfantSauvage : undefined"
+          :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
           />
+
           <div class="appel-info">
             <p class="dire"><strong>Meneur :</strong> {{ card.dire }}</p>
             <p class="description">{{ card.description }}</p>
@@ -103,7 +106,8 @@
       <h2>🌙 Nuit {{ nightCount }}</h2>
       <ul class="appel-list">
         <li v-for="card in nightCards" :key="card.name + '-night'" class="appel-row">
-          <LoupGarouCard :lgcard="card" />
+          <LoupGarouCard :lgcard="card"
+          :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined" />
           <div class="appel-info">
             <p class="dire"><strong>Meneur :</strong> {{ card.dire }}</p>
             <p class="description">{{ card.description }}</p>
@@ -113,7 +117,14 @@
           <template v-if="card.name === 'Courtisane'">
             <PouvoirCourtisane :joueurs="joueurs" @courtisaneduvillage="setCourtisane" />
           </template>
-
+          <!-- Logo pouvoir Voyante -->
+          <template v-if="card.name === 'Voyante'">
+            <PouvoirVoyante :joueurs="joueurs" @voyanteduvillage="setVoyante" />
+          </template>
+          <!-- Logo pouvoir corbeau -->
+          <template v-if="card.name === 'Corbeau'">
+            <PouvoirCorbeau :joueurs="joueurs" @corbeauduvillage="setCorbeau" />
+          </template>
           <!-- Logos potions pour la Sorcière -->
           <template v-if="card.name === 'Sorciere'">
             <PotionsSorciere
@@ -122,7 +133,6 @@
             :potion-vie-dispo="potionVieDispo" :potion-mort-dispo="potionMortDispo"
               @use-vie="potionVieDispo = false" @use-mort="potionMortDispo = false" />
           </template>
-
           <!-- Logo potion pour l'Alchimiste -->
           <template v-if="card.name === 'Alchimiste'">
             <PouvoirAlchimiste
@@ -130,7 +140,6 @@
             :pouvoir-alchi-dispo="pouvoirAlchiDispo"
             @alch-victim-selected="handleAlchimisteVictim"/>
           </template>
-
           <!-- Logo potion pour le moine -->
           <template v-if="card.name === 'Moine'">
             <PouvoirMoine
@@ -139,33 +148,30 @@
               @moine-save="handleMoineSave"/>
           </template>
 
+
+
           <!-- Logos tête de lg pour la victime -->
           <template v-if="card.name === 'Loup-garou'">
             <div class="position-logo victimelg">
               <LoupGarouButton :joueurs="joueurs" @victim-selected="victimLGName = $event" />
             </div>
           </template>
-
           <!-- Logo tête de lg pour l'infecté --> 
           <template v-if="card.name === 'Infect pere des loups'">
               <Pouvoirinfectperedesloups :joueurs="joueurs" @infect-selected="victiminfectLGName = $event" />
           </template>
-
            <!-- Logo Grand méchant loup --> 
           <template v-if="card.name === 'Grand Mechant Loup'">
               <PouvoirGrandmechantloup :joueurs="joueurs" @victim2-selected="victimGrandLGName = $event" />
           </template>
-
           <!-- Logo bouclier pour le salva -->
           <template v-if="card.name === 'Salvateur'">
             <PouvoirSalva :joueurs="joueurs" @protected-person="personneProteger = $event" />
           </template>
-
           <!-- Logo renard pour le pouvoir du renard -->
           <template v-if="card.name === 'Renard'">
             <PouvoirRenard :choixrenard="choixrenard" @use-flair="choixrenard = false" />
           </template>
-
           <!-- logo pour pour le pouvoir du joueur de flute -->
           <template v-if="card.name === 'Joueur de flute'">                 
             <PouvoirFlute
@@ -173,7 +179,6 @@
             :charmes="joueursCharmes"
             @update-charmes="setCharmes"/>
             </template>
-
           <!-- Logo potion pour la servante dévouée -->
           <template v-if="card.name === 'Servante devouee'">
             <PouvoirServantedevouee
@@ -181,8 +186,6 @@
               :pouvoirServDispo="pouvoirServDispo"
               @servante-save="handleServanteSave"/>
           </template>
-
-
         </li>
       </ul>
       <button class="btn-next-phase" @click="nextPhase">Passer au jour</button>
@@ -193,40 +196,39 @@
       <h2>💀 Qui a été éliminé cette nuit ? 💀</h2>
 <!-- Annonces classiques -->
       <div class="annonces-row">
-        <div v-if="nomAncien" class="annonce-block ancien-annonce">
-          <strong>L’Ancien du village est :</strong> {{ nomAncien }}
-        </div>
 
         <div v-if="nomMentor" class="annonce-block mentor-annonce">
-          <strong>Le mentor de <span class="highlight">{{ nomEnfantSauvage }}</span> est </strong> {{ nomMentor }}
+          <strong>Le mentor de {{ nomEnfantSauvage }} est </strong> {{ nomMentor }}
         </div>
-
         <div v-if="nomAmoureux1" class="annonce-block amoureux-annonce">
-          <strong>Les amoureux sont :</strong> {{ nomAmoureux1 }} ➕ {{ nomAmoureux2 }}
+          <strong>Les Amoureux sont :</strong> {{ nomAmoureux1 }} ❤ {{ nomAmoureux2 }}
         </div>
         <div v-if="personneProteger" class="annonce-block protected-annonce">
-          <strong>La personne protégée est :</strong> {{ personneProteger }}
+          <strong>Le Salvateur a protégé :</strong> {{ personneProteger }}
         </div>
         <div v-if="MoineSave" class="annonce-block protected-annonce">
-          <strong>La personne sauvé est :</strong> {{ MoineSave }}
+          <strong>Le Moine a sauvé :</strong> {{ MoineSave }}
+        </div>
+        <div v-if="ServSave" class="annonce-block protected-annonce">
+          <strong>La servante dévouée s'est interposée pour protéger :</strong> {{ ServSave }}
         </div>
 
 <!-- Annonces des Victimes -->
         <div class="annonces-row annonces-row-elim">
         <div v-if="victimLGName" class="annonce-block victim-annonce">
-          <strong>Victime des Loups-garous :</strong> {{ victimLGName }}
+          <strong>Les Loups-garous ont tués :</strong> {{ victimLGName }}
         </div>
         <div v-if="victiminfectLGName" class="annonce-block victim-annonce">
-         {{ victiminfectLGName }}<strong> a été infecté !</strong>
+         {{ victiminfectLGName }}<strong> deviens un Loup-garou !</strong>
         </div>
         <div v-if="victimGrandLGName" class="annonce-block victim-annonce">
-          <strong>Victime du grand méchant loup :</strong> {{ victimGrandLGName }}
+          <strong>Le Grand Méchant Loup a tué :</strong> {{ victimGrandLGName }}
         </div>
         <div v-if="victimSorName" class="annonce-block victim-annonce">
-          <strong>Victime de la Sorcière :</strong> {{ victimSorName }}
+          <strong>La Sorcière a tué :</strong> {{ victimSorName }}
         </div>
         <div v-if="victimAlchimiste" class="annonce-block victim-annonce">
-          <strong>Victime de l'Alchimiste :</strong> {{ victimAlchimiste }}
+          <strong>L'Alchimiste a tué :</strong> {{ victimAlchimiste }}
         </div>
 </div>
       </div>
@@ -242,6 +244,8 @@
           :nomSoeur1="card.name === 'Deux Soeurs' ? nomSoeur1 : undefined"
           :nomSoeur2="card.name === 'Deux Soeurs' ? nomSoeur2 : undefined"
           :nomOurs="card.name === 'Montreur d ours' ? nomOurs : undefined"
+          :nomEnfantSauvage="card.name === 'Enfant Sauvage' ? nomEnfantSauvage : undefined"
+          :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
           />
         </li>
       </ul>
@@ -258,11 +262,8 @@
 />
       <p class="vote">Vote du village : Qui a été éliminer par le village ?</p>
       <div class="annonces-row">
-      <div v-if="nomAncien" class="annonce-block ancien-annonce">
-          <strong>L’Ancien du village est :</strong> {{ nomAncien }}
-        </div>
       <div v-if="nomAmoureux1" class="annonce-block amoureux-annonce">
-        <strong>Les amoureux sont :</strong> ❤ {{ nomAmoureux1 }} ➕ {{ nomAmoureux2 }} ❤
+        <strong>Les Amoureux sont :</strong> {{ nomAmoureux1 }} ❤ {{ nomAmoureux2 }}
       </div>
       </div>
       <ul class="village-list">
@@ -273,7 +274,11 @@
           :nomAncien="card.name === 'Ancien' ? nomAncien : undefined" 
           :nomChasseur="card.name === 'Chasseur' ? nomChasseur : undefined"
           :nomJuge="card.name === 'Juge' ? nomJuge : undefined"
-          :nomOurs="card.name === 'Montreur d ours' ? nomOurs : undefined" />
+          :nomSoeur1="card.name === 'Deux Soeurs' ? nomSoeur1 : undefined"
+          :nomSoeur2="card.name === 'Deux Soeurs' ? nomSoeur2 : undefined"
+          :nomOurs="card.name === 'Montreur d ours' ? nomOurs : undefined"
+          :nomEnfantSauvage="card.name === 'Enfant Sauvage' ? nomEnfantSauvage : undefined"
+          :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined" />
         </li>
       </ul>
       <button class="btn-next-phase" @click="nextPhase">Nuit suivante</button>
@@ -322,6 +327,8 @@ import PouvoirFlute from '@/components/PouvoirFlute.vue'
 import Pouvoirinfectperedesloups from '@/components/Pouvoirinfectperedesloups.vue'
 import PouvoirGrandmechantloup from '@/components/PouvoirGrandmechantloup.vue'
 import PouvoirOurs from '../components/PouvoirOurs.vue'
+import PouvoirCorbeau from '../components/PouvoirCorbeau.vue'
+import PouvoirVoyante from '../components/PouvoirVoyante.vue'
 
 
 // Etat
@@ -457,7 +464,8 @@ const pouvoirMoineDispo = ref('');
 const pouvoirAlchiDispo = ref('');
 const MoineSave = ref('');
 const victimAlchimiste = ref('');
-
+const ServSave = ref('');
+const nomVoyante = ref('');
 
 function setAmoureux({ nomAmoureux1: n1, nomAmoureux2: n2 }) {
   nomAmoureux1.value = n1;
@@ -476,12 +484,15 @@ function setSoeurs({ nomSoeur1: n1, nomSoeur2: n2 }) {
   nomSoeur1.value = n1;
   nomSoeur2.value = n2;
 }
-function setMentor({ nomEnfantSauvage: n1, nomMentor: n2 }) {
-  nomEnfantSauvage.value = n1;
-  nomMentor.value = n2;
+function setMentor({ nomEnfantSauvage: enfant, nomMentor: mentor }) {
+  nomEnfantSauvage.value = enfant;
+  nomMentor.value = mentor;
 }
 function setJuge({ nomJuge: nom }) {
   nomJuge.value = nom;
+}
+function setVoyante({ nomVoyante: nom }) {
+  nomVoyante.value = nom;
 }
 function setCourtisane({ nomCourtisane: nom }) {
   choixCourtisane.value = { choix, personne };
@@ -503,6 +514,7 @@ function handleAlchimisteVictim(joueur) {
 }
 function handleServanteSave(joueur) {
   pouvoirServDispo.value = false;
+  ServSave.value = joueur;
 }
 
 const joueurs = ref([]);
@@ -855,13 +867,11 @@ h2 {
 .victim-annonce::before    { background: linear-gradient(90deg, #f40303, #ff6a00); }
 .protected-annonce::before { background: linear-gradient(90deg, #659904, #b6ff00); }
 .amoureux-annonce::before  { background: linear-gradient(90deg, #ec03f4, #ff17dc); }
-.ancien-annonce::before    { background: linear-gradient(90deg, #1d4c04, #ffae00); }
 
 /* Emoji pour chaque type */
 .victim-annonce strong::before    { content: "💀 "; }
 .protected-annonce strong::before { content: "🛡️ "; }
 .amoureux-annonce strong::before  { content: "💘 "; }
-.ancien-annonce strong::before    { content: "👴 "; }
 
 /* Texte */
 .annonce-block strong {

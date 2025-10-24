@@ -1,13 +1,13 @@
 <template>
   <button class="bouton" @click="openDialog">
-    <img class="position-logo" src="/logospouvoirs/pouvoirchasseur.png" alt="pouvoirchasseur" title="Qui est le chasseur ?">
+    <img class="position-logo" src="/logospouvoirs/pouvoirancien.png" alt="pouvoirvoyante" title="Qui est la voyante ?">
   </button>
-  <dialog ref="ChasseurDialog">
+  <dialog ref="voyanteDialog">
     <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
-    <p>Qui est le chasseur du village ?</p>
+    <p>Qui est la voyante du village ?</p>
     <div>
-      <label for="nomChasseur" class="font-semibold w-24">Le chasseur du village est :</label>
-      <select id="nomChasseur" v-model="nomChasseur" class="flex-auto">
+      <label for="nomVoyante" class="font-semibold w-24">La voyante du village est :</label>
+      <select id="nomVoyante" v-model="nomVoyante" class="flex-auto">
         <option value="" disabled>Choisir un joueur</option>
         <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
           {{ joueur.nom }}
@@ -21,21 +21,21 @@
 <script setup>
 import { ref, defineEmits } from "vue";
 
-const ChasseurDialog = ref(null);
+const voyanteDialog = ref(null);
 const props = defineProps({ joueurs: Array });
-const nomChasseur = ref("");
-const emit = defineEmits(["chasseurduvillage"]);
+const nomVoyante = ref("");
+const emit = defineEmits(["voyanteduvillage"]);
 
 function openDialog() {
-  nomChasseur.value = "";
-  ChasseurDialog.value.showModal();
+  nomVoyante.value = "";
+  voyanteDialog.value.showModal();
 }
 function closeDialog() {
-  ChasseurDialog.value.close();
+  voyanteDialog.value.close();
 }
 function validate() {
-  emit("chasseurduvillage", { nomChasseur: nomChasseur.value});
-  ChasseurDialog.value.close();
+  emit("voyanteduvillage", { nomVoyante: nomVoyante.value});
+  voyanteDialog.value.close();
 }
 </script>
 

@@ -1,18 +1,41 @@
 <template>
   <button class="bouton" @click="openDialog">
-    <img class="position-logo" src="/logospouvoirs/pouvoirchasseur.png" alt="pouvoirchasseur" title="Qui est le chasseur ?">
+    <img class="position-logo" src="/public/logospouvoirs/pouvoircorbeau.png" alt="pouvoircorbeau" title="Qui est le corbeau ?">
   </button>
-  <dialog ref="ChasseurDialog">
+  <dialog ref="corbeauDialog">
     <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
-    <p>Qui est le chasseur du village ?</p>
+    <p>Qui est le corbeau du village ?</p>
     <div>
-      <label for="nomChasseur" class="font-semibold w-24">Le chasseur du village est :</label>
-      <select id="nomChasseur" v-model="nomChasseur" class="flex-auto">
+      <label for="nomCorbeau" class="font-semibold w-24">Le corbeau du village est :</label>
+      <select id="nomCorbeau" v-model="nomCorbeau" class="flex-auto">
         <option value="" disabled>Choisir un joueur</option>
         <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
           {{ joueur.nom }}
         </option>
       </select>
+      <div>
+      <label for="nomPlume1" class="font-semibold w-24">Les plumes vont chez :</label>
+      <select
+        id="nomPlume1"
+        v-model="nomPlume1"
+        class="flex-auto"
+      >
+        <option value="" disabled>Choisir le premier joueur</option>
+        <option v-for="joueur in props.joueurs" :key="joueur.nom + '-1'" :value="joueur.nom">
+          {{ joueur.nom }}
+        </option>
+      </select>
+      <select
+        id="nomPlume2"
+        v-model="nomPlume2"
+        class="flex-auto"
+      >
+        <option value="" disabled>Choisir le second joueur</option>
+        <option v-for="joueur in props.joueurs" :key="joueur.nom + '-2'" :value="joueur.nom">
+          {{ joueur.nom }}
+        </option>
+      </select>
+    </div>
     </div>
     <button @click="validate">Valider</button>
   </dialog>
@@ -21,21 +44,21 @@
 <script setup>
 import { ref, defineEmits } from "vue";
 
-const ChasseurDialog = ref(null);
+const corbeauDialog = ref(null);
 const props = defineProps({ joueurs: Array });
-const nomChasseur = ref("");
-const emit = defineEmits(["chasseurduvillage"]);
+const nomCorbeau = ref("");
+const emit = defineEmits(["corbeauduvillage"]);
 
 function openDialog() {
-  nomChasseur.value = "";
-  ChasseurDialog.value.showModal();
+  nomCorbeau.value = "";
+  corbeauDialog.value.showModal();
 }
 function closeDialog() {
-  ChasseurDialog.value.close();
+  corbeauDialog.value.close();
 }
 function validate() {
-  emit("chasseurduvillage", { nomChasseur: nomChasseur.value});
-  ChasseurDialog.value.close();
+  emit("corbeauduvillage", { nomCorbeau: nomCorbeau.value});
+  corbeauDialog.value.close();
 }
 </script>
 
