@@ -1,6 +1,6 @@
 <template>
   <button class="bouton" @click="openDialog">
-    <img class="position-logo" src="/logospouvoirs/pouvoirancien.png" alt="pouvoirvoyante" title="Qui est la voyante ?">
+    <img class="position-logo" src="/public/logospouvoirs/pouvoirvoyante.png" alt="pouvoirvoyante" title="Qui est la voyante ?">
   </button>
   <dialog ref="voyanteDialog">
     <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>

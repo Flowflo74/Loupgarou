@@ -15,6 +15,9 @@
     {{ props.nomEnfantSauvage }}</div>
      <div v-if="lgcard.name === 'Voyante' && props.nomVoyante" class="carte-nom-nom">
     {{ props.nomVoyante }}</div>
+    <div v-if="lgcard.name === 'Loup-garou' && props.nomLoup" class="carte-nom-nom">
+     {{ props.nomLoup }}
+</div>
     <span class="carte-nom">{{ lgcard.name }}</span>
   </div>
   </div>
@@ -31,7 +34,8 @@ const props = defineProps({
   nomSoeur2: String,
   nomOurs: String,
   nomEnfantSauvage: String,
-  nomVoyante: String
+  nomVoyante: String,
+  nomLoup: String
 })
 const imageUrl = computed(() =>
   new URL(`../assets/assets-projet/imagecartelgbo/${props.lgcard.image}`, import.meta.url).href

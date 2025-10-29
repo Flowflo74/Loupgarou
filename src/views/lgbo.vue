@@ -61,6 +61,7 @@
           :nomOurs="card.name === 'Montreur d ours' ? nomOurs : undefined"
           :nomEnfantSauvage="card.name === 'Enfant Sauvage' ? nomEnfantSauvage : undefined"
           :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
+          :nomLoup="card.name === 'Loup-garou' ? nomLoup : undefined"
           />
 
           <div class="appel-info">
@@ -246,6 +247,7 @@
           :nomOurs="card.name === 'Montreur d ours' ? nomOurs : undefined"
           :nomEnfantSauvage="card.name === 'Enfant Sauvage' ? nomEnfantSauvage : undefined"
           :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
+          :nomLoup="card.name === 'Loup-garou' ? nomLoup : undefined"
           />
         </li>
       </ul>
@@ -278,7 +280,8 @@
           :nomSoeur2="card.name === 'Deux Soeurs' ? nomSoeur2 : undefined"
           :nomOurs="card.name === 'Montreur d ours' ? nomOurs : undefined"
           :nomEnfantSauvage="card.name === 'Enfant Sauvage' ? nomEnfantSauvage : undefined"
-          :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined" />
+          :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
+          :nomLoup="card.name === 'Loup-garou' ? nomLoup : undefined" />
         </li>
       </ul>
       <button class="btn-next-phase" @click="nextPhase">Nuit suivante</button>
@@ -347,6 +350,7 @@ const nomAncien = ref('')
 const nomJuge = ref('')
 const nomChasseur = ref('')
 const nomOurs = ref('')
+const nomLoup = ref('')
 
 // Computed
 const prepCards = computed(() =>
@@ -373,6 +377,10 @@ const solitaireCards = computed(() =>
 function addCard(card) {
   // Autorise les doublons
   selectedCards.value.push({ ...card })
+}
+
+function setLoup({ nomLoup: nom }) {
+  nomLoup.value = nom;
 }
 function removeCard(index) {
   const removed = selectedCards.value[index]

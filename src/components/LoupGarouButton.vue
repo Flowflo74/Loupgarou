@@ -2,7 +2,7 @@
   <!-- teeeeeeest -->
   <button class="bouton" @click="openDialog">
     <img class="position-logo" src="../assets/assets-projet/logoperso/victimelg.png" title="Choisir la victime"></button>
-  <dialog ref="testDialog">
+  <dialog ref="loupDialog">
     <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
     <p>Les loups-garous choisissent leur victime</p>
     <div>
@@ -25,21 +25,21 @@
 <script setup>
 import { ref, defineEmits } from "vue";
 
-const testDialog = ref(null);
+const loupDialog = ref(null);
 const props = defineProps({ joueurs: Array });
 const victimLGName = ref("");
 const emit = defineEmits(["victim-selected"]);
 
 function openDialog() {
   victimLGName.value = ""; // Réinitialise le champ à chaque ouverture
-  testDialog.value.showModal();
+  loupDialog.value.showModal();
 }
 function validate() {
   emit("victim-selected", victimLGName.value);
-  testDialog.value.close();
+  loupDialog.value.close();
 }
 function closeDialog() {
-  testDialog.value.close();
+  loupDialog.value.close();
 }
 </script>
 
