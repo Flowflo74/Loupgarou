@@ -19,7 +19,6 @@
     </div>
     <button @click="validate">Valider</button>
   </dialog>
-  <!-- fin du bouton de test -->
 </template>
 
 <script setup>
@@ -31,7 +30,7 @@ const victimLGName = ref("");
 const emit = defineEmits(["victim-selected"]);
 
 function openDialog() {
-  victimLGName.value = ""; // Réinitialise le champ à chaque ouverture
+  victimLGName.value = "";
   loupDialog.value.showModal();
 }
 function validate() {

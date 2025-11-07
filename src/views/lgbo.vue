@@ -62,6 +62,7 @@
           :nomEnfantSauvage="card.name === 'Enfant Sauvage' ? nomEnfantSauvage : undefined"
           :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
           :nomLoup="card.name === 'Loup-garou' ? nomLoup : undefined"
+          :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined"
           />
 
           <div class="appel-info">
@@ -178,6 +179,7 @@
             <PouvoirFlute
             :joueurs="joueurs"
             :charmes="joueursCharmes"
+            @fluteduvillage="setFlute"
             @update-charmes="setCharmes"/>
             </template>
           <!-- Logo potion pour la servante dévouée -->
@@ -220,7 +222,7 @@
           <strong>Les Loups-garous ont tués :</strong> {{ victimLGName }}
         </div>
         <div v-if="victiminfectLGName" class="annonce-block victim-annonce">
-         {{ victiminfectLGName }}<strong> deviens un Loup-garou !</strong>
+         {{ victiminfectLGName }}<strong> est devenu un Loup-garou !</strong>
         </div>
         <div v-if="victimGrandLGName" class="annonce-block victim-annonce">
           <strong>Le Grand Méchant Loup a tué :</strong> {{ victimGrandLGName }}
@@ -248,6 +250,7 @@
           :nomEnfantSauvage="card.name === 'Enfant Sauvage' ? nomEnfantSauvage : undefined"
           :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
           :nomLoup="card.name === 'Loup-garou' ? nomLoup : undefined"
+          :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined"
           />
         </li>
       </ul>
@@ -281,7 +284,8 @@
           :nomOurs="card.name === 'Montreur d ours' ? nomOurs : undefined"
           :nomEnfantSauvage="card.name === 'Enfant Sauvage' ? nomEnfantSauvage : undefined"
           :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
-          :nomLoup="card.name === 'Loup-garou' ? nomLoup : undefined" />
+          :nomLoup="card.name === 'Loup-garou' ? nomLoup : undefined"
+          :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined" />
         </li>
       </ul>
       <button class="btn-next-phase" @click="nextPhase">Nuit suivante</button>
@@ -299,6 +303,10 @@
       <router-link to="/"><button class="btn-retour-accueil">Accueil</button></router-link>
       <p>AMELINE-BOLLES Florian x L'école de la station</p>
     </footer>
+
+    <div v-if="transitioning" class="transition-overlay">
+      <span>{{ transitionText }}</span>
+    </div>
 
 </template>
 
@@ -351,6 +359,7 @@ const nomJuge = ref('')
 const nomChasseur = ref('')
 const nomOurs = ref('')
 const nomLoup = ref('')
+const nomMentor = ref('');
 
 // Computed
 const prepCards = computed(() =>
@@ -372,6 +381,10 @@ const loupGarouCards = computed(() =>
 const solitaireCards = computed(() =>
   allCards.filter(c => c.categorie === 'Solitaire')
 )
+
+// Transitions
+const transitioning = ref(false);
+const transitionText = ref("🌞 Le village se réveille...");
 
 // Actions
 function addCard(card) {
@@ -404,6 +417,31 @@ function startGame() {
 }
 ///Phases de jeu
 function nextPhase() {
+  if (phase.value === 'night') {
+    transitionText.value = "🌞 Le village se réveille...";
+    transitioning.value = true;
+    setTimeout(() => {
+      phase.value = 'night-elim';
+      transitioning.value = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 1500);
+    return;
+  }
+  if (phase.value === 'day') {
+    transitionText.value = "🌙 La nuit tombe...";
+    transitioning.value = true;
+    setTimeout(() => {
+      nightCount.value += 1;
+      phase.value = 'night';
+      visible.value = false;
+      victimLGName.value = '';
+      personneProteger.value = '';
+      victimSorName.value = '';
+      transitioning.value = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 1500);
+    return;
+  }
   switch (phase.value) {
     case 'prep':
       nightCount.value = 1
@@ -474,6 +512,7 @@ const MoineSave = ref('');
 const victimAlchimiste = ref('');
 const ServSave = ref('');
 const nomVoyante = ref('');
+const nomFlute = ref('');
 
 function setAmoureux({ nomAmoureux1: n1, nomAmoureux2: n2 }) {
   nomAmoureux1.value = n1;
@@ -509,6 +548,10 @@ function setCourtisane({ nomCourtisane: nom }) {
 
 function setCharmes(nomsCharmes) {
   joueursCharmes.value = nomsCharmes;
+}
+
+function setFlute({ nomFlute: nom }) {
+  nomFlute.value = nom;
 }
 
 function handleMoineSave(joueur) {
@@ -875,11 +918,13 @@ h2 {
 .victim-annonce::before    { background: linear-gradient(90deg, #f40303, #ff6a00); }
 .protected-annonce::before { background: linear-gradient(90deg, #659904, #b6ff00); }
 .amoureux-annonce::before  { background: linear-gradient(90deg, #ec03f4, #ff17dc); }
+.mentor-annonce::before    { background: linear-gradient(90deg, #f4d803, #ff0000); }
 
 /* Emoji pour chaque type */
 .victim-annonce strong::before    { content: "💀 "; }
 .protected-annonce strong::before { content: "🛡️ "; }
 .amoureux-annonce strong::before  { content: "💘 "; }
+.mentor-annonce strong::before    {content: "🧑 "; }
 
 /* Texte */
 .annonce-block strong {
@@ -916,5 +961,29 @@ h2 {
 
 .carte-loupgarou {
   position: relative;
+}
+
+.transition-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(25,34,50,0.85);
+  color: #ffae00;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+  font-weight: bold;
+  z-index: 1000;
+  opacity: 0;
+  animation: fadeIn 0.75s forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
 }
 </style>

@@ -4,8 +4,17 @@
   </button>
   <dialog ref="testDialog">
     <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
-    <p>Qui a été charmé par la douce mélodie ?</p>
     <form @submit.prevent="validate">
+      <div v-if="!dejaChoisi">
+        <label for="nomFlute">Qui est le joueur de flûte ?</label>
+        <select id="nomFlute" v-model="nomFlute" required>
+          <option value="" disabled>Choisir un joueur</option>
+          <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
+            {{ joueur.nom }}
+          </option>
+        </select>
+      </div>
+      <p>Qui a été charmé par la douce mélodie ?</p>
       <div class="liste-charmes">
         <label
           v-for="joueur in props.joueurs"
@@ -36,6 +45,8 @@ const props = defineProps({
 const emit = defineEmits(["update-charmes"]);
 const testDialog = ref(null);
 const charmesLocaux = ref([]);
+const nomFlute = ref('');
+const dejaChoisi = ref(false);
 
 function openDialog() {
   charmesLocaux.value = [...props.charmes];
@@ -45,6 +56,10 @@ function closeDialog() {
   testDialog.value.close();
 }
 function validate() {
+  if (!dejaChoisi.value && nomFlute.value) {
+    emit("fluteduvillage", { nomFlute: nomFlute.value });
+    dejaChoisi.value = true;
+  }
   emit("update-charmes", [...charmesLocaux.value]);
   testDialog.value.close();
 }

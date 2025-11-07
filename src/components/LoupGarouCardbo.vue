@@ -16,8 +16,9 @@
      <div v-if="lgcard.name === 'Voyante' && props.nomVoyante" class="carte-nom-nom">
     {{ props.nomVoyante }}</div>
     <div v-if="lgcard.name === 'Loup-garou' && props.nomLoup" class="carte-nom-nom">
-     {{ props.nomLoup }}
-</div>
+     {{ props.nomLoup }}</div>
+<div v-if="lgcard.name === 'Joueur de flute' && props.nomFlute" class="carte-nom-flute">
+  {{ props.nomFlute }}</div>
     <span class="carte-nom">{{ lgcard.name }}</span>
   </div>
   </div>
@@ -35,7 +36,8 @@ const props = defineProps({
   nomOurs: String,
   nomEnfantSauvage: String,
   nomVoyante: String,
-  nomLoup: String
+  nomLoup: String,
+  nomFlute: String
 })
 const imageUrl = computed(() =>
   new URL(`../assets/assets-projet/imagecartelgbo/${props.lgcard.image}`, import.meta.url).href
@@ -108,6 +110,19 @@ const imageUrl = computed(() =>
   font-size: 1rem;
   margin-bottom: 2px;
   text-align: center;
+}
+
+.carte-nom-flute {
+  background: rgba(80, 0, 120, 0.22);
+  color: #c77dff;
+  font-family: "NokaBold", sans-serif;
+  font-weight: bold;
+  padding: 2px 10px;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-bottom: 2px;
+  text-align: center;
+  box-shadow: 0 2px 8px #a100ff44;
 }
 
 </style>

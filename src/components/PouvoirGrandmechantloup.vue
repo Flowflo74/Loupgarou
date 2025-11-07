@@ -19,7 +19,6 @@
     </div>
     <button @click="validate">Valider</button>
   </dialog>
-  <!-- fin du bouton de test -->
 </template>
 
 <script setup>
