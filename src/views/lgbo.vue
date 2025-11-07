@@ -320,6 +320,9 @@
 
     <!-- Footer persistent -->
     <footer v-if="phase !== 'end'" class="footer">
+      <button class="btn-rejouer-footer" @click="rejouer">
+    Rejouer
+  </button>
       <router-link to="/"><button class="btn-retour-accueil">Accueil</button></router-link>
       <p>AMELINE-BOLLES Florian x L'école de la station</p>
     </footer>
@@ -777,23 +780,31 @@ h2 {
 }
 
 .remaining-card {
+  position: relative;
   background: rgba(0, 0, 0, 0.5);
   border-radius: 10px;
   padding: 0.5rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  justify-content: center;
+  min-width: 120px;
+  min-height: 120px;
 }
 
 .exclusion-logo {
-  width: 50px;
-  cursor: pointer;
-  transition: transform 0.15s;
+  position: absolute;
+  top : 40px;
+  pointer-events: auto;
+  z-index: 5;
+  opacity: 0.95;
+  width: 40%;
+  height: auto;
+  max-width: 70px;
 }
 
 .exclusion-logo:hover {
-  transform: scale(1.15) rotate(-10deg);
-  filter: drop-shadow(0 0 8px #ffae00cc);
+  transform: scale(1.10) rotate(-10deg);
 }
 
 /* Boutons */
@@ -851,6 +862,22 @@ h2 {
   box-shadow: 0 8px 30px 0 #fff70099;
   background: linear-gradient(90deg, #ffec70 0%, #ffae00 100%);
   color: #192232;
+}
+
+.btn-rejouer-footer {
+  font-size: 0.85rem;
+  padding: 0.3em 1.1em;
+  margin-bottom: 0.3em;
+  background: #ffae00;
+  color: #23243a;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #0002;
+  transition: background 0.2s;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .selection-perso,
