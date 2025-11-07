@@ -22,7 +22,6 @@
           </select>
         </div>
         <div style="margin-top:1rem; display:flex; gap:.5rem; justify-content:center;">
-          <button type="button" @click="closeDialog">Annuler</button>
           <button type="submit">Valider</button>
         </div>
       </form>
@@ -47,8 +46,6 @@ function openDialog() {
   moineSaveName.value = "";
   if (moineDialog.value && typeof moineDialog.value.showModal === 'function') {
     moineDialog.value.showModal();
-  } else {
-    // fallback : focus la sélection si dialog natif non supporté
   }
 }
 function closeDialog() {

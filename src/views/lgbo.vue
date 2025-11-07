@@ -63,6 +63,7 @@
           :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
           :nomLoup="card.name === 'Loup-garou' ? nomLoup : undefined"
           :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined"
+          :nomCorbeau="card.name === 'Corbeau' ? nomCorbeau : undefined"
           />
 
           <div class="appel-info">
@@ -130,10 +131,13 @@
           <!-- Logos potions pour la Sorcière -->
           <template v-if="card.name === 'Sorciere'">
             <PotionsSorciere
-            :joueurs="joueurs"
-            @sor-victim-selected="victimSorName = $event" 
-            :potion-vie-dispo="potionVieDispo" :potion-mort-dispo="potionMortDispo"
-              @use-vie="potionVieDispo = false" @use-mort="potionMortDispo = false" />
+  :joueurs="joueurs"
+  :potion-vie-dispo="potionVieDispo"
+  :potion-mort-dispo="potionMortDispo"
+  @sor-save-name-selected="handleSorciereSave"
+  @use-mort="potionMortDispo = false"
+  @sor-victim-selected="victimSorName = $event"
+/>
           </template>
           <!-- Logo potion pour l'Alchimiste -->
           <template v-if="card.name === 'Alchimiste'">
@@ -209,6 +213,9 @@
         <div v-if="personneProteger" class="annonce-block protected-annonce">
           <strong>Le Salvateur a protégé :</strong> {{ personneProteger }}
         </div>
+        <div v-if="sorciereSaveName" class="annonce-block protected-annonce">
+          <strong>La Sorcière a sauvé :</strong> {{ sorciereSaveName }}
+        </div>
         <div v-if="MoineSave" class="annonce-block protected-annonce">
           <strong>Le Moine a sauvé :</strong> {{ MoineSave }}
         </div>
@@ -251,6 +258,7 @@
           :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
           :nomLoup="card.name === 'Loup-garou' ? nomLoup : undefined"
           :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined"
+          :nomCorbeau="card.name === 'Corbeau' ? nomCorbeau : undefined"
           />
         </li>
       </ul>
@@ -266,9 +274,16 @@
   @update-joueurs="updateJoueurs"
 />
       <p class="vote">Vote du village : Qui a été éliminer par le village ?</p>
+      <p class="rappel">Rappel des annonces :</p>
       <div class="annonces-row">
       <div v-if="nomAmoureux1" class="annonce-block amoureux-annonce">
         <strong>Les Amoureux sont :</strong> {{ nomAmoureux1 }} ❤ {{ nomAmoureux2 }}
+      </div>
+      <div v-if="nomMentor" class="annonce-block mentor-annonce">
+          <strong>Le mentor de {{ nomEnfantSauvage }} est </strong> {{ nomMentor }}
+        </div>
+      <div v-if="nomOurs" class="annonce-block ours-annonce">
+        <strong>Le montreur d'ours est</strong> {{ nomOurs }}
       </div>
       </div>
       <ul class="village-list">
@@ -285,7 +300,8 @@
           :nomEnfantSauvage="card.name === 'Enfant Sauvage' ? nomEnfantSauvage : undefined"
           :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
           :nomLoup="card.name === 'Loup-garou' ? nomLoup : undefined"
-          :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined" />
+          :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined"
+          :nomCorbeau="card.name === 'Corbeau' ? nomCorbeau : undefined" />
         </li>
       </ul>
       <button class="btn-next-phase" @click="nextPhase">Nuit suivante</button>
@@ -360,6 +376,7 @@ const nomChasseur = ref('')
 const nomOurs = ref('')
 const nomLoup = ref('')
 const nomMentor = ref('');
+const nomCorbeau = ref('');
 
 // Computed
 const prepCards = computed(() =>
@@ -435,8 +452,13 @@ function nextPhase() {
       phase.value = 'night';
       visible.value = false;
       victimLGName.value = '';
+      victimGrandLGName.value = '';
       personneProteger.value = '';
       victimSorName.value = '';
+      victimAlchimiste.value = '';
+      ServSave.value = '';
+      MoineSave.value = '';
+      sorciereSaveName.value = '';
       transitioning.value = false;
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }, 1500);
@@ -491,21 +513,22 @@ watch(
 
 
 // ça c'est pour les logos à côté des cartes
-const pouvoirServDispo = ref(true)
-const potionMortDispo = ref(true)
-const choixrenard = ref(true)
-const pouvoirflute = ref(true)
+const pouvoirServDispo = ref(true);
+const potionVieDispo = ref(true);
+const potionMortDispo = ref(true);
+const choixrenard = ref(true);
+const pouvoirflute = ref(true);
 const joueursCharmes = ref([]);
 const nomSoeur1 = ref('');
 const nomSoeur2 = ref('');
 const personneProteger = ref('');
 const victimSorName = ref('');
+const sorciereSaveName = ref('');
 const nomAmoureux1 = ref('');
 const nomAmoureux2 = ref('');
 const nomEnfantSauvage = ref('');
 const nomCourtisane = ref('');
 const choixCourtisane = ref('');
-const potionVieDispo = ref('');
 const pouvoirMoineDispo = ref('');
 const pouvoirAlchiDispo = ref('');
 const MoineSave = ref('');
@@ -546,6 +569,10 @@ function setCourtisane({ nomCourtisane: nom }) {
   if (!nomCourtisane.value) nomCourtisane.value = nom;
 }
 
+function setCorbeau({ nomCorbeau: nom }) {
+  nomCorbeau.value = nom;
+}
+
 function setCharmes(nomsCharmes) {
   joueursCharmes.value = nomsCharmes;
 }
@@ -568,6 +595,10 @@ function handleServanteSave(joueur) {
   ServSave.value = joueur;
 }
 
+function handleSorciereSave(nom) {
+  potionVieDispo.value = false;
+  sorciereSaveName.value = nom;
+}
 const joueurs = ref([]);
 const joueursInitial = ref([]);
 function updateJoueurs(list) {
@@ -819,6 +850,14 @@ h2 {
   text-shadow: 0 0 8px #fff70099;
 }
 
+.rappel {
+  font-size: 1rem;
+  text-align: center;
+  color: #ffae00;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+}
+
 .phase-end {
   text-align: center;
 }
@@ -919,12 +958,14 @@ h2 {
 .protected-annonce::before { background: linear-gradient(90deg, #659904, #b6ff00); }
 .amoureux-annonce::before  { background: linear-gradient(90deg, #ec03f4, #ff17dc); }
 .mentor-annonce::before    { background: linear-gradient(90deg, #f4d803, #ff0000); }
+.ours-annonce::before     { background: linear-gradient(90deg, #03a9f4, #00ffc8); }
 
 /* Emoji pour chaque type */
 .victim-annonce strong::before    { content: "💀 "; }
 .protected-annonce strong::before { content: "🛡️ "; }
 .amoureux-annonce strong::before  { content: "💘 "; }
 .mentor-annonce strong::before    {content: "🧑 "; }
+.ours-annonce strong::before     { content: "🐻 "; }
 
 /* Texte */
 .annonce-block strong {

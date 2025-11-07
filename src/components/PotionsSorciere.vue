@@ -1,19 +1,21 @@
 <template>
   <div class="potions-sorciere">
-    <img
-      class="position-logo"
-      :src="props.potionVieDispo ? '/logospouvoirs/healthpotion.png' : '/logospouvoirs/potionviecroix.png'"
-      :title="props.potionVieDispo ? 'Utiliser la potion de vie' : 'Potion de vie déjà utilisée'"
-      @click="!props.potionVieDispo || emit('use-vie')"
-    />
-    <button class="bouton" @click="openDialog">
+    <button class="bouton" @click="openVieDialog" :disabled="!props.potionVieDispo">
+      <img
+        class="position-logo"
+        :src="props.potionVieDispo ? '/logospouvoirs/healthpotion.png' : '/logospouvoirs/potionviecroix.png'"
+        :title="props.potionVieDispo ? 'Utiliser la potion de vie' : 'Potion de vie déjà utilisée'"
+        :style="{ opacity: props.potionVieDispo ? 1 : 0.5 }"
+      />
+    </button>
+    <button class="bouton" @click="openDialog" :disabled="!props.potionMortDispo">
     <img
       class="position-logo"
       :src="props.potionMortDispo ? '/logospouvoirs/deathpotion.png' : '/logospouvoirs/potionmortcroix.png'"
       :title="props.potionMortDispo ? 'Utiliser la potion de mort' : 'Potion de mort déjà utilisée'"
-      @click="!props.potionMortDispo || emit('use-mort')"
+      :style="{ opacity: props.potionMortDispo ? 1 : 0.5 }"
     /></button>
-    <dialog ref="testDialog">
+    <dialog ref="sorciereDialog">
       <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
     <p>La sorcière choisi sa victime</p>
     <div>
@@ -31,6 +33,23 @@
     </div>
     <button @click="validate">Valider</button>
   </dialog>
+  <dialog ref="vieDialog">
+    <form @submit.prevent="validateVie">
+      <p>La sorcière choisit qui sauver</p>
+      <div>
+        <label for="sorciereSaveName" class="font-semibold w-24">Personne à sauver :</label>
+        <select id="sorciereSaveName" v-model="sorciereSaveName" required>
+          <option value="" disabled>Choisir un joueur</option>
+          <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
+            {{ joueur.nom }}
+          </option>
+        </select>
+      </div>
+      <div style="margin-top:1rem; display:flex; gap:.5rem; justify-content:center;">
+        <button type="submit">Valider</button>
+      </div>
+    </form>
+  </dialog>
   </div>
 </template>
 
@@ -38,25 +57,40 @@
 import { ref, defineProps, defineEmits } from "vue";
 
 
-const testDialog = ref(null);
+const sorciereDialog = ref(null);
+const vieDialog = ref(null);
 const victimSorName = ref("");
+const sorciereSaveName = ref("");
 const props = defineProps({
   potionVieDispo: Boolean,
   potionMortDispo: Boolean,
   joueurs: Array
 });
-const emit = defineEmits(["use-vie", "use-mort", "sor-victim-selected"]);
+const emit = defineEmits(["sor-save-name-selected","use-mort", "sor-victim-selected"]);
+
+function openVieDialog() {
+  if (!props.potionVieDispo) return;
+  sorciereSaveName.value = "";
+  vieDialog.value.showModal();
+}
 
 function openDialog() {
-  victimSorName.value = ""; // Réinitialise le champ à chaque ouverture
-  testDialog.value.showModal();
+  if (!props.potionMortDispo) return;
+  victimSorName.value = "";
+  sorciereDialog.value.showModal();
 }
+
 function validate() {
   emit("sor-victim-selected", victimSorName.value);
-  testDialog.value.close();
+  emit("use-mort");
+  sorciereDialog.value.close();
+}
+function validateVie() {
+  emit("sor-save-name-selected", sorciereSaveName.value);
+  vieDialog.value.close();
 }
 function closeDialog() {
-  testDialog.value.close();
+  sorciereDialog.value.close();
 }
 </script>
 
