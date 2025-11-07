@@ -1,6 +1,11 @@
 <template>
-  <button class="bouton" @click="openDialog">
-    <img class="position-logo" src="../assets/assets-projet/logoperso/infectlg.png" title="Choisir la victime"></button>
+  <button class="bouton" @click="openDialog" :disabled="!props.pouvoirInfectDispo">
+    <img
+      class="position-logo"
+      :src="props.pouvoirInfectDispo ? '/logospouvoirs/infectlg.png' : '/logospouvoirs/infectcroix2.png'"
+      title="Choisir la victime"
+    />
+  </button>
   <dialog ref="testDialog">
     <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
     <p>L'infect père des loups choisis qui sera infecté</p>
@@ -25,12 +30,15 @@
 import { ref, defineEmits } from "vue";
 
 const testDialog = ref(null);
-const props = defineProps({ joueurs: Array });
-const victimLGName = ref("");
+const props = defineProps({
+  joueurs: Array,
+  pouvoirInfectDispo: { type: Boolean, default: true }
+});
+const victiminfectLGName = ref("");
 const emit = defineEmits(["infect-selected"]);
 
 function openDialog() {
-  victimLGName.value = ""; // Réinitialise le champ à chaque ouverture
+  victiminfectLGName.value = ""; // Réinitialise le champ à chaque ouverture
   testDialog.value.showModal();
 }
 function validate() {

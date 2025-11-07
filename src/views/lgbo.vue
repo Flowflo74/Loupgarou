@@ -164,7 +164,11 @@
           </template>
           <!-- Logo tête de lg pour l'infecté --> 
           <template v-if="card.name === 'Infect pere des loups'">
-              <Pouvoirinfectperedesloups :joueurs="joueurs" @infect-selected="victiminfectLGName = $event" />
+              <Pouvoirinfectperedesloups
+    :joueurs="joueurs"
+    :pouvoir-infect-dispo="pouvoirInfectDispo"
+    @infect-selected="handleInfectVictim"
+  />
           </template>
            <!-- Logo Grand méchant loup --> 
           <template v-if="card.name === 'Grand Mechant Loup'">
@@ -378,6 +382,7 @@ const nomLoup = ref('')
 const nomMentor = ref('');
 const nomCorbeau = ref('');
 
+
 // Computed
 const prepCards = computed(() =>
   selectedCards.value
@@ -536,6 +541,7 @@ const victimAlchimiste = ref('');
 const ServSave = ref('');
 const nomVoyante = ref('');
 const nomFlute = ref('');
+const pouvoirInfectDispo = ref(true);
 
 function setAmoureux({ nomAmoureux1: n1, nomAmoureux2: n2 }) {
   nomAmoureux1.value = n1;
@@ -599,6 +605,12 @@ function handleSorciereSave(nom) {
   potionVieDispo.value = false;
   sorciereSaveName.value = nom;
 }
+
+function handleInfectVictim(nom) {
+  victiminfectLGName.value = nom;
+  pouvoirInfectDispo.value = false;
+}
+
 const joueurs = ref([]);
 const joueursInitial = ref([]);
 function updateJoueurs(list) {
