@@ -435,9 +435,12 @@ function removeCard(index) {
     winnerImage.value = '/victoire/victoireange.jpg'
   }
 }
+
+const selectedCardsInitial = ref([]);
 /// Lancer une nouvelle partie
 function startGame() {
   joueursInitial.value = joueurs.value.map(j => ({ ...j }));
+   selectedCardsInitial.value = selectedCards.value.map(c => ({ ...c }));
   phase.value = 'prep';
 }
 ///Phases de jeu
@@ -445,6 +448,7 @@ function nextPhase() {
   if (phase.value === 'night') {
     transitionText.value = "🌞 Le village se réveille...";
     transitioning.value = true;
+    resetVotes();
     setTimeout(() => {
       phase.value = 'night-elim';
       transitioning.value = false;
@@ -620,9 +624,38 @@ function updateJoueurs(list) {
   joueurs.value = list;
 }
 
+function resetVotes() {
+  joueurs.value = joueurs.value.map(j => ({ ...j, votes: 0 }));
+}
+
 function rejouer() {
   joueurs.value = joueursInitial.value.map(j => ({ ...j }));
+  selectedCards.value = selectedCardsInitial.value.map(c => ({ ...c }));
   phase.value = 'selection';
+  nomAncien.value = '';
+  nomChasseur.value = '';
+  nomJuge.value = '';
+  nomOurs.value = '';
+  nomLoup.value = '';
+  nomMentor.value = '';
+  nomCorbeau.value = '';
+  nomSoeur1.value = '';
+  nomSoeur2.value = '';
+  nomEnfantSauvage.value = '';
+  nomVoyante.value = '';
+  nomFlute.value = '';
+  nomAmoureux1.value = '';
+  nomAmoureux2.value = '';
+  sorciereSaveName.value = '';
+  MoineSave.value = '';
+  ServSave.value = '';
+  personneProteger.value = '';
+  victimLGName.value = '';
+  victiminfectLGName.value = '';
+  victimGrandLGName.value = '';
+  victimSorName.value = '';
+  victimAlchimiste.value = '';
+  // Ajoute ici toute autre variable de nom ou d'état à réinitialiser
 }
 </script>
 

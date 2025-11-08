@@ -1,7 +1,7 @@
 <template>
   <div class="vote-block">
     <h2>Vote du village</h2>
-    <ul class="liste-vote">
+    <ul class="liste-vote multi-colonnes">
       <li v-for="(joueur, idx) in joueursVivants" :key="joueur.nom">
         <span>{{ joueur.nom }}</span>
         <div class="vote-counter">
@@ -64,6 +64,11 @@ function validerVote() {
   list-style: none;
   padding: 0;
   margin: 2rem auto;
+}
+.liste-vote.multi-colonnes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
 }
 .liste-vote li {
   display: flex;
