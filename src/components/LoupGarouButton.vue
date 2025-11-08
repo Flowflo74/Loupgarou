@@ -4,13 +4,31 @@
     <img class="position-logo" src="../assets/assets-projet/logoperso/victimelg.png" title="Choisir la victime"></button>
   <dialog ref="loupDialog">
     <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
+    <template v-if="props.isFirstNight">
+      <p>Qui sont les loups-garous&nbsp;?</p>
+      <div v-for="i in props.nbLoups" :key="i" style="margin-bottom: 0.7rem;">
+        <label :for="'loup-' + i">Loup-garou {{ i }}</label>
+        <select
+          :id="'loup-' + i"
+          v-model="loupsLocaux[i-1]"
+          required
+        >
+          <option value="" disabled>Choisir un joueur</option>
+          <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
+            {{ joueur.nom }}
+          </option>
+        </select>
+      </div>
+      <hr style="margin:1.2em 0;">
+    </template>
     <p>Les loups-garous choisissent leur victime</p>
     <div>
       <label for="victimLGName" class="font-semibold w-24">La victime est</label>
       <select
         id="victimLGName"
         v-model="victimLGName"
-        class="flex-auto">
+        class="flex-auto"
+      >
         <option value="" disabled>Choisir un joueur</option>
         <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
           {{ joueur.nom }}
@@ -24,16 +42,27 @@
 <script setup>
 import { ref, defineEmits } from "vue";
 
+const props = defineProps({
+  joueurs: Array,
+  nbLoups: Number,
+  isFirstNight: Boolean
+});
+const emit = defineEmits(["loups-selected", "victim-selected"]);
 const loupDialog = ref(null);
-const props = defineProps({ joueurs: Array });
 const victimLGName = ref("");
-const emit = defineEmits(["victim-selected"]);
+const loupsLocaux = ref([]); // tableau des noms choisis
 
 function openDialog() {
   victimLGName.value = "";
+  if (props.isFirstNight) {
+    loupsLocaux.value = Array(props.nbLoups).fill("");
+  }
   loupDialog.value.showModal();
 }
 function validate() {
+  if (props.isFirstNight) {
+    emit("loups-selected", loupsLocaux.value);
+  }
   emit("victim-selected", victimLGName.value);
   loupDialog.value.close();
 }

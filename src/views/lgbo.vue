@@ -50,7 +50,7 @@
     <section v-if="phase === 'prep'" class="phase-nuit">
       <h2>Préparation de la première nuit</h2>
       <ul class="appel-list">
-        <li v-for="card in prepCards" :key="card.name + '-prep'" class="appel-row">
+        <li v-for="(card, index) in prepCards" :key="card.name + '-prep-' + index" class="appel-row">
           
           <LoupGarouCard :lgcard="card" 
           :nomAncien="card.name === 'Ancien' ? nomAncien : undefined" 
@@ -61,7 +61,7 @@
           :nomOurs="card.name === 'Montreur d ours' ? nomOurs : undefined"
           :nomEnfantSauvage="card.name === 'Enfant Sauvage' ? nomEnfantSauvage : undefined"
           :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
-          :nomLoup="card.name === 'Loup-garou' ? nomLoup : undefined"
+          :nomLoup="card.name === 'Loup-garou' ? nomsLoups[indexOfLoupInList(prepCards, index)] : undefined"
           :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined"
           :nomCorbeau="card.name === 'Corbeau' ? nomCorbeau : undefined"
           />
@@ -108,9 +108,11 @@
     <section v-if="phase === 'night'" class="phase-nuit">
       <h2>🌙 Nuit {{ nightCount }}</h2>
       <ul class="appel-list">
-        <li v-for="card in nightCards" :key="card.name + '-night'" class="appel-row">
-          <LoupGarouCard :lgcard="card"
-          :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined" />
+        <li v-for="(card, index) in nightCards" :key="card.name + '-night-' + index" class="appel-row">
+          <LoupGarouCard
+    :lgcard="card"
+    :nomLoup="card.name === 'Loup-garou' ? nomsLoups[indexOfLoupInList(nightCards, index)] : undefined"
+    :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined" />
           <div class="appel-info">
             <p class="dire"><strong>Meneur :</strong> {{ card.dire }}</p>
             <p class="description">{{ card.description }}</p>
@@ -154,12 +156,16 @@
               @moine-save="handleMoineSave"/>
           </template>
 
-
-
           <!-- Logos tête de lg pour la victime -->
           <template v-if="card.name === 'Loup-garou'">
             <div class="position-logo victimelg">
-              <LoupGarouButton :joueurs="joueurs" @victim-selected="victimLGName = $event" />
+              <LoupGarouButton
+  :joueurs="joueurs"
+  :nbLoups="nbLoups"
+  :isFirstNight="phase === 'night' && nightCount === 1"
+  @loups-selected="setLoups"
+  @victim-selected="victimLGName = $event"
+/>
             </div>
           </template>
           <!-- Logo tête de lg pour l'infecté --> 
@@ -260,7 +266,7 @@
           :nomOurs="card.name === 'Montreur d ours' ? nomOurs : undefined"
           :nomEnfantSauvage="card.name === 'Enfant Sauvage' ? nomEnfantSauvage : undefined"
           :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
-          :nomLoup="card.name === 'Loup-garou' ? nomLoup : undefined"
+          :nomLoup="card.name === 'Loup-garou' ? nomsLoups[indexOfLoupInList(selectedCards, index)]: undefined"
           :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined"
           :nomCorbeau="card.name === 'Corbeau' ? nomCorbeau : undefined"
           />
@@ -303,7 +309,7 @@
           :nomOurs="card.name === 'Montreur d ours' ? nomOurs : undefined"
           :nomEnfantSauvage="card.name === 'Enfant Sauvage' ? nomEnfantSauvage : undefined"
           :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
-          :nomLoup="card.name === 'Loup-garou' ? nomLoup : undefined"
+          :nomLoup="card.name === 'Loup-garou' ? nomsLoups[indexOfLoupInList(selectedCards, index)]: undefined"
           :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined"
           :nomCorbeau="card.name === 'Corbeau' ? nomCorbeau : undefined" />
         </li>
@@ -417,9 +423,6 @@ function addCard(card) {
   selectedCards.value.push({ ...card })
 }
 
-function setLoup({ nomLoup: nom }) {
-  nomLoup.value = nom;
-}
 function removeCard(index) {
   const removed = selectedCards.value[index]
   selectedCards.value.splice(index, 1)
@@ -550,6 +553,23 @@ const nomVoyante = ref('');
 const nomFlute = ref('');
 const pouvoirInfectDispo = ref(true);
 
+
+const nbLoups = computed(() =>
+  selectedCards.value.filter(c => c.name === 'Loup-garou').length
+);
+const nomsLoups = ref([]); // ["Alice", "Bob", ...]
+function setLoups(liste) {
+  nomsLoups.value = liste;
+}
+
+function indexOfLoupInList(list, idx) {
+  // Retourne le rang du Loup-garou parmi toutes les cartes Loup-garou affichées
+  return list
+    .slice(0, idx + 1)
+    .filter(c => c.name === 'Loup-garou').length - 1;
+}
+
+
 function setAmoureux({ nomAmoureux1: n1, nomAmoureux2: n2 }) {
   nomAmoureux1.value = n1;
   nomAmoureux2.value = n2;
@@ -655,6 +675,7 @@ function rejouer() {
   victimGrandLGName.value = '';
   victimSorName.value = '';
   victimAlchimiste.value = '';
+  nomsLoups.value = [];
   // Ajoute ici toute autre variable de nom ou d'état à réinitialiser
 }
 </script>
