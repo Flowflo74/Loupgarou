@@ -11,8 +11,10 @@
     {{ props.nomSoeur1}} & {{ props.nomSoeur2}}</div>
     <div v-if="lgcard.name === 'Montreur d ours' && props.nomOurs" class="carte-nom-nom">
     {{ props.nomOurs }}</div>
-    <div v-if="lgcard.name === 'Enfant Sauvage' && props.nomEnfantSauvage" class="carte-nom-nom">
-    {{ props.nomEnfantSauvage }}</div>
+    <div v-if="lgcard.name === 'Enfant Sauvage' && props.nomEnfantSauvage"
+     :class="['carte-nom-nom', props.mentorIsDead ? 'loup-nom-rouge' : '']">
+  {{ props.nomEnfantSauvage }}
+</div>
      <div v-if="lgcard.name === 'Voyante' && props.nomVoyante" class="carte-nom-nom">
     {{ props.nomVoyante }}</div>
     <div v-if="lgcard.name === 'Loup-garou' && props.nomLoup" class="carte-nom-nom loup-nom-rouge">

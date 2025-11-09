@@ -60,6 +60,7 @@
           :nomSoeur2="card.name === 'Deux Soeurs' ? nomSoeur2 : undefined"
           :nomOurs="card.name === 'Montreur d ours' ? nomOurs : undefined"
           :nomEnfantSauvage="card.name === 'Enfant Sauvage' ? nomEnfantSauvage : undefined"
+          :mentorIsDead="card.name === 'Enfant Sauvage' ? mentorIsDead : false"
           :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
           :nomLoup="card.name === 'Loup-garou' ? nomsLoups[indexOfLoupInList(prepCards, index)] : undefined"
           :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined"
@@ -110,13 +111,15 @@
       <ul class="appel-list">
         <li v-for="(card, index) in nightCards" :key="card.name + '-night-' + index" class="appel-row">
           <LoupGarouCard
-    :lgcard="card"
-    :nomLoup="card.name === 'Loup-garou' ? nomsLoups[indexOfLoupInList(nightCards, index)] : undefined"
-    :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined" />
-          <div class="appel-info">
-            <p class="dire"><strong>Meneur :</strong> {{ card.dire }}</p>
-            <p class="description">{{ card.description }}</p>
-          </div>
+        :lgcard="card"
+        :nomLoup="card.name === 'Loup-garou' ? nomsLoups[indexOfLoupInList(nightCards, index)] : undefined"
+        :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined"
+        :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
+      />
+      <div class="appel-info">
+        <p class="dire"><strong>Meneur :</strong> {{ card.dire }}</p>
+        <p class="description">{{ card.description }}</p>
+      </div>
 
           <!-- Logo pouvoir courtisane -->
           <template v-if="card.name === 'Courtisane'">
@@ -205,6 +208,10 @@
           </template>
         </li>
       </ul>
+      <!-- ENCART UNIQUE sous la liste des LG -->
+  <div v-if="victimLGName" class="encart-victime-lg">
+    <strong>Nom de la victime :</strong> {{ victimLGName }}
+  </div>
       <button class="btn-next-phase" @click="nextPhase">Passer au jour</button>
     </section>
 
@@ -265,6 +272,7 @@
           :nomSoeur2="card.name === 'Deux Soeurs' ? nomSoeur2 : undefined"
           :nomOurs="card.name === 'Montreur d ours' ? nomOurs : undefined"
           :nomEnfantSauvage="card.name === 'Enfant Sauvage' ? nomEnfantSauvage : undefined"
+          :mentorIsDead="card.name === 'Enfant Sauvage' ? mentorIsDead : false"
           :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
           :nomLoup="card.name === 'Loup-garou' ? nomsLoups[indexOfLoupInList(selectedCards, index)]: undefined"
           :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined"
@@ -308,6 +316,7 @@
           :nomSoeur2="card.name === 'Deux Soeurs' ? nomSoeur2 : undefined"
           :nomOurs="card.name === 'Montreur d ours' ? nomOurs : undefined"
           :nomEnfantSauvage="card.name === 'Enfant Sauvage' ? nomEnfantSauvage : undefined"
+          :mentorIsDead="card.name === 'Enfant Sauvage' ? mentorIsDead : false"
           :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
           :nomLoup="card.name === 'Loup-garou' ? nomsLoups[indexOfLoupInList(selectedCards, index)]: undefined"
           :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined"
@@ -553,6 +562,10 @@ const nomVoyante = ref('');
 const nomFlute = ref('');
 const pouvoirInfectDispo = ref(true);
 
+const mentorIsDead = computed(() =>
+  nomMentor.value &&
+  !joueurs.value.some(j => j.nom === nomMentor.value)
+);
 
 const nbLoups = computed(() =>
   selectedCards.value.filter(c => c.name === 'Loup-garou').length
@@ -1113,6 +1126,21 @@ h2 {
   z-index: 1000;
   opacity: 0;
   animation: fadeIn 0.75s forwards;
+}
+
+.encart-victime-lg {
+  margin: 1.2rem auto 0 auto;
+  padding: 0.5rem 1.2rem;
+  background: rgba(255, 30, 30, 0.06);
+  border: 1px solid #ffb3b3;
+  border-radius: 8px;
+  color: #b80000;
+  font-size: 1.05rem;
+  font-weight: 500;
+  text-align: center;
+  max-width: 260px;
+  box-shadow: 0 1px 4px #ff303022;
+  letter-spacing: 0.5px;
 }
 
 @keyframes fadeIn {
