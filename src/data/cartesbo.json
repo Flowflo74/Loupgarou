@@ -281,7 +281,7 @@
       "name": "Sectaire",
       "image": "sectairebo.png",
       "order": 29,
-      "onlyFirstNight": false,
+      "onlyFirstNight": true,
       "isCallable": false,
       "categorie": "Solitaire",
       "description": "Le meneur de Jeu constitue 2 groupes secrets en fonctions d'attributs physique (barbes, lunettes,...) et l'informe la première nuit.Le sectaire doit éliminer tous les joueurs du groupe adverse pour gagner."

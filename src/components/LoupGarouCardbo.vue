@@ -21,6 +21,10 @@
      {{ props.nomLoup }}</div>
 <div v-if="lgcard.name === 'Joueur de flute' && props.nomFlute" class="carte-nom-flute">
   {{ props.nomFlute }}</div>
+  <div
+  v-if="lgcard.name === 'Sectaire' && props.nomSectaire" class="carte-nom-flute">
+  {{ props.nomSectaire }}
+</div>
   <div v-if="lgcard.name === 'Corbeau' && props.nomCorbeau" class="carte-nom-nom">
   {{ props.nomCorbeau }}</div>
     <span class="carte-nom">{{ lgcard.name }}</span>
@@ -43,7 +47,9 @@ const props = defineProps({
   nomLoup: String,
   nomFlute: String,
   nomCorbeau: String,
-  nomLoup: String
+  nomLoup: String,
+  nomSectaire: String,
+  mentorIsDead: Boolean
 })
 const imageUrl = computed(() =>
   new URL(`../assets/assets-projet/imagecartelgbo/${props.lgcard.image}`, import.meta.url).href

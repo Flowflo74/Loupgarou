@@ -64,6 +64,7 @@
           :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
           :nomLoup="card.name === 'Loup-garou' ? nomsLoups[indexOfLoupInList(prepCards, index)] : undefined"
           :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined"
+          :nomSectaire="card.name === 'Sectaire' ? nomSectaire : undefined"
           :nomCorbeau="card.name === 'Corbeau' ? nomCorbeau : undefined"
           />
 
@@ -72,6 +73,10 @@
             <p class="description">{{ card.description }}</p>
           </div>
           
+          <!-- Logo pouvoir sectaire -->
+          <template v-if="card.name === 'Sectaire'">
+  <PouvoirSectaire :joueurs="joueurs" @sectaire-init="setSectaire" />
+          </template>
           <!-- Logo pouvoir ancien -->
           <template v-if="card.name === 'Ancien'">
             <PouvoirAncien :joueurs="joueurs" @ancienduvillage="setAncien" />
@@ -100,6 +105,7 @@
           <template v-if="card.name === 'Enfant Sauvage'">
             <PouvoirEnfantSauvage :joueurs="joueurs" @mentorduvillage="setMentor" />
           </template>
+          
         </li>
       </ul>
       <button class="btn-next-phase" @click="nextPhase">Commencer la nuit</button>
@@ -276,6 +282,7 @@
           :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
           :nomLoup="card.name === 'Loup-garou' ? nomsLoups[indexOfLoupInList(selectedCards, index)]: undefined"
           :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined"
+          :nomSectaire="card.name === 'Sectaire' ? nomSectaire : undefined"
           :nomCorbeau="card.name === 'Corbeau' ? nomCorbeau : undefined"
           />
         </li>
@@ -320,6 +327,7 @@
           :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
           :nomLoup="card.name === 'Loup-garou' ? nomsLoups[indexOfLoupInList(selectedCards, index)]: undefined"
           :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined"
+          :nomSectaire="card.name === 'Sectaire' ? nomSectaire : undefined"
           :nomCorbeau="card.name === 'Corbeau' ? nomCorbeau : undefined" />
         </li>
       </ul>
@@ -378,6 +386,7 @@ import PouvoirGrandmechantloup from '@/components/PouvoirGrandmechantloup.vue'
 import PouvoirOurs from '../components/PouvoirOurs.vue'
 import PouvoirCorbeau from '../components/PouvoirCorbeau.vue'
 import PouvoirVoyante from '../components/PouvoirVoyante.vue'
+import PouvoirSectaire from '../components/PouvoirSectaire.vue'
 
 
 // Etat
@@ -433,8 +442,10 @@ function addCard(card) {
 }
 
 function removeCard(index) {
-  const removed = selectedCards.value[index]
-  selectedCards.value.splice(index, 1)
+  const removed = selectedCards.value[index];
+  selectedCards.value.splice(index, 1);
+
+  joueurs.value = joueurs.value.filter(j => j.nom !== removed.nom);
 
   // Victoire de l'Ange uniquement s'il est éliminé au premier jour (après la première nuit)
   if (
@@ -442,9 +453,29 @@ function removeCard(index) {
     removed.name === 'Ange' &&
     dayCount.value === 1
   ) {
-    phase.value = 'end'
-    winnerMessage.value = "L'Ange a été éliminé lors du premier jour et remporte la partie !"
-    winnerImage.value = '/victoire/victoireange.jpg'
+    phase.value = 'end';
+    winnerMessage.value = "L'Ange a été éliminé lors du premier jour et remporte la partie !";
+    winnerImage.value = '/victoire/victoireange.jpg';
+  }
+
+  // Vérification victoire Sectaire
+  if (
+    groupeOppose.value.length &&
+    groupeOppose.value.every(nom => !joueurs.value.some(j => j.nom === nom && !j.mort))
+  ) {
+    phase.value = 'end';
+    winnerMessage.value = 'Le Sectaire a éliminé tout le groupe opposé et remporte la partie !';
+    winnerImage.value = '/victoire/victoiresectaire.jpg';
+  }
+
+  if (
+    nomFlute.value &&
+    joueurs.value.length > 0 &&
+    joueurs.value.every(j => j.nom === nomFlute.value || joueursCharmes.value.includes(j.nom))
+  ) {
+    phase.value = 'end';
+    winnerMessage.value = 'Le Joueur de flûte a charmé tout le village et remporte la partie !';
+    winnerImage.value = '/victoire/victoireflute.jpg';
   }
 }
 
@@ -561,6 +592,15 @@ const ServSave = ref('');
 const nomVoyante = ref('');
 const nomFlute = ref('');
 const pouvoirInfectDispo = ref(true);
+const nomSectaire = ref('');
+const groupeSectaire = ref([]);
+const groupeOppose = ref([]);
+
+function setSectaire({ nomSectaire: nom, groupeSectaire: g1, groupeOppose: g2 }) {
+  nomSectaire.value = nom;
+  groupeSectaire.value = g1;
+  groupeOppose.value = g2;
+}
 
 const mentorIsDead = computed(() =>
   nomMentor.value &&
@@ -688,7 +728,12 @@ function rejouer() {
   victimGrandLGName.value = '';
   victimSorName.value = '';
   victimAlchimiste.value = '';
+  nomSectaire.value = '';
+  groupeSectaire.value = [];
+  groupeOppose.value = [];
   nomsLoups.value = [];
+  joueursCharmes.value = [];
+  
   // Ajoute ici toute autre variable de nom ou d'état à réinitialiser
 }
 </script>
