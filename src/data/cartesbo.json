@@ -287,10 +287,10 @@
       "description": "Le meneur de Jeu constitue 2 groupes secrets en fonctions d'attributs physique (barbes, lunettes,...) et l'informe la première nuit.Le sectaire doit éliminer tous les joueurs du groupe adverse pour gagner."
     },
     {
-      "name": "Don QuiTousse",
+      "name": "DonQuiTousse",
       "image": "donquitoussebo.png",
       "order": 30,
-      "onlyFirstNight": false,
+      "onlyFirstNight": true,
       "isCallable": false,
       "categorie": "Villageois",
       "description": "Si il se fait dévorer, il contamine le premier loup-garou à sa gauche. Celui-ci mourra au début de la nuit suivante."

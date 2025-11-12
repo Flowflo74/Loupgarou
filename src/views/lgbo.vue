@@ -55,6 +55,7 @@
           <LoupGarouCard :lgcard="card" 
           :nomAncien="card.name === 'Ancien' ? nomAncien : undefined" 
           :nomChasseur="card.name === 'Chasseur' ? nomChasseur : undefined"
+          :nomQuitousse="card.name === 'DonQuiTousse' ? nomQuitousse : undefined"
           :nomJuge="card.name === 'Juge' ? nomJuge : undefined"
           :nomSoeur1="card.name === 'Deux Soeurs' ? nomSoeur1 : undefined"
           :nomSoeur2="card.name === 'Deux Soeurs' ? nomSoeur2 : undefined"
@@ -73,6 +74,10 @@
             <p class="description">{{ card.description }}</p>
           </div>
           
+          <!-- Logo pouvoir Don Qui Tousse -->
+          <template v-if="card.name === 'DonQuiTousse'">
+  <Pouvoirrouille :joueurs="joueurs" @donQuitousse="setQuitousse" />
+</template>
           <!-- Logo pouvoir sectaire -->
           <template v-if="card.name === 'Sectaire'">
   <PouvoirSectaire :joueurs="joueurs" @sectaire-init="setSectaire" />
@@ -273,6 +278,7 @@
           <LoupGarouCard :lgcard="card"
           :nomAncien="card.name === 'Ancien' ? nomAncien : undefined" 
           :nomChasseur="card.name === 'Chasseur' ? nomChasseur : undefined"
+          :nomQuitousse="card.name === 'DonQuiTousse' ? nomQuitousse : undefined"
           :nomJuge="card.name === 'Juge' ? nomJuge : undefined"
           :nomSoeur1="card.name === 'Deux Soeurs' ? nomSoeur1 : undefined"
           :nomSoeur2="card.name === 'Deux Soeurs' ? nomSoeur2 : undefined"
@@ -318,6 +324,7 @@
           <LoupGarouCard :lgcard="card" 
           :nomAncien="card.name === 'Ancien' ? nomAncien : undefined" 
           :nomChasseur="card.name === 'Chasseur' ? nomChasseur : undefined"
+          :nomQuitousse="card.name === 'DonQuiTousse' ? nomQuitousse : undefined"
           :nomJuge="card.name === 'Juge' ? nomJuge : undefined"
           :nomSoeur1="card.name === 'Deux Soeurs' ? nomSoeur1 : undefined"
           :nomSoeur2="card.name === 'Deux Soeurs' ? nomSoeur2 : undefined"
@@ -387,6 +394,7 @@ import PouvoirOurs from '../components/PouvoirOurs.vue'
 import PouvoirCorbeau from '../components/PouvoirCorbeau.vue'
 import PouvoirVoyante from '../components/PouvoirVoyante.vue'
 import PouvoirSectaire from '../components/PouvoirSectaire.vue'
+import Pouvoirrouille from '../components/Pouvoirrouille.vue'
 
 
 // Etat
@@ -409,7 +417,10 @@ const nomLoup = ref('')
 const nomMentor = ref('');
 const nomCorbeau = ref('');
 
-
+const nomQuitousse = ref('');
+function setQuitousse({ nomQuitousse: nom }) {
+  nomQuitousse.value = nom;
+}
 // Computed
 const prepCards = computed(() =>
   selectedCards.value
@@ -733,6 +744,7 @@ function rejouer() {
   groupeOppose.value = [];
   nomsLoups.value = [];
   joueursCharmes.value = [];
+  nomQuitousse.value = '';
   
   // Ajoute ici toute autre variable de nom ou d'état à réinitialiser
 }
