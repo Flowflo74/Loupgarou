@@ -44,6 +44,8 @@
 <script setup>
 import { ref, defineEmits } from "vue";
 
+const nomPlume1 = ref("");
+const nomPlume2 = ref("");
 const corbeauDialog = ref(null);
 const props = defineProps({ joueurs: Array });
 const nomCorbeau = ref("");
@@ -57,7 +59,11 @@ function closeDialog() {
   corbeauDialog.value.close();
 }
 function validate() {
-  emit("corbeauduvillage", { nomCorbeau: nomCorbeau.value});
+  emit("corbeauduvillage", {
+    nomCorbeau: nomCorbeau.value,
+    nomPlume1: nomPlume1.value,
+    nomPlume2: nomPlume2.value
+  });
   corbeauDialog.value.close();
 }
 </script>

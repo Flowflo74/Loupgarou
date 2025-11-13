@@ -540,10 +540,18 @@ function nextPhase() {
       phase.value = 'night-elim'
       break
     case 'night-elim':
-      dayCount.value += 1
-      phase.value = 'day'
-      visible.value = true
-      break
+      // Ajoute un vote aux joueurs désignés par le corbeau
+  joueurs.value.forEach(j => {
+    if (j.nom === nomPlume1.value || j.nom === nomPlume2.value) {
+      j.votes = (j.votes || 0) + 1;
+    } else {
+      j.votes = 0; // reset pour les autres
+    }
+  });
+  dayCount.value += 1;
+  phase.value = 'day';
+  visible.value = true;
+  return;
     case 'day':
       nightCount.value += 1
       phase.value = 'night'
@@ -666,8 +674,12 @@ function setCourtisane({ nomCourtisane: nom }) {
   if (!nomCourtisane.value) nomCourtisane.value = nom;
 }
 
-function setCorbeau({ nomCorbeau: nom }) {
+const nomPlume1 = ref("");
+const nomPlume2 = ref("");
+function setCorbeau({ nomCorbeau: nom, nomPlume1: plume1, nomPlume2: plume2 }) {
   nomCorbeau.value = nom;
+  nomPlume1.value = plume1;
+  nomPlume2.value = plume2;
 }
 
 function setCharmes(nomsCharmes) {
@@ -723,6 +735,8 @@ function rejouer() {
   nomLoup.value = '';
   nomMentor.value = '';
   nomCorbeau.value = '';
+  nomPlume1.value = '';
+  nomPlume2.value = '';
   nomSoeur1.value = '';
   nomSoeur2.value = '';
   nomEnfantSauvage.value = '';
