@@ -67,6 +67,9 @@
           :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined"
           :nomSectaire="card.name === 'Sectaire' ? nomSectaire : undefined"
           :nomCorbeau="card.name === 'Corbeau' ? nomCorbeau : undefined"
+          :nomChienLoup="card.name === 'Chien-Loup' ? nomChienLoup : undefined"
+:campChienLoup="card.name === 'Chien-Loup' ? campChienLoup : undefined"
+:nomCourtisane="card.name === 'Courtisane' ? nomCourtisane : undefined"
           />
 
           <div class="appel-info">
@@ -74,6 +77,11 @@
             <p class="description">{{ card.description }}</p>
           </div>
           
+          <!-- Logo pouvoir chien-loup -->
+          <template v-if="card.name === 'Chien-Loup'">
+  <PouvoirChienLoup :joueurs="joueurs" @chienloup-init="setChienLoup" />
+</template>
+
           <!-- Logo pouvoir Don Qui Tousse -->
           <template v-if="card.name === 'DonQuiTousse'">
   <Pouvoirrouille :joueurs="joueurs" @donQuitousse="setQuitousse" />
@@ -126,6 +134,10 @@
         :nomLoup="card.name === 'Loup-garou' ? nomsLoups[indexOfLoupInList(nightCards, index)] : undefined"
         :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined"
         :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
+        :nomCorbeau="card.name === 'Corbeau' ? nomCorbeau : undefined"
+        :nomChienLoup="card.name === 'Chien-Loup' ? nomChienLoup : undefined"
+        :campChienLoup="card.name === 'Chien-Loup' ? campChienLoup : undefined"
+        :nomCourtisane="card.name === 'Courtisane' ? nomCourtisane : undefined"
       />
       <div class="appel-info">
         <p class="dire"><strong>Meneur :</strong> {{ card.dire }}</p>
@@ -290,6 +302,9 @@
           :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined"
           :nomSectaire="card.name === 'Sectaire' ? nomSectaire : undefined"
           :nomCorbeau="card.name === 'Corbeau' ? nomCorbeau : undefined"
+          :nomChienLoup="card.name === 'Chien-Loup' ? nomChienLoup : undefined"
+:campChienLoup="card.name === 'Chien-Loup' ? campChienLoup : undefined"
+:nomCourtisane="card.name === 'Courtisane' ? nomCourtisane : undefined"
           />
         </li>
       </ul>
@@ -335,7 +350,10 @@
           :nomLoup="card.name === 'Loup-garou' ? nomsLoups[indexOfLoupInList(selectedCards, index)]: undefined"
           :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined"
           :nomSectaire="card.name === 'Sectaire' ? nomSectaire : undefined"
-          :nomCorbeau="card.name === 'Corbeau' ? nomCorbeau : undefined" />
+          :nomCorbeau="card.name === 'Corbeau' ? nomCorbeau : undefined"
+          :nomChienLoup="card.name === 'Chien-Loup' ? nomChienLoup : undefined"
+:campChienLoup="card.name === 'Chien-Loup' ? campChienLoup : undefined"
+:nomCourtisane="card.name === 'Courtisane' ? nomCourtisane : undefined" />
         </li>
       </ul>
       <button class="btn-next-phase" @click="nextPhase">Nuit suivante</button>
@@ -395,6 +413,7 @@ import PouvoirCorbeau from '../components/PouvoirCorbeau.vue'
 import PouvoirVoyante from '../components/PouvoirVoyante.vue'
 import PouvoirSectaire from '../components/PouvoirSectaire.vue'
 import Pouvoirrouille from '../components/Pouvoirrouille.vue'
+import PouvoirChienLoup from '../components/PouvoirChienLoup.vue'
 
 
 // Etat
@@ -416,6 +435,22 @@ const nomOurs = ref('')
 const nomLoup = ref('')
 const nomMentor = ref('');
 const nomCorbeau = ref('');
+
+
+const nomChienLoup = ref("");
+const campChienLoup = ref("");
+function setChienLoup({ nomChienLoup: nom, camp }) {
+  nomChienLoup.value = nom;
+  campChienLoup.value = camp;
+  // Mets à jour la carte Chien-Loup dans selectedCards
+  const index = selectedCards.value.findIndex(c => c.name === "Chien-Loup");
+  if (index !== -1) {
+    selectedCards.value[index] = {
+      ...selectedCards.value[index],
+      isCallable: camp === "Loup-garou"
+    };
+  }
+}
 
 const nomQuitousse = ref('');
 function setQuitousse({ nomQuitousse: nom }) {
@@ -669,9 +704,9 @@ function setJuge({ nomJuge: nom }) {
 function setVoyante({ nomVoyante: nom }) {
   nomVoyante.value = nom;
 }
-function setCourtisane({ nomCourtisane: nom }) {
+function setCourtisane({ nomCourtisane: nom, choix, personne }) {
   choixCourtisane.value = { choix, personne };
-  if (!nomCourtisane.value) nomCourtisane.value = nom;
+  nomCourtisane.value = nom;
 }
 
 const nomPlume1 = ref("");
@@ -759,6 +794,8 @@ function rejouer() {
   nomsLoups.value = [];
   joueursCharmes.value = [];
   nomQuitousse.value = '';
+  nomChienLoup.value = "";
+  campChienLoup.value = "";
   
   // Ajoute ici toute autre variable de nom ou d'état à réinitialiser
 }

@@ -7,7 +7,10 @@
     <p>Qui est l'ancien du village ?</p>
     <div>
       <label for="nomAncien" class="font-semibold w-24">L'ancien du village est :</label>
-      <select id="nomAncien" v-model="nomAncien" class="flex-auto">
+      <select 
+      id="nomAncien" 
+      v-model="nomAncien" 
+      class="flex-auto">
         <option value="" disabled>Choisir un joueur</option>
         <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
           {{ joueur.nom }}

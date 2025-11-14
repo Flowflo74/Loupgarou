@@ -5,7 +5,7 @@
     </button>
     <dialog ref="courtisaneDialog">
       <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
-      <div v-if="!nomCourtisane">
+      <div>
         <label for="nomcourtisane" class="font-semibold w-24">La courtisane est :</label>
         <select
         id="nomcourtisane"
@@ -17,9 +17,6 @@
         </option>
       </select>
       </div>
-      <div v-else>
-        <strong>courtisane : {{ nomCourtisane }}</strong>
-      </div>
       <p>Que fait la courtisane ?</p>
       <div class="choix-courtisane">
         <label>
@@ -30,13 +27,20 @@
           <input type="radio" value="autre" v-model="choixCourtisane" />
           Elle va chez quelqu’un d’autre
         </label>
-        <input
-          v-if="choixCourtisane === 'autre'"
-          type="text"
-          v-model="nomPersonne"
-          placeholder="Nom de la personne"
-          class="input-nom"
-        />
+        <select
+  v-if="choixCourtisane === 'autre'"
+  v-model="nomPersonne"
+  class="input-nom"
+>
+  <option value="" disabled>Choisir un joueur</option>
+  <option
+    v-for="joueur in props.joueurs.filter(j => !j.mort && j.nom !== nomCourtisane)"
+    :key="joueur.nom"
+    :value="joueur.nom"
+  >
+    {{ joueur.nom }}
+  </option>
+</select>
       </div>
       <button @click="validate">Valider</button>
     </dialog>
@@ -51,10 +55,9 @@ const choixCourtisane = ref("chez-elle");
 const nomPersonne = ref("");
 const emit = defineEmits(["courtisaneduvillage"]);
 const props = defineProps({
-  joueurs: Array,
-  nomCourtisane: String
+  joueurs: Array
 });
-const nomCourtisane = ref(props.nomCourtisane || "");
+const nomCourtisane = ref("");
 
 function openDialog() {
   choixCourtisane.value = "chez-elle";
@@ -65,10 +68,12 @@ function closeDialog() {
   courtisaneDialog.value.close();
 }
 function validate() {
-  emit("courtisane-choix", {
+  if (!nomCourtisane.value) return; // Empêche la validation sans courtisane
+  if (choixCourtisane.value === "autre" && !nomPersonne.value) return; // Empêche la validation sans cible
+  emit("courtisaneduvillage", {
+    nomCourtisane: nomCourtisane.value,
     choix: choixCourtisane.value,
-    personne: choixCourtisane.value === "autre" ? nomPersonne.value : null,
-    nomcourtisane: nomCourtisane.value
+    personne: choixCourtisane.value === "autre" ? nomPersonne.value : null
   });
   courtisaneDialog.value.close();
 }
