@@ -106,6 +106,7 @@ function removeVote(idx) {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  text-transform: uppercase;
   background: #181818;
   margin-bottom: 0.5rem;
   padding: 0.5rem 1rem;
@@ -117,6 +118,7 @@ function removeVote(idx) {
   display: inline-block;
   min-width: 120px; /* largeur fixe pour le nom */
   text-align: left;
+  text-transform: uppercase;
   font-size: 1.1rem;
   font-weight: 500;
   word-break: break-word;

@@ -11,7 +11,7 @@
   {
     "name": "Villageois révélé",
     "image": "villageoisrevelebo.png",
-    "order": 1,
+    "order": 2,
     "onlyFirstNight": false,
     "isCallable": false,
     "categorie": "Villageois",
@@ -20,7 +20,7 @@
   {
     "name": "Ancien",
     "image": "ancienbo.png",
-    "order": 2,
+    "order": 3,
     "onlyFirstNight": true,
     "isCallable": false,
     "categorie": "Villageois",
@@ -30,7 +30,7 @@
   {
     "name": "Cupidon",
     "image": "cupidonbo.png",
-    "order": 3,
+    "order": 4,
     "onlyFirstNight": true,
     "isCallable": false,
     "categorie": "Villageois",
@@ -40,7 +40,7 @@
   {
     "name": "Enfant Sauvage",
     "image": "enfantsauvagebo.png",
-    "order": 4,
+    "order": 5,
     "onlyFirstNight": true,
     "isCallable": false,
     "categorie": "Villageois",
@@ -50,7 +50,7 @@
   {
     "name": "Chasseur",
     "image": "chasseurbo.png",
-    "order": 5,
+    "order": 6,
     "onlyFirstNight": true,
     "isCallable": false,
     "categorie": "Villageois",
@@ -60,7 +60,7 @@
   {
     "name": "Voleur",
     "image": "voleurbo.png",
-    "order": 6,
+    "order": 7,
     "onlyFirstNight": true,
     "isCallable": false,
     "categorie": "Solitaire",
@@ -70,7 +70,7 @@
   {
     "name": "Deux Soeurs",
     "image": "villageois.jpg",
-    "order": 7,
+    "order": 8,
     "onlyFirstNight": true,
     "isCallable": false,
     "categorie": "Villageois",
@@ -80,7 +80,7 @@
   {
     "name": "Voyante",
     "image": "voyantebo.png",
-    "order": 8,
+    "order": 14,
     "onlyFirstNight": false,
     "isCallable": true,
     "categorie": "Villageois",
@@ -110,7 +110,7 @@
   {
     "name": "Loup-garou",
     "image": "loupgaroubo.png",
-    "order": 11,
+    "order": 8,
     "onlyFirstNight": false,
     "isCallable": true,
     "categorie": "Loup-garou",
@@ -120,7 +120,7 @@
   {
     "name": "Infect pere des loups",
     "image": "infectbo.png",
-    "order": 12,
+    "order": 9,
     "onlyFirstNight": false,
     "isCallable": true,
     "categorie": "Loup-garou",
@@ -130,7 +130,7 @@
   {
     "name": "Grand Mechant Loup",
     "image": "grandmechantloupbo.png",
-    "order": 13,
+    "order": 11,
     "onlyFirstNight": false,
     "isCallable": true,
     "categorie": "Loup-garou",

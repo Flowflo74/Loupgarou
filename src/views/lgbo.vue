@@ -1,18 +1,15 @@
 <template>
-    <h1>Loup-Garou de BreakOut v0.1</h1>
+  
+  <h1>Loup-Garou de BreakOut v0.1</h1>
     <Boutonfullscreen />
-    
+
     <section v-if="phase === 'selection'" class="selection-phase">
       <p class="selection-perso">Sélectionne les personnages de la partie</p>
       <button class="btn-lancer-partie" @click="startGame" :disabled="!selectedCards.length">
         Lancer la partie
       </button>
       <!-- Liste des joueurs -->
-<Listedesjoueurs
-  :joueurs="joueurs"
-  :phase="phase"
-  @update-joueurs="updateJoueurs"
-/>
+<Listedesjoueurs :joueurs="joueurs" :phase="phase" @update-joueurs="updateJoueurs" />
       <!-- Cartes -->
       <div class="cartes-selectionnees">
         <p class="label">Cartes sélectionnées</p>
@@ -45,10 +42,14 @@
         </div>
       </div>
     </section>
-
     <!-- Préparation : première nuit -->
     <section v-if="phase === 'prep'" class="phase-nuit">
-      <h2>Préparation de la première nuit</h2>
+      <div class="prep-header">
+  <BoutonListedesjoueurs v-if="phase !== 'selection'" :joueurs="joueurs" />
+  <h2 class="prep-title">Préparation de la première nuit</h2>
+  <span class="prep-header-spacer"></span>
+</div>
+      
       <ul class="appel-list">
         <li v-for="(card, index) in prepCards" :key="card.name + '-prep-' + index" class="appel-row">
           
@@ -126,7 +127,11 @@
 
     <!-- Nuit active (appel des rôles) -->
     <section v-if="phase === 'night'" class="phase-nuit">
-      <h2>🌙 Nuit {{ nightCount }}</h2>
+      <div class="phase-header">
+    <BoutonListedesjoueurs v-if="phase !== 'selection'" :joueurs="joueurs" />
+    <h2 class="phase-title">🌙 Nuit {{ nightCount }}</h2>
+    <span class="phase-header-spacer"></span>
+  </div>
       <ul class="appel-list">
         <li v-for="(card, index) in nightCards" :key="card.name + '-night-' + index" class="appel-row">
           <LoupGarouCard
@@ -414,6 +419,7 @@ import PouvoirVoyante from '../components/PouvoirVoyante.vue'
 import PouvoirSectaire from '../components/PouvoirSectaire.vue'
 import Pouvoirrouille from '../components/Pouvoirrouille.vue'
 import PouvoirChienLoup from '../components/PouvoirChienLoup.vue'
+import BoutonListedesjoueurs from '../components/BoutonListedesjoueurs.vue'
 
 
 // Etat
@@ -796,7 +802,14 @@ function rejouer() {
   nomQuitousse.value = '';
   nomChienLoup.value = "";
   campChienLoup.value = "";
-  
+  pouvoirServDispo.value = true;
+  potionVieDispo.value = true; 
+  potionMortDispo.value = true;
+  pouvoirMoineDispo.value = true;
+  pouvoirAlchiDispo.value = true;
+  pouvoirInfectDispo.value = true;
+  choixrenard.value = true;
+  pouvoirflute.value = true;
   // Ajoute ici toute autre variable de nom ou d'état à réinitialiser
 }
 </script>
@@ -1216,6 +1229,26 @@ h2 {
 
 .carte-loupgarou {
   position: relative;
+}
+
+.phase-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2em;
+  margin-bottom: 1.2em;
+  width: 100%;
+}
+
+.phase-header > *:first-child,
+.phase-header > .phase-header-spacer {
+  flex: 0 0 60px; /* largeur fixe pour le bouton et le spacer */
+}
+
+.phase-title {
+  flex: 1 1 0;
+  text-align: center;
+  margin: 0;
 }
 
 .transition-overlay {

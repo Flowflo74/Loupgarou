@@ -73,6 +73,7 @@ function validerVote() {
 .liste-vote li {
   display: flex;
   align-items: center;
+  text-transform: uppercase;
   justify-content: space-between;
   background: #181818;
   margin-bottom: 0.5rem;
