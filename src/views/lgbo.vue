@@ -153,44 +153,44 @@
           
           <!-- Logo pouvoir chien-loup -->
           <template v-if="card.name === 'Chien-Loup'">
-  <PouvoirChienLoup :joueurs="joueurs" @chienloup-init="setChienLoup" />
+  <PouvoirChienLoup :joueurs="joueursVivants" @chienloup-init="setChienLoup" />
 </template>
 
           <!-- Logo pouvoir Don Qui Tousse -->
           <template v-if="card.name === 'DonQuiTousse'">
-  <Pouvoirrouille :joueurs="joueurs" @donQuitousse="setQuitousse" />
+  <Pouvoirrouille :joueurs="joueursVivants" @donQuitousse="setQuitousse" />
 </template>
           <!-- Logo pouvoir sectaire -->
           <template v-if="card.name === 'Sectaire'">
-  <PouvoirSectaire :joueurs="joueurs" @sectaire-init="setSectaire" />
+  <PouvoirSectaire :joueurs="joueursVivants" @sectaire-init="setSectaire" />
           </template>
           <!-- Logo pouvoir ancien -->
           <template v-if="card.name === 'Ancien'">
-            <PouvoirAncien :joueurs="joueurs" @ancienduvillage="setAncien" />
+            <PouvoirAncien :joueurs="joueursVivants" @ancienduvillage="setAncien" />
           </template>
           <!-- Logo pouvoir Ours -->
           <template v-if="card.name === 'Montreur d ours'">
-            <PouvoirOurs :joueurs="joueurs" @oursduvillage="setOurs" />
+            <PouvoirOurs :joueurs="joueursVivants" @oursduvillage="setOurs" />
           </template>
           <!-- Logo pouvoir juge -->
           <template v-if="card.name === 'Juge'">
-            <PouvoirJuge :joueurs="joueurs" @jugeduvillage="setJuge" />
+            <PouvoirJuge :joueurs="joueursVivants" @jugeduvillage="setJuge" />
           </template>
           <!-- Logos potion pour les soeurs -->
           <template v-if="card.name === 'Deux Soeurs'">
-            <Pouvoirdeuxsoeurs :joueurs="joueurs" @soeurs="setSoeurs" />
+            <Pouvoirdeuxsoeurs :joueurs="joueursVivants" @soeurs="setSoeurs" />
             </template>
           <!-- Logos pouvoir cupidon -->
           <template v-if="card.name === 'Cupidon'">
-            <PouvoirCupidon :joueurs="joueurs" @inlove1="setAmoureux" />
+            <PouvoirCupidon :joueurs="joueursVivants" @inlove1="setAmoureux" />
           </template>
           <!-- Logo pouvoir chasseur -->
           <template v-if="card.name === 'Chasseur'">
-            <PouvoirChasseur :joueurs="joueurs" @chasseurduvillage="setChasseur" />
+            <PouvoirChasseur :joueurs="joueursVivants" @chasseurduvillage="setChasseur" />
           </template>
           <!-- Logo pouvoir enfant sauvage -->
           <template v-if="card.name === 'Enfant Sauvage'">
-            <PouvoirEnfantSauvage :joueurs="joueurs" @mentorduvillage="setMentor" />
+            <PouvoirEnfantSauvage :joueurs="joueursVivants" @mentorduvillage="setMentor" />
           </template>
           
         </li>
@@ -219,7 +219,7 @@
           <div class="appel-carte">
             <LoupGarouCard
               :lgcard="card"
-              :nomsLoups="card.name === carteAvecPouvoirLoups ? nomsLoups : undefined"
+              :nomsLoups="card.name === carteAvecPouvoirLoups ? nomsLoupsVivants : undefined"
               :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined"
               :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
               :nomSalvateur="card.name === 'Salvateur' ? nomSalvateur : undefined"
@@ -228,7 +228,12 @@
               :campChienLoup="card.name === 'Chien-Loup' ? campChienLoup : undefined"
               :nomCourtisane="card.name === 'Courtisane' ? nomCourtisane : undefined"
             />
-            <span v-if="card.count > 1" class="appel-carte-count">× {{ card.count }}</span>
+            <span
+              v-if="card.count > 1 || (card.name === carteAvecPouvoirLoups && nbLoupsCamp > 1 && nomsLoups.length)"
+              class="appel-carte-count"
+            >× {{ card.name === carteAvecPouvoirLoups && nomsLoups.length
+              ? nomsLoupsVivants.length
+              : card.count }}</span>
           </div>
       <div class="appel-info">
         <p class="dire"><strong>Meneur :</strong> {{ card.dire }}</p>
@@ -237,20 +242,24 @@
 
           <!-- Logo pouvoir courtisane -->
           <template v-if="card.name === 'Courtisane'">
-            <PouvoirCourtisane :joueurs="joueurs" @courtisaneduvillage="setCourtisane" />
+            <PouvoirCourtisane
+              :joueurs="joueursVivants"
+              :nom-courtisane="nomCourtisane"
+              @courtisaneduvillage="setCourtisane"
+            />
           </template>
           <!-- Logo pouvoir Voyante -->
           <template v-if="card.name === 'Voyante' && !nomVoyante">
-            <PouvoirVoyante :joueurs="joueurs" @voyanteduvillage="setVoyante" />
+            <PouvoirVoyante :joueurs="joueursVivants" @voyanteduvillage="setVoyante" />
           </template>
           <!-- Logo pouvoir corbeau -->
           <template v-if="card.name === 'Corbeau'">
-            <PouvoirCorbeau :joueurs="joueurs" @corbeauduvillage="setCorbeau" />
+            <PouvoirCorbeau :joueurs="joueursVivants" @corbeauduvillage="setCorbeau" />
           </template>
           <!-- Logos potions pour la Sorcière -->
           <template v-if="card.name === 'Sorciere'">
             <PotionsSorciere
-  :joueurs="joueurs"
+  :joueurs="joueursVivants"
   :cibles-a-sauver="ciblesAttaqueesCetteNuit"
   :potion-vie-dispo="potionVieDispo"
   :potion-mort-dispo="potionMortDispo"
@@ -262,14 +271,14 @@
           <!-- Logo potion pour l'Alchimiste -->
           <template v-if="card.name === 'Alchimiste'">
             <PouvoirAlchimiste
-            :joueurs="joueurs"
+            :joueurs="joueursVivants"
             :pouvoir-alchi-dispo="pouvoirAlchiDispo"
             @alch-victim-selected="handleAlchimisteVictim"/>
           </template>
           <!-- Logo potion pour le moine -->
           <template v-if="card.name === 'Moine'">
             <PouvoirMoine
-              :joueurs="joueurs"
+              :joueurs="joueursVivants"
               :cibles-a-sauver="ciblesAttaqueesCetteNuit"
               :pouvoir-moine-dispo="pouvoirMoineDispo"
               @moine-save="handleMoineSave"/>
@@ -279,7 +288,7 @@
           <template v-if="card.name === carteAvecPouvoirLoups">
             <div class="position-logo victimelg">
               <LoupGarouButton
-                :joueurs="joueurs"
+                :joueurs="joueursVivants"
                 :nbLoups="nbLoupsSelection"
                 :isFirstNight="phase === 'night' && nightCount === 1"
                 :chien-loup-name="campChienLoup === 'Loup-garou' ? nomChienLoup : ''"
@@ -291,19 +300,19 @@
           <!-- Logo tête de lg pour l'infecté --> 
           <template v-if="card.name === 'Infect pere des loups'">
               <Pouvoirinfectperedesloups
-    :joueurs="joueurs"
+    :joueurs="joueursVivants"
     :pouvoir-infect-dispo="pouvoirInfectDispo"
     @infect-selected="handleInfectVictim"
   />
           </template>
            <!-- Logo Grand méchant loup --> 
           <template v-if="card.name === 'Grand Mechant Loup'">
-              <PouvoirGrandmechantloup :joueurs="joueurs" @victim2-selected="victimGrandLGName = $event" />
+              <PouvoirGrandmechantloup :joueurs="joueursVivants" @victim2-selected="victimGrandLGName = $event" />
           </template>
           <!-- Pouvoir du Loup Blanc, uniquement les nuits paires à partir de la nuit 2 -->
           <template v-if="card.name === 'Loup Blanc' && nuitPouvoirLoupBlanc">
             <PouvoirLoupBlanc
-              :joueurs="joueurs"
+              :joueurs="joueursVivants"
               :nom-loup-blanc="nomLoupBlanc"
               :noms-loups="nomsLoups"
               @loup-blanc-selected="handleLoupBlancVictim"
@@ -312,7 +321,7 @@
           <!-- Logo bouclier pour le salva -->
           <template v-if="card.name === 'Salvateur'">
             <PouvoirSalva
-              :joueurs="joueurs"
+              :joueurs="joueursVivants"
               :nom-salvateur="nomSalvateur"
               @salvateur-selected="nomSalvateur = $event"
               @protected-person="personneProteger = $event"
@@ -325,7 +334,7 @@
           <!-- logo pour pour le pouvoir du joueur de flute -->
           <template v-if="card.name === 'Joueur de flute'">                 
             <PouvoirFlute
-            :joueurs="joueurs"
+            :joueurs="joueursVivants"
             :charmes="joueursCharmes"
             @fluteduvillage="setFlute"
             @update-charmes="setCharmes"/>
@@ -333,7 +342,7 @@
           <!-- Logo potion pour la servante dévouée -->
           <template v-if="card.name === 'Servante devouee'">
             <PouvoirServantedevouee
-              :joueurs="joueurs"
+              :joueurs="joueursVivants"
               :pouvoirServDispo="pouvoirServDispo"
               @servante-save="handleServanteSave"/>
           </template>
@@ -393,11 +402,16 @@
           </ul>
         </div>
 
-        <div v-if="nomAmoureux1 || nomMentor || nomOurs" class="bilan-infos">
+        <div v-if="nomAmoureux1 || nomMentor || nomOurs || (nomCourtisane && choixCourtisane)" class="bilan-infos">
           <h3>Informations du village</h3>
           <p v-if="nomAmoureux1">💘 Les amoureux sont {{ nomAmoureux1 }} et {{ nomAmoureux2 }}.</p>
           <p v-if="nomMentor">🧑 Le mentor de {{ nomEnfantSauvage }} est {{ nomMentor }}.</p>
           <p v-if="nomOurs">🐻 Le Montreur d'ours est {{ nomOurs }}.</p>
+          <p v-if="nomCourtisane && choixCourtisane">
+            🌙 {{ nomCourtisane }} {{ choixCourtisane.choix === 'chez-elle'
+              ? 'est restée chez elle.'
+              : `est allée dormir chez ${choixCourtisane.personne}.` }}
+          </p>
         </div>
       </section>
       <section v-if="chasseurActif" class="reaction-chasseur" aria-live="polite">
@@ -666,7 +680,12 @@ const nightCards = computed(() =>
     .filter(c =>
       c.isCallable &&
       !(villageoisPouvoirsPerdus.value && c.categorie === 'Villageois') &&
-      !(c.name === 'Loup Blanc' && !nuitPouvoirLoupBlanc.value)
+      !(c.name === 'Loup Blanc' && !nuitPouvoirLoupBlanc.value) &&
+      !(c.name === carteAvecPouvoirLoups && nomsLoups.length > 0 && nomsLoupsVivants.length === 0) &&
+      (c.name !== 'Courtisane' || (
+        (!nomCourtisane.value || joueurs.value.some(joueur => joueur.nom === nomCourtisane.value && !joueur.mort)) &&
+        !joueurs.value.some(joueur => joueur.mort && roleConnuPour(joueur.nom) === 'Courtisane')
+      ))
     )
     .sort((a, b) => a.order - b.order))
 )
@@ -805,6 +824,8 @@ function resolveNightDeaths() {
       victimGrandLGName.value === nom || victimAlchimiste.value === nom;
     const attaqueDuLoupBlanc = victimLoupBlancName.value === nom;
     const attaqueDesLoups = victimeLoups === nom;
+    const courtisaneEstAilleurs =
+      nom === nomCourtisane.value && choixCourtisane.value?.choix === 'autre';
 
     // La potion de mort est létale même si la cible est protégée.
     if (attaqueParSorciere) continue;
@@ -813,11 +834,13 @@ function resolveNightDeaths() {
       attaqueParGrandLoupOuAlchimiste && !protectionsNuit.value.includes(nom);
     const morsureAboutit =
       attaqueDesLoups &&
+      !courtisaneEstAilleurs &&
       !protectionsNuit.value.includes(nom) &&
       sorciereSaveName.value !== nom &&
       nom !== nomAncien.value;
     const attaqueLoupBlancAboutit =
       attaqueDuLoupBlanc &&
+      !courtisaneEstAilleurs &&
       !protectionsNuit.value.includes(nom) &&
       sorciereSaveName.value !== nom &&
       nom !== nomAncien.value;
@@ -855,6 +878,23 @@ function resolveNightDeaths() {
       }));
     }
   }
+
+  // Si la personne chez qui la Courtisane a dormi meurt cette nuit, elle meurt aussi.
+  if (
+    choixCourtisane.value?.choix === 'autre' &&
+    choixCourtisane.value.personne &&
+    mortsNuit.value.includes(choixCourtisane.value.personne) &&
+    nomCourtisane.value &&
+    !mortsNuit.value.includes(nomCourtisane.value)
+  ) {
+    mortsNuit.value.push(nomCourtisane.value);
+    nomsJoueursMortsNuit.value.push(nomCourtisane.value);
+    joueurs.value = joueurs.value.map(joueur => ({
+      ...joueur,
+      mort: joueur.mort || joueur.nom === nomCourtisane.value
+    }));
+  }
+
   mortsNuit.value = [...new Set(mortsNuit.value)];
   nomsJoueursMortsNuit.value = [...new Set(nomsJoueursMortsNuit.value)];
   ajouterChasseursDeclenches(nomsJoueursMortsNuit.value);
@@ -1070,6 +1110,9 @@ const nbLoupsSelection = computed(() =>
   Math.max(nbLoupsCamp.value, nomsLoups.value.filter(Boolean).length)
 );
 const nomsLoups = ref([]); // ["Alice", "Bob", ...]
+const nomsLoupsVivants = computed(() => nomsLoups.value.filter(nom =>
+  joueurs.value.some(joueur => joueur.nom === nom && !joueur.mort)
+));
 function setLoups(liste) {
   nomsLoups.value = liste;
 }
@@ -1160,6 +1203,7 @@ function handleLoupBlancVictim({ nomLoupBlanc: nom, victime }) {
 }
 
 const joueurs = ref([]);
+const joueursVivants = computed(() => joueurs.value.filter(joueur => !joueur.mort));
 const joueursInitial = ref([]);
 const peutLancerPartie = computed(() =>
   selectedCards.value.length > 0 && joueurs.value.length === selectedCards.value.length

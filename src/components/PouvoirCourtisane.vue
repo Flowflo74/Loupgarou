@@ -6,16 +6,20 @@
     <dialog ref="courtisaneDialog">
       <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
       <div>
-        <label for="nomcourtisane" class="font-semibold w-24">La courtisane est :</label>
-        <select
-        id="nomcourtisane"
-        v-model="nomCourtisane"
-        class="flex-auto">
-        <option value="" disabled>Choisir un joueur</option>
-        <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
-          {{ joueur.nom }}
-        </option>
-      </select>
+        <template v-if="!props.nomCourtisane">
+          <label for="nomcourtisane" class="font-semibold w-24">La courtisane est :</label>
+          <select
+            id="nomcourtisane"
+            v-model="nomCourtisane"
+            class="flex-auto"
+            required
+          >
+            <option value="" disabled>Choisir un joueur</option>
+            <option v-for="joueur in joueursVivants" :key="joueur.nom" :value="joueur.nom">
+              {{ joueur.nom }}
+            </option>
+          </select>
+        </template>
       </div>
       <p>Que fait la courtisane ?</p>
       <div class="choix-courtisane">
@@ -48,30 +52,34 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, defineProps } from "vue";
+import { computed, ref, defineEmits, defineProps } from "vue";
 
 const courtisaneDialog = ref(null);
 const choixCourtisane = ref("chez-elle");
 const nomPersonne = ref("");
 const emit = defineEmits(["courtisaneduvillage"]);
 const props = defineProps({
-  joueurs: Array
+  joueurs: { type: Array, default: () => [] },
+  nomCourtisane: { type: String, default: "" }
 });
+const joueursVivants = computed(() => props.joueurs.filter(joueur => !joueur.mort));
 const nomCourtisane = ref("");
 
 function openDialog() {
   choixCourtisane.value = "chez-elle";
   nomPersonne.value = "";
+  nomCourtisane.value = props.nomCourtisane || "";
   courtisaneDialog.value.showModal();
 }
 function closeDialog() {
   courtisaneDialog.value.close();
 }
 function validate() {
-  if (!nomCourtisane.value) return; // Empêche la validation sans courtisane
+  const nom = props.nomCourtisane || nomCourtisane.value;
+  if (!nom) return; // Empêche la validation sans courtisane
   if (choixCourtisane.value === "autre" && !nomPersonne.value) return; // Empêche la validation sans cible
   emit("courtisaneduvillage", {
-    nomCourtisane: nomCourtisane.value,
+    nomCourtisane: nom,
     choix: choixCourtisane.value,
     personne: choixCourtisane.value === "autre" ? nomPersonne.value : null
   });
