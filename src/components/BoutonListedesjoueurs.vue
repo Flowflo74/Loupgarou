@@ -4,13 +4,16 @@
       👥
     </button>
     <div v-if="show" class="liste-joueurs-popup">
+      <h2 class="compteur-vivants" aria-live="polite">
+        Joueurs vivants : {{ joueursVivants.length }} / {{ joueurs.length }}
+      </h2>
       <ul>
         <li
           v-for="joueur in joueursTries"
           :key="joueur.nom"
-          :class="{ mort: joueur.mort }"
+          :class="{ mort: joueur.mort, 'mort-nuit': props.mortsNuit.includes(joueur.nom) }"
         >
-          {{ joueur.nom }}
+          <span v-if="props.mortsNuit.includes(joueur.nom)" aria-hidden="true">💀 </span>{{ joueur.nom }}
         </li>
       </ul>
       <button class="close-btn" @click="show = false">Fermer</button>
@@ -21,11 +24,15 @@
 <script setup>
 import { ref, computed, defineProps } from "vue";
 
-const props = defineProps({ joueurs: Array });
+const props = defineProps({
+  joueurs: { type: Array, default: () => [] },
+  mortsNuit: { type: Array, default: () => [] }
+});
 const show = ref(false);
 
+const joueursVivants = computed(() => props.joueurs.filter(j => !j.mort));
 const joueursTries = computed(() => [
-  ...props.joueurs.filter(j => !j.mort),
+  ...joueursVivants.value,
   ...props.joueurs.filter(j => j.mort)
 ]);
 </script>
@@ -59,6 +66,12 @@ const joueursTries = computed(() => [
   z-index: 200;
   min-width: 210px;
 }
+.compteur-vivants {
+  margin: 0 0 0.85em;
+  color: #ffae00;
+  font-size: 1.1em;
+  text-align: center;
+}
 .liste-joueurs-popup ul {
   list-style: none;
   margin: 0;
@@ -77,10 +90,18 @@ const joueursTries = computed(() => [
 }
 .liste-joueurs-popup li.mort {
   color: #fff;
-  background: linear-gradient(90deg, #bdbdbd 60%, #ffae00 100%);
-  box-shadow: 0 0 12px #ffae0055 inset;
+  background: linear-gradient(90deg, #777 60%, #555 100%);
+  box-shadow: 0 0 12px #0008 inset;
   text-decoration: line-through;
-  opacity: 0.85;
+  opacity: 0.75;
+}
+.liste-joueurs-popup li.mort-nuit {
+  color: #fff;
+  background: linear-gradient(90deg, #9f1717, #e34242);
+  box-shadow: 0 0 12px #ff454588 inset;
+  font-weight: 800;
+  opacity: 1;
+  text-decoration: line-through;
 }
 .close-btn {
   margin-top: 0.7em;

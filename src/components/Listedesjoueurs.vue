@@ -1,6 +1,9 @@
 <template>
   <div class="joueurs-block">
     <h2>Liste des joueurs</h2>
+    <p v-if="!isDay" class="joueur-count" aria-live="polite">
+      {{ joueursCount }} {{ joueursCount === 1 ? 'joueur inscrit' : 'joueurs inscrits' }}
+    </p>
     <form v-if="!isDay" @submit.prevent="addJoueur">
       <input
         v-model="nouveauJoueur"
@@ -38,6 +41,7 @@ const emit = defineEmits(["update-joueurs"]);
 const nouveauJoueur = ref("");
 
 const isDay = computed(() => props.phase === "day");
+const joueursCount = computed(() => props.joueurs?.length ?? 0);
 
 function addJoueur() {
   if (nouveauJoueur.value.trim()) {
@@ -72,6 +76,12 @@ function removeVote(idx) {
   border-radius: 16px;
   box-shadow: 0 4px 24px #000a;
   color: #ffae00;
+}
+.joueur-count {
+  margin: -0.75rem 0 1rem;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 .input-joueur {
   padding: 0.5rem;
