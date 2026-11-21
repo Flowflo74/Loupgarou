@@ -3,7 +3,7 @@
     <header class="vote-header">
       <div>
         <h2 id="titre-vote">🗳️ Scrutin du village</h2>
-        <p class="vote-intro">Attribuez les voix aux joueurs vivants, puis vérifiez le résultat avant de le confirmer.</p>
+        <p class="vote-intro">Attribuez les voix aux joueurs vivants.</p>
       </div>
       <div class="vote-stats" aria-live="polite">
         <span><strong>{{ joueursVivants.length }}</strong> vivants</span>

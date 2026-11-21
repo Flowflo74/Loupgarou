@@ -21,7 +21,16 @@
       <div class="cartes-selectionnees">
         <p class="label">Cartes sélectionnées</p>
         <ul>
-          <li v-for="(card, index) in selectedCards" :key="index" @click="removeCard(index)">
+          <li
+            v-for="(card, index) in selectedCards"
+            :key="index"
+            role="button"
+            tabindex="0"
+            :aria-label="`Retirer la carte ${card.name} de la sélection`"
+            @click="removeCard(index)"
+            @keydown.enter.prevent="removeCard(index)"
+            @keydown.space.prevent="removeCard(index)"
+          >
             <LoupGarouCard :lgcard="card" />
           </li>
         </ul>
@@ -31,7 +40,16 @@
           <div class="cartes-colonne">
             <p class="label">Villageois</p>
             <ul>
-              <li v-for="card in villageoisCards" :key="card.name + '-v'" @click="addCard(card)">
+              <li
+                v-for="card in villageoisCards"
+                :key="card.name + '-v'"
+                role="button"
+                tabindex="0"
+                :aria-label="`Ajouter la carte ${card.name}`"
+                @click="addCard(card)"
+                @keydown.enter.prevent="addCard(card)"
+                @keydown.space.prevent="addCard(card)"
+              >
                 <LoupGarouCard :lgcard="card" />
               </li>
             </ul>
@@ -39,8 +57,16 @@
           <div class="cartes-colonne">
             <p class="label">Loups-garous & Solitaires</p>
             <ul>
-              <li v-for="card in [...loupGarouCards, ...solitaireCards]" :key="card.name + '-lgsol'"
-                @click="addCard(card)">
+              <li
+                v-for="card in [...loupGarouCards, ...solitaireCards]"
+                :key="card.name + '-lgsol'"
+                role="button"
+                tabindex="0"
+                :aria-label="`Ajouter la carte ${card.name}`"
+                @click="addCard(card)"
+                @keydown.enter.prevent="addCard(card)"
+                @keydown.space.prevent="addCard(card)"
+              >
                 <LoupGarouCard :lgcard="card" />
               </li>
             </ul>
@@ -358,16 +384,18 @@ function nextPhase() {
 
 // Vérifie les conditions de victoire
 watch(
-  selectedCards,
-  cards => {
-    if (!['night', 'day', 'prep'].includes(phase.value)) return
-    const hasWolf = cards.some(c => ['Loup-garou', 'Solitaire'].includes(c.categorie))
-    const hasVillager = cards.some(c => c.categorie === 'Villageois')
-    if (hasWolf && !hasVillager) {
+  [selectedCards, phase],
+  ([cards]) => {
+    if (!['night', 'night-elim', 'day', 'prep'].includes(phase.value)) return
+    const wolfCount = cards.filter(c => c.categorie === 'Loup-garou').length
+    const villagerCount = cards.filter(c => c.categorie === 'Villageois').length
+    const hasWolfOrSolitaire = cards.some(c => ['Loup-garou', 'Solitaire'].includes(c.categorie))
+
+    if (wolfCount > villagerCount) {
       phase.value = 'end'
       winnerMessage.value = 'Les Loups-garous remportent la partie !'
       winnerImage.value = '/victoire/victoirelg.jpg'
-    } else if (!hasWolf && hasVillager) {
+    } else if (!hasWolfOrSolitaire && villagerCount > 0) {
       phase.value = 'end'
       winnerMessage.value = 'Les Villageois remportent la partie !'
       winnerImage.value = '/victoire/victoirevillage.jpg'
@@ -462,6 +490,11 @@ function setCharmes(nomsCharmes) {
 <style scoped>
 
 /* Containers */
+.selection-phase {
+  width: min(100% - 2rem, 1280px);
+  margin: 0 auto 3rem;
+}
+
 .selection-phase .cartes-container {
   display: flex;
   justify-content: space-around;
@@ -484,12 +517,19 @@ function setCharmes(nomsCharmes) {
 .cartes-colonne {
   flex: 1 1 0;
   min-width: 220px;
+  padding: 0.75rem 1rem 1.25rem;
+  border: 1px solid rgba(255, 174, 0, 0.24);
+  border-radius: 16px;
+  background: rgba(10, 15, 24, 0.42);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
 }
 
 .cartes-colonne .label {
   text-align: center;
-  margin-bottom: 1rem;
-  padding-top: 1rem;
+  margin: 0 0 1rem;
+  padding: 0 0 0.75rem;
+  border-bottom: 1px solid rgba(255, 174, 0, 0.35);
+  color: #ffcf68;
   font-size: x-large;
 }
 
@@ -502,10 +542,33 @@ function setCharmes(nomsCharmes) {
   justify-content: center;
 }
 
+.cartes-colonne li,
+.cartes-selectionnees li {
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.cartes-colonne li:hover,
+.cartes-selectionnees li:hover {
+  transform: translateY(-3px);
+}
+
+.cartes-colonne li:focus-visible,
+.cartes-selectionnees li:focus-visible {
+  outline: 3px solid #ffcf68;
+  outline-offset: 3px;
+}
+
 .cartes-selectionnees {
   width: 100%;
   margin-bottom: 2rem;
+  padding: 1rem 1rem 1.25rem;
   text-align: center;
+  border: 1px solid rgba(255, 174, 0, 0.35);
+  border-radius: 18px;
+  background: rgba(10, 15, 24, 0.58);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.2);
 }
 
 .cartes-selectionnees ul {
@@ -515,6 +578,7 @@ function setCharmes(nomsCharmes) {
   gap: 0.5rem;
   list-style: none;
   padding: 0;
+  margin-bottom: 0;
 }
 
 .cartes-selectionnees .label {
@@ -859,5 +923,25 @@ h2 {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+@media (max-width: 760px) {
+  .selection-phase {
+    width: min(100% - 1rem, 1280px);
+  }
+
+  .cartes-list-2col {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .cartes-colonne {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .selection-perso {
+    font-size: clamp(1.4rem, 6vw, 2rem);
+  }
 }
 </style>

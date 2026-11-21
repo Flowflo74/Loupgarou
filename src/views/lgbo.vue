@@ -33,39 +33,82 @@
       </div>
       <div class="cartes-container">
         <div class="cartes-list-2col">
-          <div class="cartes-colonne">
+          <div class="cartes-colonne villageois-colonne">
             <p class="label">Villageois</p>
-            <ul>
-              <li
-                v-for="card in villageoisCards"
-                :key="card.name + '-v'"
-                role="button"
-                tabindex="0"
-                :aria-label="`Ajouter la carte ${card.name}`"
-                @click="addCard(card)"
-                @keydown.enter.prevent="addCard(card)"
-                @keydown.space.prevent="addCard(card)"
-              >
-                <LoupGarouCard :lgcard="card" />
-              </li>
-            </ul>
+            <section
+              v-for="groupe in villageoisSousCategories"
+              :key="groupe.nom"
+              class="cartes-sous-categorie"
+            >
+              <h3>{{ groupe.nom }}</h3>
+              <ul>
+                <li
+                  v-for="card in groupe.cartes"
+                  :key="card.name + '-v'"
+                  role="button"
+                  tabindex="0"
+                  :aria-label="`Ajouter la carte ${card.name}`"
+                  @click="addCard(card)"
+                  @keydown.enter.prevent="addCard(card)"
+                  @keydown.space.prevent="addCard(card)"
+                >
+                  <LoupGarouCard :lgcard="card" />
+                </li>
+              </ul>
+            </section>
+            <section v-if="villageoisAutres.length" class="cartes-sous-categorie">
+              <h3>Autres rôles</h3>
+              <ul>
+                <li
+                  v-for="card in villageoisAutres"
+                  :key="card.name + '-v-autre'"
+                  role="button"
+                  tabindex="0"
+                  :aria-label="`Ajouter la carte ${card.name}`"
+                  @click="addCard(card)"
+                  @keydown.enter.prevent="addCard(card)"
+                  @keydown.space.prevent="addCard(card)"
+                >
+                  <LoupGarouCard :lgcard="card" />
+                </li>
+              </ul>
+            </section>
           </div>
-          <div class="cartes-colonne">
-            <p class="label">Loups-garous & Solitaires</p>
-            <ul>
-              <li
-                v-for="card in [...loupGarouCards, ...solitaireCards]"
-                :key="card.name + '-lgsol'"
-                role="button"
-                tabindex="0"
-                :aria-label="`Ajouter la carte ${card.name}`"
-                @click="addCard(card)"
-                @keydown.enter.prevent="addCard(card)"
-                @keydown.space.prevent="addCard(card)"
-              >
-                <LoupGarouCard :lgcard="card" />
-              </li>
-            </ul>
+          <div class="cartes-colonne-groupe">
+            <div class="cartes-colonne">
+              <p class="label">Loups-garous</p>
+              <ul>
+                <li
+                  v-for="card in loupGarouCards"
+                  :key="card.name + '-lg'"
+                  role="button"
+                  tabindex="0"
+                  :aria-label="`Ajouter la carte ${card.name}`"
+                  @click="addCard(card)"
+                  @keydown.enter.prevent="addCard(card)"
+                  @keydown.space.prevent="addCard(card)"
+                >
+                  <LoupGarouCard :lgcard="card" />
+                </li>
+              </ul>
+            </div>
+            <div class="cartes-colonne">
+              <p class="label">Solitaires</p>
+              <ul>
+                <li
+                  v-for="card in solitaireCards"
+                  :key="card.name + '-sol'"
+                  role="button"
+                  tabindex="0"
+                  :aria-label="`Ajouter la carte ${card.name}`"
+                  @click="addCard(card)"
+                  @keydown.enter.prevent="addCard(card)"
+                  @keydown.space.prevent="addCard(card)"
+                >
+                  <LoupGarouCard :lgcard="card" />
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -79,7 +122,7 @@
 </div>
       
       <ul class="appel-list">
-        <li v-for="(card, index) in prepCards" :key="card.instanceId" class="appel-row">
+        <li v-for="(card) in prepCards" :key="card.instanceId" class="appel-row">
           <div class="appel-carte">
             <LoupGarouCard :lgcard="card"
             :nomAncien="card.name === 'Ancien' ? nomAncien : undefined"
@@ -92,7 +135,7 @@
             :nomEnfantSauvage="card.name === 'Enfant Sauvage' ? nomEnfantSauvage : undefined"
             :mentorIsDead="card.name === 'Enfant Sauvage' ? mentorIsDead : false"
             :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
-            :nomLoup="card.name === 'Loup-garou' ? nomsLoups[indexOfLoupInList(prepCards, index)] : undefined"
+            :nomsLoups="card.name === 'Loup-garou' ? nomsLoups : undefined"
             :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined"
             :nomSectaire="card.name === 'Sectaire' ? nomSectaire : undefined"
             :nomCorbeau="card.name === 'Corbeau' ? nomCorbeau : undefined"
@@ -176,7 +219,7 @@
           <div class="appel-carte">
             <LoupGarouCard
               :lgcard="card"
-              :nomLoup="card.name === 'Loup-garou' ? nomsLoups[indexOfLoupInList(nightCards, index)] : undefined"
+              :nomsLoups="card.name === 'Loup-garou' ? nomsLoups : undefined"
               :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined"
               :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
               :nomCorbeau="card.name === 'Corbeau' ? nomCorbeau : undefined"
@@ -584,6 +627,24 @@ const nightCards = computed(() =>
 const villageoisCards = computed(() =>
   allCards.filter(c => c.categorie === 'Villageois')
 )
+const villageoisSousCategories = computed(() => {
+  const categories = [
+    { nom: 'Voyance', roles: ['Voyante', 'Renard', 'Montreur d ours', 'Petite Fille'] },
+    { nom: 'Protection', roles: ['Sorciere', 'Salvateur', 'Courtisane', 'Moine', 'Servante devouee'] },
+    { nom: 'Influenceurs', roles: ['Juge', 'Dictateur', 'Corbeau'] },
+    { nom: 'Exécuteurs', roles: ['DonQuiTousse', 'Chasseur', 'Alchimiste'] },
+    { nom: 'Villageois', roles: ['Villageois', 'Villageois révélé', 'Deux Soeurs', 'Idiot'] }
+  ];
+
+  return categories.map(groupe => ({
+    nom: groupe.nom,
+    cartes: villageoisCards.value.filter(carte => groupe.roles.includes(carte.name))
+  }));
+});
+const villageoisAutres = computed(() => {
+  const rolesClasses = villageoisSousCategories.value.flatMap(groupe => groupe.cartes.map(carte => carte.name));
+  return villageoisCards.value.filter(carte => !rolesClasses.includes(carte.name));
+});
 const loupGarouCards = computed(() =>
   allCards.filter(c => c.categorie === 'Loup-garou')
 )
@@ -825,28 +886,6 @@ function nextPhase() {
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
-// On regarde pour la victoire
-watch(
-  selectedCards,
-  cards => {
-    if (!['night', 'day', 'prep'].includes(phase.value)) return
-    const hasWolf = cards.some(c => ['Loup-garou', 'Solitaire'].includes(c.categorie))
-    const hasVillager = cards.some(c => c.categorie === 'Villageois')
-    if (hasWolf && !hasVillager) {
-      phase.value = 'end'
-      winnerMessage.value = 'Les Loups-garous remportent la partie !'
-      winnerImage.value = '/victoire/victoirelg.jpg'
-    } else if (!hasWolf && hasVillager) {
-      phase.value = 'end'
-      winnerMessage.value = 'Les Villageois remportent la partie !'
-      winnerImage.value = '/victoire/victoirevillage.jpg'
-    }
-  },
-  { deep: true }
-)
-
-
-
 // ça c'est pour les logos à côté des cartes
 const villageoisPouvoirsPerdus = ref(false);
 const pouvoirServDispo = ref(true);
@@ -1071,6 +1110,37 @@ const cartesRestantes = computed(() => {
 });
 const totalCartesRestantes = computed(() => cartesRestantes.value.reduce((total, carte) => total + carte.nombre, 0));
 const revelationVoteComplete = computed(() => votantsElimines.value.every(nom => roleConnuPour(nom) || rolesReveles.value[nom]));
+
+watch(
+  [cartesRestantes, phase, joueursMortsSansRole],
+  ([cartes]) => {
+    if (!['night', 'night-elim', 'day', 'prep'].includes(phase.value)) return
+    // Attendre la révélation des rôles des joueurs morts pour ne pas compter une carte éliminée.
+    if (joueursMortsSansRole.value.length) return
+
+    const categoriesParNom = new Map(allCards.map(carte => [carte.name, carte.categorie]));
+    const wolfCount = cartes
+      .filter(carte => categoriesParNom.get(carte.nom) === 'Loup-garou')
+      .reduce((total, carte) => total + carte.nombre, 0);
+    const villagerCount = cartes
+      .filter(carte => categoriesParNom.get(carte.nom) === 'Villageois')
+      .reduce((total, carte) => total + carte.nombre, 0);
+    const hasWolfOrSolitaire = cartes.some(carte =>
+      ['Loup-garou', 'Solitaire'].includes(categoriesParNom.get(carte.nom))
+    );
+
+    if (wolfCount > villagerCount) {
+      phase.value = 'end';
+      winnerMessage.value = 'Les Loups-garous remportent la partie !';
+      winnerImage.value = '/victoire/victoirelg.jpg';
+    } else if (!hasWolfOrSolitaire && villagerCount > 0) {
+      phase.value = 'end';
+      winnerMessage.value = 'Les Villageois remportent la partie !';
+      winnerImage.value = '/victoire/victoirevillage.jpg';
+    }
+  },
+  { deep: true }
+);
 
 function roleEstChasseur(nom) {
   return roleConnuPour(nom) === 'Chasseur' || rolesReveles.value[nom] === 'Chasseur';
@@ -1321,6 +1391,11 @@ onBeforeUnmount(() => {
 }
 
 /* Containers */
+.selection-phase {
+  width: min(100% - 2rem, 1280px);
+  margin: 0 auto 3rem;
+}
+
 .selection-phase .cartes-container {
   display: flex;
   justify-content: space-around;
@@ -1333,45 +1408,124 @@ onBeforeUnmount(() => {
 }
 
 .cartes-list-2col {
-  display: flex;
-  gap: 2rem;
-  justify-content: center;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
   width: 100%;
 }
 
+.cartes-colonne-groupe {
+  display: grid;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+.cartes-sous-categorie {
+  padding: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: rgba(4, 8, 15, 0.22);
+}
+
+.cartes-sous-categorie + .cartes-sous-categorie {
+  margin-top: 0.75rem;
+}
+
+.cartes-sous-categorie h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 0.7rem;
+  color: rgba(255, 236, 190, 0.82);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.cartes-sous-categorie h3::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255, 174, 0, 0.3), transparent);
+}
+
 .cartes-colonne {
-  flex: 1 1 0;
-  min-width: 220px;
+  min-width: 0;
+  padding: 1rem 0.85rem 1.1rem;
+  border: 1px solid rgba(255, 174, 0, 0.2);
+  border-radius: 18px;
+  background: linear-gradient(160deg, rgba(31, 39, 54, 0.78), rgba(10, 15, 24, 0.58));
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.cartes-colonne:hover {
+  border-color: rgba(255, 174, 0, 0.36);
 }
 
 .cartes-colonne .label {
   text-align: center;
-  margin-bottom: 1rem;
-  padding-top: 1rem;
-  font-size: x-large;
+  margin: 0 0 0.85rem;
+  padding: 0 0 0.7rem;
+  border-bottom: 1px solid rgba(255, 174, 0, 0.24);
+  color: #ffcf68;
+  font-size: clamp(1.15rem, 1.8vw, 1.45rem);
+  letter-spacing: 0.03em;
 }
 
 .cartes-colonne ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  align-content: start;
+  justify-content: center;
+  gap: 0.65rem;
   list-style: none;
   padding: 0;
-  justify-content: center;
+  margin: 0;
 }
 
 .cartes-colonne ul li {
-  flex: 1 1 22%; 
-  max-width: 25%;
-  min-width: 120px; 
+  display: flex;
+  justify-content: center;
+  min-width: 0;
   box-sizing: border-box;
+}
+
+.cartes-colonne ul li :deep(.carte-loupgarou) {
+  width: min(100%, 110px);
+  margin: 0;
+}
+
+.cartes-colonne li,
+.cartes-selectionnees li {
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.cartes-colonne li:hover,
+.cartes-selectionnees li:hover {
+  transform: translateY(-3px);
+}
+
+.cartes-colonne li:focus-visible,
+.cartes-selectionnees li:focus-visible {
+  outline: 3px solid #ffcf68;
+  outline-offset: 3px;
 }
 
 .cartes-selectionnees {
   width: 100%;
   margin-bottom: 2rem;
+  padding: 1rem 1rem 1.25rem;
   text-align: center;
+  border: 1px solid rgba(255, 174, 0, 0.35);
+  border-radius: 18px;
+  background: rgba(10, 15, 24, 0.58);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.2);
 }
 
 .cartes-selectionnees ul {
@@ -1381,6 +1535,7 @@ onBeforeUnmount(() => {
   gap: 0.5rem;
   list-style: none;
   padding: 0;
+  margin-bottom: 0;
 }
 
 .cartes-selectionnees .label {
@@ -1820,6 +1975,42 @@ h2 {
   justify-content: center;
   width: 100%;
   max-width: 900px;
+}
+
+@media (max-width: 1000px) {
+  .cartes-list-2col {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 760px) {
+  .selection-phase {
+    width: min(100% - 1rem, 1280px);
+  }
+
+  .cartes-list-2col {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .cartes-colonne {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .cartes-colonne ul {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .cartes-colonne ul li :deep(.carte-loupgarou) {
+    width: min(100%, 110px);
+  }
+
+  .selection-perso {
+    font-size: clamp(1.4rem, 6vw, 2rem);
+  }
 }
 
 @media (max-width: 700px) {

@@ -17,8 +17,9 @@
 </div>
      <div v-if="lgcard.name === 'Voyante' && props.nomVoyante" class="carte-nom-nom">
     {{ props.nomVoyante }}</div>
-    <div v-if="lgcard.name === 'Loup-garou' && props.nomLoup" class="carte-nom-nom loup-nom-rouge">
-     {{ props.nomLoup }}</div>
+    <div v-if="lgcard.name === 'Loup-garou' && props.nomsLoups?.length" class="carte-noms-loups">
+      <span v-for="(nom, index) in props.nomsLoups" :key="`${nom}-${index}`" class="loup-nom-rouge">{{ nom }}</span>
+    </div>
 <div v-if="lgcard.name === 'Joueur de flute' && props.nomFlute" class="carte-nom-flute">
   {{ props.nomFlute }}</div>
   <div
@@ -54,10 +55,9 @@ const props = defineProps({
   nomOurs: String,
   nomEnfantSauvage: String,
   nomVoyante: String,
-  nomLoup: String,
+  nomsLoups: Array,
   nomFlute: String,
   nomCorbeau: String,
-  nomLoup: String,
   nomSectaire: String,
   mentorIsDead: Boolean,
   nomQuitousse: String,
@@ -124,6 +124,24 @@ const imageUrl = computed(() =>
   padding: 4px 10px 2px 10px;
   margin-bottom: 2px;
   box-shadow: 0 2px 8px #0004;
+}
+
+.carte-noms-loups {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 100%;
+  padding: 3px 8px;
+  margin-bottom: 2px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.48);
+}
+
+.carte-noms-loups .loup-nom-rouge {
+  padding: 0;
+  margin: 0;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
 }
 
 .carte-nom-nom {

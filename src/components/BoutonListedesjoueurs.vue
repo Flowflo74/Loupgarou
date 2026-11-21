@@ -16,7 +16,7 @@
           <span v-if="props.mortsNuit.includes(joueur.nom)" aria-hidden="true">💀 </span>{{ joueur.nom }}
         </li>
       </ul>
-      <button class="close-btn" @click="show = false">Fermer</button>
+      <button class="close-btn" @click="show = false">X</button>
     </div>
   </div>
 </template>
