@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button class="bouton" @click="openDialog" :disabled="!props.pouvoirMoineDispo">
+    <button class="bouton" @click="openDialog" :disabled="!props.pouvoirMoineDispo || !props.ciblesASauver.length">
       <img
         class="position-logo"
         :src="props.pouvoirMoineDispo ? '/logospouvoirs/healthpotion2.png' : '/logospouvoirs/potionviecroix2.png'"
@@ -16,8 +16,8 @@
           <label for="moineSaveName" class="font-semibold w-24">Personne à sauver :</label>
           <select id="moineSaveName" v-model="moineSaveName" required>
             <option value="" disabled>Choisir un joueur</option>
-            <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
-              {{ joueur.nom }}
+            <option v-for="joueur in props.ciblesASauver" :key="joueur" :value="joueur">
+              {{ joueur }}
             </option>
           </select>
         </div>
@@ -34,6 +34,7 @@ import { ref, defineProps, defineEmits } from "vue";
 
 const props = defineProps({
   joueurs: { type: Array, default: () => [] },
+  ciblesASauver: { type: Array, default: () => [] },
   pouvoirMoineDispo: { type: Boolean, default: true }
 });
 const emit = defineEmits(["moine-save"]);
@@ -42,7 +43,7 @@ const moineDialog = ref(null);
 const moineSaveName = ref("");
 
 function openDialog() {
-  if (!props.pouvoirMoineDispo) return;
+  if (!props.pouvoirMoineDispo || !props.ciblesASauver.length) return;
   moineSaveName.value = "";
   if (moineDialog.value && typeof moineDialog.value.showModal === 'function') {
     moineDialog.value.showModal();

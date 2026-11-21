@@ -1,6 +1,6 @@
 <template>
   <div class="potions-sorciere">
-    <button class="bouton" @click="openVieDialog" :disabled="!props.potionVieDispo">
+    <button class="bouton" @click="openVieDialog" :disabled="!props.potionVieDispo || !props.ciblesASauver.length">
       <img
         class="position-logo"
         :src="props.potionVieDispo ? '/logospouvoirs/healthpotion.png' : '/logospouvoirs/potionviecroix.png'"
@@ -40,8 +40,8 @@
         <label for="sorciereSaveName" class="font-semibold w-24">Personne à sauver :</label>
         <select id="sorciereSaveName" v-model="sorciereSaveName" required>
           <option value="" disabled>Choisir un joueur</option>
-          <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
-            {{ joueur.nom }}
+          <option v-for="joueur in props.ciblesASauver" :key="joueur" :value="joueur">
+            {{ joueur }}
           </option>
         </select>
       </div>
@@ -64,12 +64,13 @@ const sorciereSaveName = ref("");
 const props = defineProps({
   potionVieDispo: Boolean,
   potionMortDispo: Boolean,
-  joueurs: Array
+  joueurs: Array,
+  ciblesASauver: { type: Array, default: () => [] }
 });
 const emit = defineEmits(["sor-save-name-selected","use-mort", "sor-victim-selected"]);
 
 function openVieDialog() {
-  if (!props.potionVieDispo) return;
+  if (!props.potionVieDispo || !props.ciblesASauver.length) return;
   sorciereSaveName.value = "";
   vieDialog.value.showModal();
 }

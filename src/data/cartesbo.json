@@ -143,9 +143,9 @@
     "order": 14,
     "onlyFirstNight": false,
     "isCallable": true,
-    "categorie": "Solitaire",
-    "description": "Il peut éliminer un loup-garou une nuit sur deux.",
-    "dire": "Souhaites-tu éliminer l'un de tes camarades ?"
+    "categorie": "Loup-garou",
+    "description": "Il peut éliminer un joueur supplémentaire une nuit sur deux.",
+    "dire": "Qui souhaites-tu dévorer pour ton repas personnel ?"
   },
   {
     "name": "Renard",
@@ -155,7 +155,7 @@
     "isCallable": true,
     "categorie": "Villageois",
     "description": "Renifle les rôles autour d un joueur pour détecter un loup-garou.",
-    "dire": "Veux-tu utiliser ton flair ce soir ?, si oui, quel groupe de 3 joueurs veux-tu flairer ?"
+    "dire": "Veux-tu utiliser ton flair ce soir ? Si oui, quel groupe de 3 joueurs veux-tu flairer ?"
   },
   {
     "name": "Sorciere",

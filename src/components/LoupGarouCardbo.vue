@@ -1,6 +1,11 @@
 <template>
-  <div class="carte-loupgarou" :style="{ backgroundImage: `url('${imageUrl}')` }">
+  <div
+    class="carte-loupgarou"
+    :class="{ 'carte-pouvoir-indisponible': pouvoirIndisponible }"
+    :style="{ '--carte-image': `url('${imageUrl}')` }"
+  >
     <div class="carte-overlay">
+      <span v-if="pouvoirIndisponible" class="carte-indisponible-badge">Pouvoir indisponible</span>
     <div v-if="lgcard.name === 'Ancien' && props.nomAncien" class="carte-nom-nom">
     {{ props.nomAncien }}</div>
     <div v-if="lgcard.name === 'Chasseur' && props.nomChasseur" class="carte-nom-nom">
@@ -17,8 +22,13 @@
 </div>
      <div v-if="lgcard.name === 'Voyante' && props.nomVoyante" class="carte-nom-nom">
     {{ props.nomVoyante }}</div>
-    <div v-if="lgcard.name === 'Loup-garou' && props.nomsLoups?.length" class="carte-noms-loups">
-      <span v-for="(nom, index) in props.nomsLoups" :key="`${nom}-${index}`" class="loup-nom-rouge">{{ nom }}</span>
+    <div v-if="lgcard.name === 'Salvateur' && props.nomSalvateur" class="carte-nom-nom">
+    {{ props.nomSalvateur }}</div>
+    <div
+      v-if="(lgcard.name === 'Loup-garou' || (lgcard.name === 'Chien-Loup' && props.campChienLoup === 'Loup-garou')) && nomsLoupsAffiches.length"
+      class="carte-noms-loups"
+    >
+      <span v-for="(nom, index) in nomsLoupsAffiches" :key="`${nom}-${index}`" class="loup-nom-rouge">{{ nom }}</span>
     </div>
 <div v-if="lgcard.name === 'Joueur de flute' && props.nomFlute" class="carte-nom-flute">
   {{ props.nomFlute }}</div>
@@ -55,6 +65,7 @@ const props = defineProps({
   nomOurs: String,
   nomEnfantSauvage: String,
   nomVoyante: String,
+  nomSalvateur: String,
   nomsLoups: Array,
   nomFlute: String,
   nomCorbeau: String,
@@ -65,6 +76,15 @@ const props = defineProps({
   campChienLoup: String,
   nomCourtisane: String
 })
+const rolesPouvoirIndisponible = ['Infect pere des loups', 'Grand Mechant Loup', 'Comedien', 'Avocat', 'DonQuiTousse'];
+const pouvoirIndisponible = computed(() => rolesPouvoirIndisponible.includes(props.lgcard?.name));
+const nomsLoupsAffiches = computed(() => {
+  const noms = [...(props.nomsLoups || [])];
+  if (props.campChienLoup === 'Loup-garou' && props.nomChienLoup && !noms.includes(props.nomChienLoup)) {
+    noms.push(props.nomChienLoup);
+  }
+  return noms;
+});
 const imageUrl = computed(() =>
   new URL(`../assets/assets-projet/imagecartelgbo/${props.lgcard.image}`, import.meta.url).href
 )
@@ -82,8 +102,10 @@ const imageUrl = computed(() =>
   margin: 12px;
   border-radius: 18px;
   box-shadow: 0 4px 24px 0 #000a, 0 0 0 2px #ffae0033 inset;
+  background-image: var(--carte-image);
   background-size: cover;
   background-position: center;
+  filter: none;
   overflow: hidden;
   transition: transform 0.18s, box-shadow 0.18s;
   border: 2.5px solid #ffae00cc;
@@ -95,6 +117,35 @@ const imageUrl = computed(() =>
   box-shadow: 0 8px 32px 0 #fff700cc, 0 2px 16px 0 #000a;
   border-color: #fff700;
   z-index: 2;
+}
+
+.carte-pouvoir-indisponible {
+  filter: grayscale(1);
+  opacity: 0.62;
+}
+
+.carte-pouvoir-indisponible:hover {
+  border-color: #b9b9b9;
+  box-shadow: 0 8px 24px #000a;
+}
+
+.carte-indisponible-badge {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  z-index: 1;
+  width: max-content;
+  max-width: calc(100% - 12px);
+  padding: 3px 6px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: rgba(20, 20, 20, 0.82);
+  color: #e2e2e2;
+  font-size: 0.58rem;
+  font-weight: 700;
+  line-height: 1.2;
+  text-align: center;
+  text-transform: uppercase;
 }
 
 .carte-overlay {

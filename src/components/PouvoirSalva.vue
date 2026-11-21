@@ -3,38 +3,53 @@
     <img class="position-logo" src="../assets/assets-projet/logoperso/salvabouclierlogo.png" alt="bouclierSalvateur" title="Choisir la personne à protéger">
   </button>
   <dialog ref="testDialog">
-    <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
-    <p>Le salvateur choisi de protéger :</p>
-    <div>
-      <label for="personneProteger" class="font-semibold w-24">La personne protégée est :</label>
-      <select
-        id="personneProteger"
-        v-model="personneProteger"
-        class="flex-auto"
-      >
-        <option value="" disabled>Choisir un joueur</option>
-        <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
-          {{ joueur.nom }}
-        </option>
-      </select>
-    </div>
-    <button @click="validate">Valider</button>
+    <button class="close-btn" type="button" @click="closeDialog" title="Fermer">&times;</button>
+    <form @submit.prevent="validate">
+      <div v-if="!props.nomSalvateur">
+        <label for="nomSalvateur" class="font-semibold w-24">Qui est le Salvateur ?</label>
+        <select id="nomSalvateur" v-model="nomSalvateurLocal" required>
+          <option value="" disabled>Choisir un joueur</option>
+          <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
+            {{ joueur.nom }}
+          </option>
+        </select>
+      </div>
+      <p>Le Salvateur choisit qui protéger :</p>
+      <div>
+        <label for="personneProteger" class="font-semibold w-24">La personne protégée est :</label>
+        <select id="personneProteger" v-model="personneProteger" required>
+          <option value="" disabled>Choisir un joueur</option>
+          <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
+            {{ joueur.nom }}
+          </option>
+        </select>
+      </div>
+      <button type="submit">Valider</button>
+    </form>
   </dialog>
 </template>
 
 <script setup>
-import { ref, defineEmits } from "vue";
+import { ref } from "vue";
 
 const testDialog = ref(null);
 const personneProteger = ref("");
-const emit = defineEmits(["protected-person"]);
-const props = defineProps({ joueurs: Array });
+const nomSalvateurLocal = ref("");
+const emit = defineEmits(["protected-person", "salvateur-selected"]);
+const props = defineProps({
+  joueurs: { type: Array, default: () => [] },
+  nomSalvateur: { type: String, default: "" }
+});
 
 function openDialog() {
-  personneProteger.value = ""; // Réinitialise le champ à chaque ouverture
+  personneProteger.value = "";
+  nomSalvateurLocal.value = props.nomSalvateur || "";
   testDialog.value.showModal();
 }
 function validate() {
+  const nom = props.nomSalvateur || nomSalvateurLocal.value;
+  if (!nom || !personneProteger.value) return;
+  if (!props.nomSalvateur) emit("salvateur-selected", nom);
   emit("protected-person", personneProteger.value);
   testDialog.value.close();
 }

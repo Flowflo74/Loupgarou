@@ -24,7 +24,7 @@
         }"
       >
         <div class="joueur-vote-identite">
-          <span class="joueur-vote-nom">{{ joueur.nom }}</span>
+          <span class="joueur-vote-nom" :class="`nom-camp-${props.campDesJoueurs[joueur.nom] || 'inconnu'}`">{{ joueur.nom }}</span>
           <span v-if="!resultatVote && joueur.votes > 0 && joueur.votes === meilleurScore" class="badge-leader">En tête</span>
           <span v-if="resultatConfirme && resultatVote?.elimine?.includes(joueur.nom)" class="badge-elimine">Éliminé</span>
         </div>
@@ -96,7 +96,8 @@
 import { computed, ref } from "vue";
 
 const props = defineProps({
-  joueurs: { type: Array, default: () => [] }
+  joueurs: { type: Array, default: () => [] },
+  campDesJoueurs: { type: Object, default: () => ({}) }
 });
 const emit = defineEmits(["update-joueurs", "vote-confirme"]);
 
@@ -230,6 +231,14 @@ function reinitialiserVote() {
   overflow-wrap: anywhere;
   font-weight: 700;
   text-transform: uppercase;
+}
+.nom-camp-loups {
+  color: #ff4b55;
+  text-shadow: 0 0 10px rgba(255, 55, 65, 0.32);
+}
+.nom-camp-solitaires {
+  color: #c77dff;
+  text-shadow: 0 0 10px rgba(174, 91, 255, 0.34);
 }
 .badge-leader, .badge-elimine {
   padding: 0.2rem 0.5rem;

@@ -6,7 +6,10 @@
     <button class="close-btn" @click="closeDialog" title="Fermer">&times;</button>
     <template v-if="props.isFirstNight">
       <p>Qui sont les loups-garous&nbsp;?</p>
-      <div v-for="i in props.nbLoups" :key="i" style="margin-bottom: 0.7rem;">
+      <p v-if="props.chienLoupName" class="chien-loup-camp">
+        Chien-Loup (camp des Loups-garous) : <strong>{{ props.chienLoupName }}</strong>
+      </p>
+      <div v-for="i in nombreLoupsAIdentifier" :key="i" style="margin-bottom: 0.7rem;">
         <label :for="'loup-' + i">Loup-garou {{ i }}</label>
         <select
           :id="'loup-' + i"
@@ -14,7 +17,12 @@
           required
         >
           <option value="" disabled>Choisir un joueur</option>
-          <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
+          <option
+            v-for="joueur in joueursEligibles"
+            :key="joueur.nom"
+            :value="joueur.nom"
+            :disabled="loupsLocaux.includes(joueur.nom) && loupsLocaux[i - 1] !== joueur.nom"
+          >
             {{ joueur.nom }}
           </option>
         </select>
@@ -28,9 +36,14 @@
         id="victimLGName"
         v-model="victimLGName"
         class="flex-auto"
+        required
       >
         <option value="" disabled>Choisir un joueur</option>
-        <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
+        <option
+          v-for="joueur in joueursEligibles"
+          :key="joueur.nom"
+          :value="joueur.nom"
+        >
           {{ joueur.nom }}
         </option>
       </select>
@@ -40,28 +53,36 @@
 </template>
 
 <script setup>
-import { ref, defineEmits } from "vue";
+import { ref, computed, defineEmits } from "vue";
 
 const props = defineProps({
   joueurs: Array,
   nbLoups: Number,
-  isFirstNight: Boolean
+  isFirstNight: Boolean,
+  chienLoupName: String
 });
 const emit = defineEmits(["loups-selected", "victim-selected"]);
 const loupDialog = ref(null);
 const victimLGName = ref("");
 const loupsLocaux = ref([]); // tableau des noms choisis
+const joueursEligibles = computed(() =>
+  props.joueurs.filter(joueur => joueur.nom !== props.chienLoupName)
+);
+
+const nombreLoupsAIdentifier = computed(() =>
+  Math.max(0, props.nbLoups - (props.chienLoupName ? 1 : 0))
+);
 
 function openDialog() {
   victimLGName.value = "";
   if (props.isFirstNight) {
-    loupsLocaux.value = Array(props.nbLoups).fill("");
+    loupsLocaux.value = Array(nombreLoupsAIdentifier.value).fill("");
   }
   loupDialog.value.showModal();
 }
 function validate() {
   if (props.isFirstNight) {
-    emit("loups-selected", loupsLocaux.value);
+    emit("loups-selected", [...loupsLocaux.value, ...(props.chienLoupName ? [props.chienLoupName] : [])]);
   }
   emit("victim-selected", victimLGName.value);
   loupDialog.value.close();

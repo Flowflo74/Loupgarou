@@ -135,7 +135,7 @@
             :nomEnfantSauvage="card.name === 'Enfant Sauvage' ? nomEnfantSauvage : undefined"
             :mentorIsDead="card.name === 'Enfant Sauvage' ? mentorIsDead : false"
             :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
-            :nomsLoups="card.name === 'Loup-garou' ? nomsLoups : undefined"
+            :nomsLoups="card.name === carteAvecPouvoirLoups ? nomsLoups : undefined"
             :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined"
             :nomSectaire="card.name === 'Sectaire' ? nomSectaire : undefined"
             :nomCorbeau="card.name === 'Corbeau' ? nomCorbeau : undefined"
@@ -219,9 +219,10 @@
           <div class="appel-carte">
             <LoupGarouCard
               :lgcard="card"
-              :nomsLoups="card.name === 'Loup-garou' ? nomsLoups : undefined"
+              :nomsLoups="card.name === carteAvecPouvoirLoups ? nomsLoups : undefined"
               :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined"
               :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
+              :nomSalvateur="card.name === 'Salvateur' ? nomSalvateur : undefined"
               :nomCorbeau="card.name === 'Corbeau' ? nomCorbeau : undefined"
               :nomChienLoup="card.name === 'Chien-Loup' ? nomChienLoup : undefined"
               :campChienLoup="card.name === 'Chien-Loup' ? campChienLoup : undefined"
@@ -239,7 +240,7 @@
             <PouvoirCourtisane :joueurs="joueurs" @courtisaneduvillage="setCourtisane" />
           </template>
           <!-- Logo pouvoir Voyante -->
-          <template v-if="card.name === 'Voyante'">
+          <template v-if="card.name === 'Voyante' && !nomVoyante">
             <PouvoirVoyante :joueurs="joueurs" @voyanteduvillage="setVoyante" />
           </template>
           <!-- Logo pouvoir corbeau -->
@@ -250,6 +251,7 @@
           <template v-if="card.name === 'Sorciere'">
             <PotionsSorciere
   :joueurs="joueurs"
+  :cibles-a-sauver="ciblesAttaqueesCetteNuit"
   :potion-vie-dispo="potionVieDispo"
   :potion-mort-dispo="potionMortDispo"
   @sor-save-name-selected="handleSorciereSave"
@@ -268,20 +270,22 @@
           <template v-if="card.name === 'Moine'">
             <PouvoirMoine
               :joueurs="joueurs"
+              :cibles-a-sauver="ciblesAttaqueesCetteNuit"
               :pouvoir-moine-dispo="pouvoirMoineDispo"
               @moine-save="handleMoineSave"/>
           </template>
 
           <!-- Logos tête de lg pour la victime -->
-          <template v-if="card.name === 'Loup-garou'">
+          <template v-if="card.name === carteAvecPouvoirLoups">
             <div class="position-logo victimelg">
               <LoupGarouButton
-  :joueurs="joueurs"
-  :nbLoups="nbLoups"
-  :isFirstNight="phase === 'night' && nightCount === 1"
-  @loups-selected="setLoups"
-  @victim-selected="victimLGName = $event"
-/>
+                :joueurs="joueurs"
+                :nbLoups="nbLoupsSelection"
+                :isFirstNight="phase === 'night' && nightCount === 1"
+                :chien-loup-name="campChienLoup === 'Loup-garou' ? nomChienLoup : ''"
+                @loups-selected="setLoups"
+                @victim-selected="victimLGName = $event"
+              />
             </div>
           </template>
           <!-- Logo tête de lg pour l'infecté --> 
@@ -296,9 +300,23 @@
           <template v-if="card.name === 'Grand Mechant Loup'">
               <PouvoirGrandmechantloup :joueurs="joueurs" @victim2-selected="victimGrandLGName = $event" />
           </template>
+          <!-- Pouvoir du Loup Blanc, uniquement les nuits paires à partir de la nuit 2 -->
+          <template v-if="card.name === 'Loup Blanc' && nuitPouvoirLoupBlanc">
+            <PouvoirLoupBlanc
+              :joueurs="joueurs"
+              :nom-loup-blanc="nomLoupBlanc"
+              :noms-loups="nomsLoups"
+              @loup-blanc-selected="handleLoupBlancVictim"
+            />
+          </template>
           <!-- Logo bouclier pour le salva -->
           <template v-if="card.name === 'Salvateur'">
-            <PouvoirSalva :joueurs="joueurs" @protected-person="personneProteger = $event" />
+            <PouvoirSalva
+              :joueurs="joueurs"
+              :nom-salvateur="nomSalvateur"
+              @salvateur-selected="nomSalvateur = $event"
+              @protected-person="personneProteger = $event"
+            />
           </template>
           <!-- Logo renard pour le pouvoir du renard -->
           <template v-if="card.name === 'Renard'">
@@ -370,7 +388,7 @@
           <ul>
             <li v-if="personneProteger">Le Salvateur a protégé {{ personneProteger }}.</li>
             <li v-if="sorciereSaveName">La Sorcière a sauvé {{ sorciereSaveName }}.</li>
-            <li v-if="MoineSave">Le Moine a protégé {{ MoineSave }}.</li>
+            <li v-if="MoineSave">Le Moine a sauvé {{ MoineSave }}.</li>
             <li v-if="ServSave">La Servante dévouée s'est interposée pour {{ ServSave }}.</li>
           </ul>
         </div>
@@ -432,6 +450,7 @@
       <p class="vote">Le village débat et désigne la personne à éliminer.</p>
       <Phasedevote
         :joueurs="joueurs"
+        :camp-des-joueurs="campDesJoueurs"
         :key="dayCount"
         @update-joueurs="updateJoueurs"
         @vote-confirme="handleVillageVote"
@@ -548,6 +567,7 @@ import PouvoirServantedevouee from '../components/PouvoirServantedevouee.vue'
 import PouvoirFlute from '@/components/PouvoirFlute.vue'
 import Pouvoirinfectperedesloups from '@/components/Pouvoirinfectperedesloups.vue'
 import PouvoirGrandmechantloup from '@/components/PouvoirGrandmechantloup.vue'
+import PouvoirLoupBlanc from '@/components/PouvoirLoupBlanc.vue'
 import PouvoirOurs from '../components/PouvoirOurs.vue'
 import PouvoirCorbeau from '../components/PouvoirCorbeau.vue'
 import PouvoirVoyante from '../components/PouvoirVoyante.vue'
@@ -570,6 +590,8 @@ const winnerImage = ref('')
 const victimLGName = ref('')
 const victiminfectLGName = ref('')
 const victimGrandLGName = ref('')
+const victimLoupBlancName = ref('')
+const nomLoupBlanc = ref('')
 const mortsNuit = ref([])
 const nomsJoueursMortsNuit = ref([])
 const nomAncien = ref('')
@@ -614,14 +636,38 @@ function regrouperCartesPourAppel(cards) {
   return [...groupes.values()];
 }
 
+const nuitPouvoirLoupBlanc = computed(() => nightCount.value >= 2 && nightCount.value % 2 === 0)
+
 const prepCards = computed(() =>
   regrouperCartesPourAppel(selectedCards.value
     .filter(c => c.onlyFirstNight)
     .sort((a, b) => a.order - b.order))
 )
+const ciblesAttaqueesCetteNuit = computed(() => {
+  const cibles = new Set();
+  const nomsVivants = new Set(joueurs.value.filter(joueur => !joueur.mort).map(joueur => joueur.nom));
+
+  if (nomsVivants.has(victimLGName.value)) cibles.add(victimLGName.value);
+  if (
+    nuitPouvoirLoupBlanc.value &&
+    nomLoupBlanc.value &&
+    nomsVivants.has(nomLoupBlanc.value) &&
+    nomsVivants.has(victimLoupBlancName.value) &&
+    victimLoupBlancName.value !== nomLoupBlanc.value
+  ) {
+    cibles.add(victimLoupBlancName.value);
+  }
+
+  return [...cibles];
+});
+
 const nightCards = computed(() =>
   regrouperCartesPourAppel(selectedCards.value
-    .filter(c => c.isCallable && !(villageoisPouvoirsPerdus.value && c.categorie === 'Villageois'))
+    .filter(c =>
+      c.isCallable &&
+      !(villageoisPouvoirsPerdus.value && c.categorie === 'Villageois') &&
+      !(c.name === 'Loup Blanc' && !nuitPouvoirLoupBlanc.value)
+    )
     .sort((a, b) => a.order - b.order))
 )
 const villageoisCards = computed(() =>
@@ -735,9 +781,21 @@ function startGame() {
 function resolveNightDeaths() {
   const joueursVivants = new Set(joueurs.value.filter(joueur => !joueur.mort).map(joueur => joueur.nom));
   const victimeLoups = joueursVivants.has(victimLGName.value) ? victimLGName.value : '';
-  const attaquesParPouvoir = [victimGrandLGName.value, victimSorName.value, victimAlchimiste.value]
-    .filter(nom => nom && joueursVivants.has(nom));
+  const attaquesParPouvoir = [
+    victimGrandLGName.value,
+    victimLoupBlancName.value,
+    victimSorName.value,
+    victimAlchimiste.value
+  ].filter(nom => nom && joueursVivants.has(nom));
   const victimes = new Set(attaquesParPouvoir);
+  const victimLoupBlancValide =
+    nuitPouvoirLoupBlanc.value &&
+    nomLoupBlanc.value &&
+    joueursVivants.has(nomLoupBlanc.value) &&
+    victimLoupBlancName.value !== nomLoupBlanc.value
+      ? victimLoupBlancName.value
+      : '';
+  if (victimLoupBlancValide) victimes.add(victimLoupBlancValide);
   if (victimeLoups) victimes.add(victimeLoups);
 
   // Les protections standards annulent les attaques, mais la potion de mort de la Sorcière reste létale.
@@ -745,6 +803,7 @@ function resolveNightDeaths() {
     const attaqueParSorciere = victimSorName.value === nom;
     const attaqueParGrandLoupOuAlchimiste =
       victimGrandLGName.value === nom || victimAlchimiste.value === nom;
+    const attaqueDuLoupBlanc = victimLoupBlancName.value === nom;
     const attaqueDesLoups = victimeLoups === nom;
 
     // La potion de mort est létale même si la cible est protégée.
@@ -757,8 +816,13 @@ function resolveNightDeaths() {
       !protectionsNuit.value.includes(nom) &&
       sorciereSaveName.value !== nom &&
       nom !== nomAncien.value;
+    const attaqueLoupBlancAboutit =
+      attaqueDuLoupBlanc &&
+      !protectionsNuit.value.includes(nom) &&
+      sorciereSaveName.value !== nom &&
+      nom !== nomAncien.value;
 
-    if (!autreAttaqueAboutit && !morsureAboutit) victimes.delete(nom);
+    if (!autreAttaqueAboutit && !morsureAboutit && !attaqueLoupBlancAboutit) victimes.delete(nom);
   }
 
   const mortsDirectes = [...victimes];
@@ -848,6 +912,7 @@ function nextPhase() {
       visible.value = false;
       victimLGName.value = '';
       victimGrandLGName.value = '';
+      victimLoupBlancName.value = '';
       victiminfectLGName.value = '';
       mortsNuit.value = [];
       nomsJoueursMortsNuit.value = [];
@@ -897,6 +962,7 @@ const joueursCharmes = ref([]);
 const nomSoeur1 = ref('');
 const nomSoeur2 = ref('');
 const personneProteger = ref('');
+const nomSalvateur = ref('');
 const victimSorName = ref('');
 const sorciereSaveName = ref('');
 const nomAmoureux1 = ref('');
@@ -928,11 +994,23 @@ const evenementsNuit = computed(() => {
   if (victimGrandLGName.value && mortsNuit.value.includes(victimGrandLGName.value)) {
     evenements.push({ type: 'attaque', titre: 'Tué par le Grand Méchant Loup :', nom: victimGrandLGName.value });
   }
+  if (victimLoupBlancName.value && mortsNuit.value.includes(victimLoupBlancName.value)) {
+    evenements.push({ type: 'attaque', titre: 'Dévoré par le Loup Blanc :', nom: victimLoupBlancName.value });
+  }
   if (victimSorName.value && mortsNuit.value.includes(victimSorName.value)) {
     evenements.push({ type: 'attaque', titre: 'Tué par la Sorcière :', nom: victimSorName.value });
   }
   if (victimAlchimiste.value && mortsNuit.value.includes(victimAlchimiste.value)) {
     evenements.push({ type: 'attaque', titre: "Tué par l'Alchimiste :", nom: victimAlchimiste.value });
+  }
+  if (
+    victimLoupBlancName.value &&
+    !mortsNuit.value.includes(victimLoupBlancName.value) &&
+    (protectionsNuit.value.includes(victimLoupBlancName.value) ||
+      sorciereSaveName.value === victimLoupBlancName.value ||
+      (nomAncien.value === victimLoupBlancName.value && !mortsNuit.value.includes(nomAncien.value)))
+  ) {
+    evenements.push({ type: 'protection', titre: 'La victime du Loup Blanc a été sauvée :', nom: victimLoupBlancName.value });
   }
   if (
     victimLGName.value &&
@@ -979,6 +1057,17 @@ const mentorIsDead = computed(() =>
 
 const nbLoups = computed(() =>
   selectedCards.value.filter(c => c.name === 'Loup-garou').length
+);
+const carteAvecPouvoirLoups = computed(() =>
+  campChienLoup.value === 'Loup-garou' && nbLoups.value === 0
+    ? 'Chien-Loup'
+    : 'Loup-garou'
+);
+const nbLoupsCamp = computed(() =>
+  nbLoups.value + (campChienLoup.value === 'Loup-garou' ? 1 : 0)
+);
+const nbLoupsSelection = computed(() =>
+  Math.max(nbLoupsCamp.value, nomsLoups.value.filter(Boolean).length)
 );
 const nomsLoups = ref([]); // ["Alice", "Bob", ...]
 function setLoups(liste) {
@@ -1063,6 +1152,11 @@ function handleSorciereSave(nom) {
 function handleInfectVictim(nom) {
   victiminfectLGName.value = nom;
   pouvoirInfectDispo.value = false;
+}
+
+function handleLoupBlancVictim({ nomLoupBlanc: nom, victime }) {
+  nomLoupBlanc.value = nom;
+  victimLoupBlancName.value = victime;
 }
 
 const joueurs = ref([]);
@@ -1228,6 +1322,7 @@ function roleConnuPour(nom) {
     [nomSectaire.value, 'Sectaire'],
     [nomQuitousse.value, 'DonQuiTousse'],
     [nomChienLoup.value, 'Chien-Loup'],
+    [nomLoupBlanc.value, 'Loup Blanc'],
     [nomCourtisane.value, 'Courtisane'],
     [nomCorbeau.value, 'Corbeau']
   ];
@@ -1237,6 +1332,23 @@ function roleConnuPour(nom) {
   if (indexLoup !== -1) return selectedCards.value.filter(carte => carte.name === 'Loup-garou')[indexLoup]?.name || 'Loup-garou';
   return joueur.role || joueur.carte || joueur.roleName || '';
 }
+
+const campDesJoueurs = computed(() => Object.fromEntries(joueurs.value.map(joueur => {
+  if (nomChienLoup.value === joueur.nom) {
+    return [joueur.nom, campChienLoup.value === 'Loup-garou' ? 'loups' : ''];
+  }
+  if (
+    nomsLoups.value.includes(joueur.nom) ||
+    victiminfectLGName.value === joueur.nom ||
+    (nomEnfantSauvage.value === joueur.nom && mentorIsDead.value)
+  ) {
+    return [joueur.nom, 'loups'];
+  }
+
+  const role = rolesReveles.value[joueur.nom] || roleConnuPour(joueur.nom);
+  const categorie = allCards.find(carte => carte.name === role)?.categorie;
+  return [joueur.nom, categorie === 'Loup-garou' ? 'loups' : categorie === 'Solitaire' ? 'solitaires' : ''];
+})));
 
 function handleVillageVote({ elimines }) {
   villageVoteConfirme.value = true;
@@ -1316,6 +1428,7 @@ function rejouer() {
   winnerImage.value = '';
   visible.value = false;
   nomAncien.value = '';
+  nomSalvateur.value = '';
   nomChasseur.value = '';
   nomJuge.value = '';
   nomOurs.value = '';
@@ -1324,6 +1437,8 @@ function rejouer() {
   nomCorbeau.value = '';
   mortsNuit.value = [];
   nomsJoueursMortsNuit.value = [];
+  victimLoupBlancName.value = '';
+  nomLoupBlanc.value = '';
   ancienMorsureAbsorbee.value = false;
   nomPlume1.value = '';
   nomPlume2.value = '';
@@ -1343,6 +1458,7 @@ function rejouer() {
   victimLGName.value = '';
   victiminfectLGName.value = '';
   victimGrandLGName.value = '';
+  victimLoupBlancName.value = '';
   mortsNuit.value = [];
   nomsJoueursMortsNuit.value = [];
   ancienMorsureAbsorbee.value = false;
