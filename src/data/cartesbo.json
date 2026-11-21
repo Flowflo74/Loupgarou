@@ -120,12 +120,12 @@
   {
     "name": "Infect pere des loups",
     "image": "infectbo.png",
-    "order": 9,
+    "order": 8.5,
     "onlyFirstNight": false,
     "isCallable": true,
     "categorie": "Loup-garou",
-    "description": "Peut transformer un joueur en loup-garou.",
-    "dire": "Souhaites-tu transformer votre victime en Loup-Garou ?"
+    "description": "Après le choix des Loups-garous, il peut infecter leur victime une fois dans la partie.",
+    "dire": "Infect père des Loups, réveille-toi après les Loups-garous… Souhaites-tu infecter leur victime plutôt que de la dévorer ?"
   },
   {
     "name": "Grand Mechant Loup",

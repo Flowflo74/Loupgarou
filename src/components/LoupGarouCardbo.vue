@@ -44,6 +44,9 @@
 <div v-if="lgcard.name === 'Courtisane' && props.nomCourtisane" class="carte-nom-nom">
   {{ props.nomCourtisane }}
 </div>
+<div v-if="lgcard.name === 'Infect pere des loups' && props.nomInfect" class="carte-nom-nom loup-nom-rouge">
+  {{ props.nomInfect }}
+</div>
 <div v-if="lgcard.name === 'DonQuiTousse' && props.nomQuitousse" class="carte-nom-tousse">
    {{ props.nomQuitousse }} </div>
   <div v-if="lgcard.name === 'Corbeau' && props.nomCorbeau" class="carte-nom-nom">
@@ -74,9 +77,10 @@ const props = defineProps({
   nomQuitousse: String,
   nomChienLoup: String,
   campChienLoup: String,
-  nomCourtisane: String
+  nomCourtisane: String,
+  nomInfect: String
 })
-const rolesPouvoirIndisponible = ['Infect pere des loups', 'Grand Mechant Loup', 'Comedien', 'Avocat', 'DonQuiTousse'];
+const rolesPouvoirIndisponible = ['Grand Mechant Loup', 'Comedien', 'Avocat', 'DonQuiTousse'];
 const pouvoirIndisponible = computed(() => rolesPouvoirIndisponible.includes(props.lgcard?.name));
 const nomsLoupsAffiches = computed(() => {
   const noms = [...(props.nomsLoups || [])];
