@@ -139,6 +139,7 @@
             :nomFlute="card.name === 'Joueur de flute' ? nomFlute : undefined"
             :nomSectaire="card.name === 'Sectaire' ? nomSectaire : undefined"
             :nomCorbeau="card.name === 'Corbeau' ? nomCorbeau : undefined"
+            :nomServante="card.name === 'Servante devouee' ? nomServante : undefined"
             :nomChienLoup="card.name === 'Chien-Loup' ? nomChienLoup : undefined"
             :campChienLoup="card.name === 'Chien-Loup' ? campChienLoup : undefined"
             :nomCourtisane="card.name === 'Courtisane' ? nomCourtisane : undefined"
@@ -225,6 +226,7 @@
               :nomVoyante="card.name === 'Voyante' ? nomVoyante : undefined"
               :nomSalvateur="card.name === 'Salvateur' ? nomSalvateur : undefined"
               :nomCorbeau="card.name === 'Corbeau' ? nomCorbeau : undefined"
+              :nomServante="card.name === 'Servante devouee' ? nomServante : undefined"
               :nomChienLoup="card.name === 'Chien-Loup' ? nomChienLoup : undefined"
               :campChienLoup="card.name === 'Chien-Loup' ? campChienLoup : undefined"
               :nomCourtisane="card.name === 'Courtisane' ? nomCourtisane : undefined"
@@ -348,7 +350,10 @@
           <template v-if="card.name === 'Servante devouee'">
             <PouvoirServantedevouee
               :joueurs="joueursVivants"
+              :cibles="ciblesAttaqueesCetteNuit"
+              :nom-servante="nomServante"
               :pouvoirServDispo="pouvoirServDispo"
+              @servante-identified="nomServante = $event"
               @servante-save="handleServanteSave"/>
           </template>
         </li>
@@ -372,7 +377,7 @@
           <h3>💀 Joueurs morts cette nuit</h3>
           <ul v-if="nomsJoueursMortsNuit.length" class="liste-morts-nuit">
             <li v-for="nom in nomsJoueursMortsNuit" :key="nom" class="revelation-mort-nuit">
-              <span>💀 <strong>{{ nom }}</strong> était :</span>
+              <span>💀 <strong class="nom-joueur-bilan">{{ nom }}</strong> était :</span>
               <template v-if="roleConnuPour(nom) || rolesReveles[nom]">
                 <span class="revelation-role">{{ roleConnuPour(nom) || rolesReveles[nom] }}</span>
               </template>
@@ -392,30 +397,38 @@
           <h3>Autres événements</h3>
           <ul>
             <li v-for="(evenement, index) in evenementsNuit" :key="`${evenement.type}-${evenement.nom}-${index}`" :class="`evenement-${evenement.type}`">
-              <strong>{{ evenement.titre }}</strong> {{ evenement.nom }}
+              <template v-if="evenement.type === 'infection'">
+                <strong class="nom-joueur-bilan">{{ evenement.joueurInfecte }}</strong>
+                a été infecté par <strong class="nom-joueur-bilan">{{ evenement.nomInfect }}</strong>
+                et rejoint donc le camp des Loups-Garous.
+              </template>
+              <template v-else><strong>{{ evenement.titre }}</strong> <strong class="nom-joueur-bilan">{{ evenement.nom }}</strong></template>
             </li>
           </ul>
         </div>
 
-        <div v-if="evenementsNuit.some(evenement => evenement.type === 'protection') || personneProteger || sorciereSaveName || MoineSave || ServSave" class="bilan-protections">
+        <div v-if="evenementsNuit.some(evenement => evenement.type === 'protection') || personneProteger || sorciereSaveName || MoineSave || (ServSave && nomServante)" class="bilan-protections">
           <h3>🛡️ Protections et sauvetages</h3>
           <ul>
-            <li v-if="personneProteger">Le Salvateur a protégé {{ personneProteger }}.</li>
-            <li v-if="sorciereSaveName">La Sorcière a sauvé {{ sorciereSaveName }}.</li>
-            <li v-if="MoineSave">Le Moine a sauvé {{ MoineSave }}.</li>
-            <li v-if="ServSave">La Servante dévouée s'est interposée pour {{ ServSave }}.</li>
+            <li v-if="personneProteger">Le Salvateur a protégé <strong class="nom-joueur-bilan">{{ personneProteger }}</strong>.</li>
+            <li v-if="sorciereSaveName">La Sorcière a sauvé <strong class="nom-joueur-bilan">{{ sorciereSaveName }}</strong>.</li>
+            <li v-if="MoineSave">Le Moine a sauvé <strong class="nom-joueur-bilan">{{ MoineSave }}</strong>.</li>
+            <li v-if="ServSave && nomServante">
+              <strong class="nom-joueur-bilan">{{ nomServante }}</strong> s'est sacrifiée à la place de
+              <strong class="nom-joueur-bilan">{{ ServSave }}</strong>, qui a été sauvé par la Servante dévouée.
+            </li>
           </ul>
         </div>
 
-        <div v-if="nomAmoureux1 || nomMentor || nomOurs || (nomCourtisane && choixCourtisane)" class="bilan-infos">
+        <div v-if="nomAmoureux1 || nomMentor || nomOurs || (nomCourtisane && choixCourtisane && joueurs.some(joueur => joueur.nom === nomCourtisane && !joueur.mort))" class="bilan-infos">
           <h3>Informations du village</h3>
-          <p v-if="nomAmoureux1">💘 Les amoureux sont {{ nomAmoureux1 }} et {{ nomAmoureux2 }}.</p>
-          <p v-if="nomMentor">🧑 Le mentor de {{ nomEnfantSauvage }} est {{ nomMentor }}.</p>
-          <p v-if="nomOurs">🐻 Le Montreur d'ours est {{ nomOurs }}.</p>
-          <p v-if="nomCourtisane && choixCourtisane">
-            🌙 {{ nomCourtisane }} {{ choixCourtisane.choix === 'chez-elle'
+          <p v-if="nomAmoureux1">💘 Les amoureux sont <strong class="nom-joueur-bilan">{{ nomAmoureux1 }}</strong> et <strong class="nom-joueur-bilan">{{ nomAmoureux2 }}</strong>.</p>
+          <p v-if="nomMentor">🧑 Le mentor de <strong class="nom-joueur-bilan">{{ nomEnfantSauvage }}</strong> est <strong class="nom-joueur-bilan">{{ nomMentor }}</strong>.</p>
+          <p v-if="nomOurs">🐻 Le Montreur d'ours est <strong class="nom-joueur-bilan">{{ nomOurs }}</strong>.</p>
+          <p v-if="nomCourtisane && choixCourtisane && joueurs.some(joueur => joueur.nom === nomCourtisane && !joueur.mort)">
+            🌙 <strong class="nom-joueur-bilan">{{ nomCourtisane }}</strong> {{ choixCourtisane.choix === 'chez-elle'
               ? 'est restée chez elle.'
-              : `est allée dormir chez ${choixCourtisane.personne}.` }}
+              : 'est allée dormir chez ' }}<strong v-if="choixCourtisane.choix !== 'chez-elle'" class="nom-joueur-bilan">{{ choixCourtisane.personne }}</strong><span v-if="choixCourtisane.choix !== 'chez-elle'">.</span>
           </p>
         </div>
       </section>
@@ -610,6 +623,7 @@ const victimLGName = ref('')
 const victiminfectLGName = ref('')
 const nomInfect = ref('')
 const joueurInfecte = ref('')
+const joueurInfecteCetteNuit = ref('')
 const infectionAcceptee = ref(false)
 const infectionRepondue = ref(false)
 const victimGrandLGName = ref('')
@@ -695,7 +709,8 @@ const nightCards = computed(() =>
       (c.name !== 'Courtisane' || (
         (!nomCourtisane.value || joueurs.value.some(joueur => joueur.nom === nomCourtisane.value && !joueur.mort)) &&
         !joueurs.value.some(joueur => joueur.mort && roleConnuPour(joueur.nom) === 'Courtisane')
-      ))
+      )) &&
+      (c.name !== 'Servante devouee' || !nomServante.value || joueurs.value.some(joueur => joueur.nom === nomServante.value && !joueur.mort))
     )
     .sort((a, b) => a.order - b.order))
 )
@@ -826,10 +841,22 @@ function resolveNightDeaths() {
       : '';
   if (victimLoupBlancValide) victimes.add(victimLoupBlancValide);
   if (victimeLoups) victimes.add(victimeLoups);
+  // Le sacrifice de la Servante la tue lorsque sa cible est réellement sauvée d'une attaque.
+  const cibleServanteSauvee = ServSave.value;
+  const sacrificeServanteAboutit = Boolean(
+    nomServante.value &&
+    cibleServanteSauvee &&
+    (cibleServanteSauvee === victimeLoups || cibleServanteSauvee === victimLoupBlancValide) &&
+    joueursVivants.has(nomServante.value)
+  );
+  if (sacrificeServanteAboutit) victimes.add(nomServante.value);
 
   // Les protections standards annulent les attaques, mais la potion de mort de la Sorcière reste létale.
   const joueursInfectesCetteNuit = new Set();
   for (const nom of [...victimes]) {
+    // Une Servante qui s'est sacrifiée meurt à la place de sa cible, sans annulation par les protections.
+    if (sacrificeServanteAboutit && nom === nomServante.value) continue;
+
     const attaqueParSorciere = victimSorName.value === nom;
     const attaqueParGrandLoupOuAlchimiste =
       victimGrandLGName.value === nom || victimAlchimiste.value === nom;
@@ -866,13 +893,15 @@ function resolveNightDeaths() {
       sorciereSaveName.value !== nom &&
       nom !== nomAncien.value;
 
-    if (!autreAttaqueAboutit && !morsureAboutit && !attaqueLoupBlancAboutit && !infectionAboutit) victimes.delete(nom);
+    // L'infection change le camp, mais ne tue pas la cible : seule une autre attaque réussie la laisse parmi les victimes.
+    if (!autreAttaqueAboutit && !morsureAboutit && !attaqueLoupBlancAboutit) victimes.delete(nom);
   }
 
   const mortsDirectes = [...victimes];
   mortsNuit.value = [...victimes];
   nomsJoueursMortsNuit.value = [...victimes];
-  joueurInfecte.value = [...joueursInfectesCetteNuit][0] || joueurInfecte.value;
+  joueurInfecteCetteNuit.value = [...joueursInfectesCetteNuit][0] || '';
+  joueurInfecte.value = joueurInfecteCetteNuit.value || joueurInfecte.value;
   joueurs.value = joueurs.value.map(joueur => ({
     ...joueur,
     mort: joueur.mort || victimes.has(joueur.nom),
@@ -976,6 +1005,7 @@ function nextPhase() {
       victimLGName.value = '';
       infectionAcceptee.value = false;
       infectionRepondue.value = false;
+      joueurInfecteCetteNuit.value = '';
       victiminfectLGName.value = '';
       victimGrandLGName.value = '';
       victimLoupBlancName.value = '';
@@ -1028,6 +1058,7 @@ const nomSoeur1 = ref('');
 const nomSoeur2 = ref('');
 const personneProteger = ref('');
 const nomSalvateur = ref('');
+const nomServante = ref('');
 const victimSorName = ref('');
 const sorciereSaveName = ref('');
 const nomAmoureux1 = ref('');
@@ -1052,8 +1083,12 @@ const evenementsNuit = computed(() => {
   const evenements = [];
   if (victimLGName.value && mortsNuit.value.includes(victimLGName.value)) {
     evenements.push({ type: 'attaque', titre: 'Tué par les Loups-garous :', nom: victimLGName.value });
-  } else if (infectionAcceptee.value && victiminfectLGName.value) {
-    evenements.push({ type: 'infection', titre: 'A rejoint le camp des Loups-garous :', nom: victiminfectLGName.value });
+  } else if (joueurInfecteCetteNuit.value) {
+    evenements.push({
+      type: 'infection',
+      joueurInfecte: joueurInfecteCetteNuit.value,
+      nomInfect: nomInfect.value
+    });
   }
   if (victimGrandLGName.value && mortsNuit.value.includes(victimGrandLGName.value)) {
     evenements.push({ type: 'attaque', titre: 'Tué par le Grand Méchant Loup :', nom: victimGrandLGName.value });
@@ -1210,9 +1245,10 @@ function handleAlchimisteVictim(joueur) {
   pouvoirAlchiDispo.value = false;
   victimAlchimiste.value = joueur;
 }
-function handleServanteSave(joueur) {
+function handleServanteSave({ nomServante: nom, cibleSauvee }) {
+  nomServante.value = nom;
   pouvoirServDispo.value = false;
-  ServSave.value = joueur;
+  ServSave.value = cibleSauvee;
 }
 
 function handleSorciereSave(nom) {
@@ -1395,6 +1431,7 @@ function sauvegarderRoleRevele(nom) {
 function roleConnuPour(nom) {
   const joueur = joueurs.value.find(element => element.nom === nom);
   if (!joueur) return '';
+  if (joueurInfecte.value === nom || joueur.camp === 'Loup-garou') return 'Loup-garou';
   const nomsAssignes = [
     [nomAncien.value, 'Ancien'],
     [nomJuge.value, 'Juge'],
@@ -1410,6 +1447,7 @@ function roleConnuPour(nom) {
     [nomChienLoup.value, 'Chien-Loup'],
     [nomLoupBlanc.value, 'Loup Blanc'],
     [nomCourtisane.value, 'Courtisane'],
+    [nomServante.value, 'Servante devouee'],
     [nomCorbeau.value, 'Corbeau'],
     [nomInfect.value, 'Infect pere des loups']
   ];
@@ -1517,6 +1555,7 @@ function rejouer() {
   visible.value = false;
   nomAncien.value = '';
   nomSalvateur.value = '';
+  nomServante.value = '';
   nomChasseur.value = '';
   nomJuge.value = '';
   nomOurs.value = '';
@@ -1547,6 +1586,7 @@ function rejouer() {
   victiminfectLGName.value = '';
   nomInfect.value = '';
   joueurInfecte.value = '';
+  joueurInfecteCetteNuit.value = '';
   infectionAcceptee.value = false;
   infectionRepondue.value = false;
   victimGrandLGName.value = '';
@@ -2574,6 +2614,17 @@ h2 {
   padding: 0.55rem 0.7rem;
   border-radius: 8px;
   background: rgba(0, 0, 0, 0.28);
+}
+
+.nom-joueur-bilan {
+  display: inline-block;
+  padding: 0.08rem 0.45rem;
+  border: 1px solid rgba(255, 196, 77, 0.7);
+  border-radius: 999px;
+  background: rgba(255, 174, 0, 0.16);
+  color: #ffd36a;
+  font-weight: 800;
+  text-shadow: 0 0 8px rgba(255, 174, 0, 0.3);
 }
 
 .evenement-infection { border-left: 4px solid #ad5cff; }

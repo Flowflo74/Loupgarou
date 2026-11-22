@@ -1,25 +1,35 @@
 <template>
   <div>
-    <button class="bouton" @click="openDialog" :disabled="!pouvoirServDispo">
+    <button class="bouton" @click="openDialog" :disabled="!pouvoirServDispo || !props.cibles.length">
       <img
         class="position-logo"
         :src="pouvoirServDispo ? '/logospouvoirs/pouvoirservante.png' : '/logospouvoirs/servantedevcroix.png'"
-        :title="pouvoirServDispo ? 'Utiliser le pouvoir de la Servante dévouée' : 'Pouvoir déjà utilisé'"
+        :title="!pouvoirServDispo ? 'Pouvoir déjà utilisé' : props.cibles.length ? 'Choisir une cible des Loups-garous ou du Loup Blanc' : 'Aucune cible désignée par les Loups-garous ou le Loup Blanc'"
         :style="{ opacity: pouvoirServDispo ? 1 : 0.5 }"
       />
     </button>
     <dialog ref="servanteDialog">
-      <p>La servante dévouée choisit qui sauver</p>
-      <div>
-        <label for="servanteSaveName" class="font-semibold w-24">Personne sauver :</label>
-        <select id="servanteSaveName" v-model="servanteSaveName" class="flex-auto">
-        <option value="" disabled>Choisir un joueur</option>
-        <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
-          {{ joueur.nom }}
-        </option>
-      </select>
+      <p v-if="!props.nomServante">Qui est la Servante dévouée ?</p>
+      <div v-if="!props.nomServante">
+        <label for="nomServante" class="font-semibold w-24">La Servante dévouée est :</label>
+        <select id="nomServante" v-model="nomServanteLocale" class="flex-auto" required>
+          <option value="" disabled>Choisir un joueur</option>
+          <option v-for="joueur in props.joueurs" :key="joueur.nom" :value="joueur.nom">
+            {{ joueur.nom }}
+          </option>
+        </select>
       </div>
-      <button @click="validate">Valider</button>
+      <p>La Servante dévouée choisit qui sauver</p>
+      <div>
+        <label for="servanteSaveName" class="font-semibold w-24">Personne à sauver :</label>
+        <select id="servanteSaveName" v-model="servanteSaveName" class="flex-auto" required>
+          <option value="" disabled>Choisir une cible</option>
+          <option v-for="nom in props.cibles" :key="nom" :value="nom">
+            {{ nom }}
+          </option>
+        </select>
+      </div>
+      <button @click="validate" :disabled="!servanteSaveName || (!props.nomServante && !nomServanteLocale)">Valider</button>
     </dialog>
   </div>
 </template>
@@ -29,21 +39,30 @@ import { ref, defineEmits, defineProps } from "vue";
 
 const servanteDialog = ref(null);
 const servanteSaveName = ref("");
+const nomServanteLocale = ref("");
 const props = defineProps({
-  joueurs: Array,
+  joueurs: { type: Array, default: () => [] },
+  cibles: { type: Array, default: () => [] },
+  nomServante: { type: String, default: "" },
   pouvoirServDispo: Boolean
 });
-const emit = defineEmits(["servante-save"]);
+const emit = defineEmits(["servante-save", "servante-identified"]);
 
 function openDialog() {
-  if (props.pouvoirServDispo) {
+  if (props.pouvoirServDispo && props.cibles.length) {
     servanteSaveName.value = "";
+    nomServanteLocale.value = props.nomServante;
     servanteDialog.value.showModal();
   }
 }
 
 function validate() {
-  emit("servante-save", servanteSaveName.value);
+  if (!servanteSaveName.value || (!props.nomServante && !nomServanteLocale.value)) return;
+  if (!props.nomServante) emit("servante-identified", nomServanteLocale.value);
+  emit("servante-save", {
+    nomServante: props.nomServante || nomServanteLocale.value,
+    cibleSauvee: servanteSaveName.value
+  });
   servanteDialog.value.close();
 }
 

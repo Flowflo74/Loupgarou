@@ -24,6 +24,8 @@
     {{ props.nomVoyante }}</div>
     <div v-if="lgcard.name === 'Salvateur' && props.nomSalvateur" class="carte-nom-nom">
     {{ props.nomSalvateur }}</div>
+    <div v-if="lgcard.name === 'Servante devouee' && props.nomServante" class="carte-nom-nom">
+    {{ props.nomServante }}</div>
     <div
       v-if="(lgcard.name === 'Loup-garou' || (lgcard.name === 'Chien-Loup' && props.campChienLoup === 'Loup-garou')) && nomsLoupsAffiches.length"
       class="carte-noms-loups"
@@ -69,6 +71,7 @@ const props = defineProps({
   nomEnfantSauvage: String,
   nomVoyante: String,
   nomSalvateur: String,
+  nomServante: String,
   nomsLoups: Array,
   nomFlute: String,
   nomCorbeau: String,
