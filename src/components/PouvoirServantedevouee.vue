@@ -19,26 +19,19 @@
           </option>
         </select>
       </div>
-      <p>La Servante dévouée choisit qui sauver</p>
-      <div>
-        <label for="servanteSaveName" class="font-semibold w-24">Personne à sauver :</label>
-        <select id="servanteSaveName" v-model="servanteSaveName" class="flex-auto" required>
-          <option value="" disabled>Choisir une cible</option>
-          <option v-for="nom in props.cibles" :key="nom" :value="nom">
-            {{ nom }}
-          </option>
-        </select>
+      <p>La Servante dévouée souhaite-t-elle prendre la place de <strong>{{ props.cibles[0] }}</strong>, la cible des Loups-garous ?</p>
+      <div class="servante-reponses">
+        <button type="button" @click="repondre(true)" :disabled="!peutRepondre">Oui</button>
+        <button type="button" @click="repondre(false)" :disabled="!peutRepondre">Non</button>
       </div>
-      <button @click="validate" :disabled="!servanteSaveName || (!props.nomServante && !nomServanteLocale)">Valider</button>
     </dialog>
   </div>
 </template>
 
 <script setup>
-import { ref, defineEmits, defineProps } from "vue";
+import { computed, ref, defineEmits, defineProps } from "vue";
 
 const servanteDialog = ref(null);
-const servanteSaveName = ref("");
 const nomServanteLocale = ref("");
 const props = defineProps({
   joueurs: { type: Array, default: () => [] },
@@ -47,21 +40,25 @@ const props = defineProps({
   pouvoirServDispo: Boolean
 });
 const emit = defineEmits(["servante-save", "servante-identified"]);
+const peutRepondre = computed(() =>
+  Boolean(props.cibles.length && (props.nomServante || nomServanteLocale.value))
+);
 
 function openDialog() {
   if (props.pouvoirServDispo && props.cibles.length) {
-    servanteSaveName.value = "";
     nomServanteLocale.value = props.nomServante;
     servanteDialog.value.showModal();
   }
 }
 
-function validate() {
-  if (!servanteSaveName.value || (!props.nomServante && !nomServanteLocale.value)) return;
-  if (!props.nomServante) emit("servante-identified", nomServanteLocale.value);
+function repondre(prendreLaPlace) {
+  if (!peutRepondre.value) return;
+  const nom = props.nomServante || nomServanteLocale.value;
+  if (!props.nomServante) emit("servante-identified", nom);
   emit("servante-save", {
-    nomServante: props.nomServante || nomServanteLocale.value,
-    cibleSauvee: servanteSaveName.value
+    nomServante: nom,
+    cibleSauvee: props.cibles[0],
+    prendreLaPlace
   });
   servanteDialog.value.close();
 }

@@ -221,7 +221,7 @@
       "onlyFirstNight": false,
       "isCallable": false,
       "categorie": "Villageois",
-      "description": "Au cours de la partie, il peut réaliser un coup d'état et éliminer un joueur au moment du vote du village. Si ce joueur est un Loup-Garou, le Dictateur devient le Maire du village sinon, il meurt."
+      "description": "Une fois par partie, au moment du vote du village, il peut imposer l'élimination d'un joueur. S'il élimine un Loup-Garou, il reste en vie ; s'il élimine un Villageois, il meurt à son tour."
     },
     {
       "name": "Comedien",

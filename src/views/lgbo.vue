@@ -336,7 +336,11 @@
           </template>
           <!-- Logo renard pour le pouvoir du renard -->
           <template v-if="card.name === 'Renard'">
-            <PouvoirRenard :choixrenard="choixrenard" @use-flair="choixrenard = false" />
+            <PouvoirRenard
+              :choixrenard="choixrenard"
+              :joueurs="joueurs"
+              @flair-result="handleRenardResult"
+            />
           </template>
           <!-- logo pour pour le pouvoir du joueur de flute -->
           <template v-if="card.name === 'Joueur de flute'">                 
@@ -350,9 +354,9 @@
           <template v-if="card.name === 'Servante devouee'">
             <PouvoirServantedevouee
               :joueurs="joueursVivants"
-              :cibles="ciblesAttaqueesCetteNuit"
+              :cibles="victimLGName ? [victimLGName] : []"
               :nom-servante="nomServante"
-              :pouvoirServDispo="pouvoirServDispo"
+              :pouvoirServDispo="pouvoirServDispo && !servanteRepondueCetteNuit"
               @servante-identified="nomServante = $event"
               @servante-save="handleServanteSave"/>
           </template>
@@ -402,6 +406,7 @@
                 a été infecté par <strong class="nom-joueur-bilan">{{ evenement.nomInfect }}</strong>
                 et rejoint donc le camp des Loups-Garous.
               </template>
+              <template v-else-if="evenement.type === 'renard'"><strong>{{ evenement.titre }}</strong></template>
               <template v-else><strong>{{ evenement.titre }}</strong> <strong class="nom-joueur-bilan">{{ evenement.nom }}</strong></template>
             </li>
           </ul>
@@ -413,7 +418,7 @@
             <li v-if="personneProteger">Le Salvateur a protégé <strong class="nom-joueur-bilan">{{ personneProteger }}</strong>.</li>
             <li v-if="sorciereSaveName">La Sorcière a sauvé <strong class="nom-joueur-bilan">{{ sorciereSaveName }}</strong>.</li>
             <li v-if="MoineSave">Le Moine a sauvé <strong class="nom-joueur-bilan">{{ MoineSave }}</strong>.</li>
-            <li v-if="ServSave && nomServante">
+            <li v-if="sacrificeServanteCetteNuit && ServSave && nomServante">
               <strong class="nom-joueur-bilan">{{ nomServante }}</strong> s'est sacrifiée à la place de
               <strong class="nom-joueur-bilan">{{ ServSave }}</strong>, qui a été sauvé par la Servante dévouée.
             </li>
@@ -445,6 +450,7 @@
         </template>
         <button v-else type="button" @click="confirmerTirChasseur">Terminer (aucun joueur vivant à cibler)</button>
       </section>
+      <button class="btn-next-phase" @click="nextPhase" :disabled="transitioning || Boolean(chasseurActif) || !revelationNuitComplete">{{ !revelationNuitComplete ? 'Révéler tous les rôles avant le vote' : 'Passer au vote du village' }}</button>
       <details class="cartes-restantes">
         <summary>
           <span>Rôles identifiés encore en jeu</span>
@@ -469,7 +475,6 @@
           </label>
         </div>
       </details>
-      <button class="btn-next-phase" @click="nextPhase" :disabled="transitioning || Boolean(chasseurActif) || !revelationNuitComplete">{{ !revelationNuitComplete ? 'Révéler tous les rôles avant le vote' : 'Passer au vote du village' }}</button>
     </section>
 
     <!-- Jour -->
@@ -483,8 +488,11 @@
       <Phasedevote
         :joueurs="joueurs"
         :camp-des-joueurs="campDesJoueurs"
+        :pouvoir-dictateur-dispo="dictateurPouvoirAffichable"
+        :nom-dictateur="nomDictateur"
         :key="dayCount"
         @update-joueurs="updateJoueurs"
+        @dictateur-identifie="nomDictateur = $event"
         @vote-confirme="handleVillageVote"
       />
       <section v-if="votantsElimines.length" class="revelation-vote" aria-live="polite">
@@ -521,6 +529,9 @@
         </template>
         <button v-else type="button" @click="confirmerTirChasseur">Terminer (aucun joueur vivant à cibler)</button>
       </section>
+      <button class="btn-next-phase" @click="nextPhase" :disabled="transitioning || !villageVoteConfirme || !revelationVoteComplete || Boolean(chasseurActif)">
+        {{ !villageVoteConfirme ? 'Confirmer le vote avant la nuit' : !revelationVoteComplete ? 'Révéler le rôle avant la nuit' : 'Nuit suivante' }}
+      </button>
       <details class="cartes-restantes">
         <summary>
           <span>Rôles identifiés encore en jeu</span>
@@ -545,9 +556,6 @@
           </label>
         </div>
       </details>
-      <button class="btn-next-phase" @click="nextPhase" :disabled="transitioning || !villageVoteConfirme || !revelationVoteComplete || Boolean(chasseurActif)">
-        {{ !villageVoteConfirme ? 'Confirmer le vote avant la nuit' : !revelationVoteComplete ? 'Révéler le rôle avant la nuit' : 'Nuit suivante' }}
-      </button>
     </section>
 
     <!-- Résultat -->
@@ -633,6 +641,8 @@ const mortsNuit = ref([])
 const nomsJoueursMortsNuit = ref([])
 const nomAncien = ref('')
 const nomJuge = ref('')
+const nomDictateur = ref('')
+const pouvoirDictateurDispo = ref(true)
 const nomChasseur = ref('')
 const nomOurs = ref('')
 const nomLoup = ref('')
@@ -844,9 +854,10 @@ function resolveNightDeaths() {
   // Le sacrifice de la Servante la tue lorsque sa cible est réellement sauvée d'une attaque.
   const cibleServanteSauvee = ServSave.value;
   const sacrificeServanteAboutit = Boolean(
+    sacrificeServanteCetteNuit.value &&
     nomServante.value &&
     cibleServanteSauvee &&
-    (cibleServanteSauvee === victimeLoups || cibleServanteSauvee === victimLoupBlancValide) &&
+    cibleServanteSauvee === victimeLoups &&
     joueursVivants.has(nomServante.value)
   );
   if (sacrificeServanteAboutit) victimes.add(nomServante.value);
@@ -870,10 +881,12 @@ function resolveNightDeaths() {
 
     const autreAttaqueAboutit =
       attaqueParGrandLoupOuAlchimiste && !protectionsNuit.value.includes(nom);
+    const cibleRemplaceeParServante = sacrificeServanteAboutit && nom === cibleServanteSauvee;
     const infectionAboutit =
       infectionAcceptee.value &&
       victiminfectLGName.value === nom &&
       attaqueDesLoups &&
+      !cibleRemplaceeParServante &&
       !courtisaneEstAilleurs &&
       !protectionsNuit.value.includes(nom) &&
       sorciereSaveName.value !== nom &&
@@ -881,6 +894,7 @@ function resolveNightDeaths() {
     if (infectionAboutit) joueursInfectesCetteNuit.add(nom);
     const morsureAboutit =
       attaqueDesLoups &&
+      !cibleRemplaceeParServante &&
       !(infectionAboutit) &&
       !courtisaneEstAilleurs &&
       !protectionsNuit.value.includes(nom) &&
@@ -1002,6 +1016,7 @@ function nextPhase() {
       rolesReveles.value = {};
       phase.value = 'night';
       visible.value = false;
+      resultatRenardCetteNuit.value = null;
       victimLGName.value = '';
       infectionAcceptee.value = false;
       infectionRepondue.value = false;
@@ -1016,6 +1031,8 @@ function nextPhase() {
       victimSorName.value = '';
       victimAlchimiste.value = '';
       ServSave.value = '';
+      sacrificeServanteCetteNuit.value = false;
+      servanteRepondueCetteNuit.value = false;
       MoineSave.value = '';
       sorciereSaveName.value = '';
       transitioning.value = false;
@@ -1052,6 +1069,7 @@ const pouvoirServDispo = ref(true);
 const potionVieDispo = ref(true);
 const potionMortDispo = ref(true);
 const choixrenard = ref(true);
+const resultatRenardCetteNuit = ref(null);
 const pouvoirflute = ref(true);
 const joueursCharmes = ref([]);
 const nomSoeur1 = ref('');
@@ -1079,8 +1097,21 @@ const groupeSectaire = ref([]);
 const groupeOppose = ref([]);
 const ancienMorsureAbsorbee = ref(false);
 
+function handleRenardResult(presenceLoup) {
+  resultatRenardCetteNuit.value = presenceLoup;
+  if (!presenceLoup) choixrenard.value = false;
+}
+
 const evenementsNuit = computed(() => {
   const evenements = [];
+  if (resultatRenardCetteNuit.value !== null) {
+    evenements.push({
+      type: 'renard',
+      titre: resultatRenardCetteNuit.value
+        ? 'Le Renard a flairé un LG.'
+        : 'Le Renard a perdu son flair.'
+    });
+  }
   if (victimLGName.value && mortsNuit.value.includes(victimLGName.value)) {
     evenements.push({ type: 'attaque', titre: 'Tué par les Loups-garous :', nom: victimLGName.value });
   } else if (joueurInfecteCetteNuit.value) {
@@ -1132,8 +1163,7 @@ const evenementsNuit = computed(() => {
 
 const protectionsNuit = computed(() => [
   personneProteger.value,
-  MoineSave.value,
-  ServSave.value
+  MoineSave.value
 ].filter(Boolean));
 
 function cardJoueurMortNuit(card, index) {
@@ -1245,10 +1275,17 @@ function handleAlchimisteVictim(joueur) {
   pouvoirAlchiDispo.value = false;
   victimAlchimiste.value = joueur;
 }
-function handleServanteSave({ nomServante: nom, cibleSauvee }) {
+const sacrificeServanteCetteNuit = ref(false);
+const servanteRepondueCetteNuit = ref(false);
+
+function handleServanteSave({ nomServante: nom, cibleSauvee, prendreLaPlace }) {
   nomServante.value = nom;
-  pouvoirServDispo.value = false;
-  ServSave.value = cibleSauvee;
+  servanteRepondueCetteNuit.value = true;
+  if (prendreLaPlace) {
+    pouvoirServDispo.value = false;
+    sacrificeServanteCetteNuit.value = true;
+    ServSave.value = cibleSauvee;
+  }
 }
 
 function handleSorciereSave(nom) {
@@ -1288,6 +1325,10 @@ function updateJoueurs(list) {
 }
 
 const villageVoteConfirme = ref(false);
+const dictateurPouvoirAffichable = computed(() =>
+  pouvoirDictateurDispo.value && selectedCards.value.some(carte => carte.name === 'Dictateur') &&
+  (!nomDictateur.value || joueurs.value.some(joueur => joueur.nom === nomDictateur.value && !joueur.mort))
+);
 const chasseursAResoudre = ref([]);
 const chasseursDeclenches = ref([]);
 const cibleChasseur = ref('');
@@ -1435,6 +1476,7 @@ function roleConnuPour(nom) {
   const nomsAssignes = [
     [nomAncien.value, 'Ancien'],
     [nomJuge.value, 'Juge'],
+    [nomDictateur.value, 'Dictateur'],
     [nomChasseur.value, 'Chasseur'],
     [nomOurs.value, 'Montreur d ours'],
     [nomMentor.value, 'Enfant Sauvage'],
@@ -1476,8 +1518,12 @@ const campDesJoueurs = computed(() => Object.fromEntries(joueurs.value.map(joueu
   return [joueur.nom, categorie === 'Loup-garou' ? 'loups' : categorie === 'Solitaire' ? 'solitaires' : ''];
 })));
 
-function handleVillageVote({ elimines }) {
+function handleVillageVote({ elimines, parDictateur = false, nomDictateur: dictateur = '' }) {
   villageVoteConfirme.value = true;
+  if (parDictateur) {
+    pouvoirDictateurDispo.value = false;
+    nomDictateur.value = dictateur;
+  }
   const mortsDuVote = new Set(elimines);
   for (const nom of elimines) {
     const partenaire = nom === nomAmoureux1.value
@@ -1490,16 +1536,29 @@ function handleVillageVote({ elimines }) {
     }
   }
   const nomsElimines = [...mortsDuVote];
-  joueurs.value = joueurs.value.map(joueur => nomsElimines.includes(joueur.nom)
+  const dictateurTueUnLoup = parDictateur && elimines.some(nom => campDesJoueurs.value[nom] === 'loups');
+  if (parDictateur && !dictateurTueUnLoup && dictateur && !nomsElimines.includes(dictateur)) {
+    mortsDuVote.add(dictateur);
+    const partenaireDictateur = dictateur === nomAmoureux1.value
+      ? nomAmoureux2.value
+      : dictateur === nomAmoureux2.value
+        ? nomAmoureux1.value
+        : '';
+    if (partenaireDictateur && joueurs.value.some(joueur => joueur.nom === partenaireDictateur && !joueur.mort)) {
+      mortsDuVote.add(partenaireDictateur);
+    }
+  }
+  const nomsEliminesFinal = [...mortsDuVote];
+  joueurs.value = joueurs.value.map(joueur => nomsEliminesFinal.includes(joueur.nom)
     ? { ...joueur, mort: true }
     : joueur);
-  votantsElimines.value = nomsElimines;
-  ajouterChasseursDeclenches(nomsElimines);
+  votantsElimines.value = nomsEliminesFinal;
+  ajouterChasseursDeclenches(nomsEliminesFinal);
 
-  if (nomsElimines.some(nom => roleConnuPour(nom) === 'Ancien' || rolesReveles.value[nom] === 'Ancien')) {
+  if (nomsEliminesFinal.some(nom => roleConnuPour(nom) === 'Ancien' || rolesReveles.value[nom] === 'Ancien')) {
     villageoisPouvoirsPerdus.value = true;
   }
-  if (nomsElimines.includes('Ange') && dayCount.value === 1) {
+  if (nomsEliminesFinal.includes('Ange') && dayCount.value === 1) {
     phase.value = 'end';
     winnerMessage.value = "L'Ange a été éliminé lors du premier jour et remporte la partie !";
     winnerImage.value = '/victoire/victoireange.jpg';
@@ -1558,6 +1617,8 @@ function rejouer() {
   nomServante.value = '';
   nomChasseur.value = '';
   nomJuge.value = '';
+  nomDictateur.value = '';
+  pouvoirDictateurDispo.value = true;
   nomOurs.value = '';
   nomLoup.value = '';
   nomMentor.value = '';
@@ -1581,6 +1642,8 @@ function rejouer() {
   sorciereSaveName.value = '';
   MoineSave.value = '';
   ServSave.value = '';
+  sacrificeServanteCetteNuit.value = false;
+  servanteRepondueCetteNuit.value = false;
   personneProteger.value = '';
   victimLGName.value = '';
   victiminfectLGName.value = '';
@@ -1611,6 +1674,7 @@ function rejouer() {
   pouvoirAlchiDispo.value = true;
   pouvoirInfectDispo.value = true;
   choixrenard.value = true;
+  resultatRenardCetteNuit.value = null;
   pouvoirflute.value = true;
   nextCardId = Math.max(0, ...selectedCards.value.map(card => {
     const match = card.instanceId?.match(/^card-(\d+)$/);

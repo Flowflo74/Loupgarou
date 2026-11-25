@@ -50,12 +50,37 @@
       En tête : {{ leaders.join(', ') }} — {{ meilleurScore }} {{ meilleurScore === 1 ? 'voix' : 'voix' }}
     </p>
 
+    <section v-if="pouvoirDictateurDispo" class="pouvoir-dictateur" aria-label="Pouvoir du Dictateur">
+      <h3>👑 Coup d’État du Dictateur</h3>
+      <label v-if="!nomDictateur" for="identite-dictateur">Qui est le Dictateur ?</label>
+      <select
+        v-if="!nomDictateur"
+        id="identite-dictateur"
+        v-model="dictateurChoisi"
+        @change="emit('dictateur-identifie', dictateurChoisi)"
+      >
+        <option value="" disabled>Choisir le Dictateur</option>
+        <option v-for="joueur in joueursVivants" :key="joueur.nom" :value="joueur.nom">{{ joueur.nom }}</option>
+      </select>
+      <p v-else>Dictateur : <strong>{{ nomDictateur }}</strong></p>
+      <label for="cible-dictateur">Joueur à éliminer :</label>
+      <select id="cible-dictateur" v-model="cibleDictateur" :disabled="!dictateurActif || Boolean(resultatVote)">
+        <option value="" disabled>Choisir un joueur</option>
+        <option v-for="joueur in ciblesDictateur" :key="joueur.nom" :value="joueur.nom">{{ joueur.nom }}</option>
+      </select>
+      <button type="button" class="btn-dictateur" :disabled="!dictateurActif || !cibleDictateur || Boolean(resultatVote)" @click="imposerChoixDictateur">
+        Imposer mon choix
+      </button>
+      <p class="aide-dictateur">Si la cible est un Loup-garou, le Dictateur survit ; sinon, il est éliminé.</p>
+    </section>
+
     <div v-if="resultatVote" class="resultat-vote" aria-live="polite">
       <template v-if="resultatVote.elimine.length === 1">
         <h3 v-if="!resultatConfirme">Résultat à confirmer</h3>
         <h3 v-else>Vote confirmé</h3>
-        <p><strong>{{ resultatVote.elimine[0] }}</strong> est en tête avec {{ resultatVote.score }} voix.</p>
-        <p v-if="!resultatConfirme" class="rappel-majorite">La personne en tête est éliminée après confirmation, même sans majorité absolue.</p>
+        <p v-if="resultatVote.parDictateur">Le Dictateur impose l’élimination de <strong>{{ resultatVote.elimine[0] }}</strong>.</p>
+        <p v-else><strong>{{ resultatVote.elimine[0] }}</strong> est en tête avec {{ resultatVote.score }} voix.</p>
+        <p v-if="!resultatConfirme" class="rappel-majorite">La personne en tête est éliminée</p>
         <p v-else class="confirmation-message">{{ resultatVote.elimine[0] }} a été marqué(e) comme mort(e).</p>
       </template>
       <template v-else-if="resultatVote.elimine.length > 1">
@@ -70,6 +95,14 @@
         <p v-else class="confirmation-message">Personne n'est éliminé(e) ce jour.</p>
       </template>
 
+      <button
+        v-if="!resultatConfirme"
+        type="button"
+        class="btn-retour-vote"
+        @click="reinitialiserVote"
+      >
+        Retour
+      </button>
       <button
         v-if="!resultatConfirme"
         type="button"
@@ -97,12 +130,18 @@ import { computed, ref } from "vue";
 
 const props = defineProps({
   joueurs: { type: Array, default: () => [] },
-  campDesJoueurs: { type: Object, default: () => ({}) }
+  campDesJoueurs: { type: Object, default: () => ({}) },
+  pouvoirDictateurDispo: { type: Boolean, default: false },
+  nomDictateur: { type: String, default: '' }
 });
-const emit = defineEmits(["update-joueurs", "vote-confirme"]);
+const emit = defineEmits(["update-joueurs", "vote-confirme", "dictateur-identifie"]);
 
 const resultatVote = ref(null);
 const resultatConfirme = ref(false);
+const dictateurChoisi = ref(props.nomDictateur);
+const cibleDictateur = ref('');
+const dictateurActif = computed(() => Boolean(props.nomDictateur || dictateurChoisi.value));
+const ciblesDictateur = computed(() => joueursVivants.value.filter(joueur => joueur.nom !== (props.nomDictateur || dictateurChoisi.value)));
 
 const joueursVivants = computed(() => props.joueurs.filter(joueur => !joueur.mort));
 const joueursVivantsTries = computed(() => [...joueursVivants.value].sort((a, b) => a.nom.localeCompare(b.nom, 'fr')));
@@ -119,6 +158,12 @@ function modifierVoix(nom, variation) {
     return { ...joueur, votes: Math.max(0, (Number(joueur.votes) || 0) + variation) };
   });
   emit("update-joueurs", joueursMisAJour);
+}
+
+function imposerChoixDictateur() {
+  if (!dictateurActif.value || !cibleDictateur.value || resultatVote.value) return;
+  resultatVote.value = { score: 0, elimine: [cibleDictateur.value], parDictateur: true };
+  resultatConfirme.value = false;
 }
 
 function preparerResultat() {
@@ -138,7 +183,12 @@ function confirmerVote() {
     mort: joueur.mort || nomsElimines.includes(joueur.nom),
     votes: 0
   })));
-  emit("vote-confirme", { elimines: nomsElimines, score: resultatVote.value.score });
+  emit("vote-confirme", {
+    elimines: nomsElimines,
+    score: resultatVote.value.score,
+    parDictateur: Boolean(resultatVote.value.parDictateur),
+    nomDictateur: props.nomDictateur || dictateurChoisi.value
+  });
   resultatConfirme.value = true;
 }
 
@@ -149,6 +199,56 @@ function reinitialiserVote() {
 </script>
 
 <style scoped>
+.btn-retour-vote {
+  margin-right: 0.65rem;
+  padding: 0.65rem 1rem;
+  border: 1px solid #d5d7e2;
+  border-radius: 8px;
+  background: #252a39;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+.btn-retour-vote:hover {
+  background: #343a4c;
+}
+
+.pouvoir-dictateur {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 1.25rem 0;
+  padding: 1rem;
+  border: 1px solid #ffae0080;
+  border-radius: 12px;
+  background: #2b2518;
+}
+.pouvoir-dictateur h3,
+.pouvoir-dictateur p { flex-basis: 100%; margin: 0; }
+.pouvoir-dictateur h3 { color: #ffdc5e; }
+.pouvoir-dictateur select {
+  min-height: 2.5rem;
+  padding: 0.4rem 0.65rem;
+  border: 1px solid #ffffff44;
+  border-radius: 8px;
+  background: #111522;
+  color: #fff;
+  font: inherit;
+}
+.btn-dictateur {
+  min-height: 2.5rem;
+  padding: 0.55rem 1rem;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ffae00, #ffe06a);
+  color: #23243a;
+  font-weight: 800;
+  cursor: pointer;
+}
+.btn-dictateur:disabled { opacity: 0.5; cursor: not-allowed; }
+.aide-dictateur { color: #d4d7e4; font-size: 0.9rem; }
+
 .vote-block {
   width: min(900px, calc(100% - 2rem));
   margin: 1.5rem auto 2rem;

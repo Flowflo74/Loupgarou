@@ -142,7 +142,11 @@
 
           <!-- Logo renard pour le pouvoir du renard -->
           <template v-if="card.name === 'Renard'">
-            <PouvoirRenard :choixrenard="choixrenard" @use-flair="choixrenard = false" />
+            <PouvoirRenard
+              :choixrenard="choixrenard"
+              :joueurs="joueurs"
+              @flair-result="presenceLoup => { if (!presenceLoup) choixrenard = false }"
+            />
           </template>
 
           <!-- Logo pour le pouvoir de la servante -->
